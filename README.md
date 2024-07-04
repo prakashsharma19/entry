@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mnemonic Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 50%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #results {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mnemonic and Keywords Generator</h1>
+        <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+        <button onclick="generateMnemonics()">Generate Mnemonics</button>
+        <div id="results">
+            <h2>Results</h2>
+            <p><strong>Mnemonics:</strong> <span id="mnemonics"></span></p>
+            <p><strong>Keywords:</strong> <span id="keywords"></span></p>
+        </div>
+    </div>
+
+    <script>
+        function generateMnemonics() {
+            const text = document.getElementById('inputText').value;
+
+            if (text.trim() === "") {
+                alert("Please paste some text!");
+                return;
+            }
+
+            const words = text.match(/\b\w+\b/g);
+            const keywords = words.filter(word => word.length > 4).slice(0, 5); // Example keyword selection
+            const mnemonics = words.map(word => word.charAt(0).toUpperCase()).join(''); // Simple mnemonic
+
+            document.getElementById('mnemonics').textContent = mnemonics;
+            document.getElementById('keywords').textContent = keywords.join(', ');
+        }
+    </script>
+</body>
+</html>
