@@ -27,12 +27,12 @@
 
         textarea {
             width: 100%;
-            height: 100px;
+            height: 200px;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            resize: none;
+            resize: vertical;
         }
 
         button {
@@ -57,6 +57,15 @@
         h2 {
             margin-bottom: 10px;
         }
+
+        .mnemonic-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mnemonic-list li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +75,8 @@
         <button onclick="generateMnemonics()">Generate Mnemonics</button>
         <div id="results">
             <h2>Results</h2>
-            <p><strong>Mnemonics:</strong> <span id="mnemonics"></span></p>
+            <p><strong>Mnemonics:</strong></p>
+            <ul id="mnemonics" class="mnemonic-list"></ul>
             <p><strong>Keywords:</strong> <span id="keywords"></span></p>
         </div>
     </div>
@@ -80,12 +90,47 @@
                 return;
             }
 
-            const words = text.match(/\b\w+\b/g);
-            const keywords = words.filter(word => word.length > 4).slice(0, 5); // Example keyword selection
-            const mnemonics = words.map(word => word.charAt(0).toUpperCase()).join(''); // Simple mnemonic
+            const phrases = extractPhrases(text);
+            const mnemonics = generateUniqueMnemonics(phrases);
+            const keywords = phrases.map(phrase => phrase.split(' ')[0]).join(', ');
 
-            document.getElementById('mnemonics').textContent = mnemonics;
-            document.getElementById('keywords').textContent = keywords.join(', ');
+            displayResults(mnemonics, keywords);
+        }
+
+        function extractPhrases(text) {
+            // Split the text into sentences
+            const sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+
+            // Extract meaningful phrases from sentences
+            const phrases = sentences.map(sentence => {
+                const words = sentence.split(' ');
+                // Take the first few words of each sentence as a phrase
+                return words.slice(0, 3).join(' ');
+            });
+
+            return phrases;
+        }
+
+        function generateUniqueMnemonics(phrases) {
+            // Generate mnemonics from meaningful phrases
+            return phrases.map(phrase => {
+                const words = phrase.split(' ');
+                // Create a mnemonic from the first letter of each word in the phrase
+                return words.map(word => word.charAt(0).toUpperCase()).join('');
+            });
+        }
+
+        function displayResults(mnemonics, keywords) {
+            const mnemonicsList = document.getElementById('mnemonics');
+            mnemonicsList.innerHTML = '';
+
+            mnemonics.forEach(mnemonic => {
+                const listItem = document.createElement('li');
+                listItem.textContent = mnemonic;
+                mnemonicsList.appendChild(listItem);
+            });
+
+            document.getElementById('keywords').textContent = keywords;
         }
     </script>
 </body>
