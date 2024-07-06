@@ -2,23 +2,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fix Entries PPH</title>
+<title>Text Formatter</title>
 <style>
     body {
         font-family: 'Times New Roman', Times, serif;
         font-size: 16px;
         line-height: 1.6;
-        margin: 20px;
-        background-color: #f3f3f3; /* Light background color */
+        margin: 0;
+        background-color: #ADD8E6; /* Light blue background color */
         color: #333; /* Darker text color */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
     .container {
+        width: 80%;
         max-width: 800px;
-        margin: 0 auto;
         padding: 20px;
         background-color: #fff; /* White background for main content */
         border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for container */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for container */
     }
     #text-area {
         width: 100%;
@@ -52,9 +56,11 @@
         border-radius: 4px;
         margin-top: 10px;
         text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.1s ease;
     }
     .copy-button:hover {
         background-color: #45a049;
+        transform: scale(1.05);
     }
     .footer {
         text-align: center;
@@ -66,11 +72,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Text Formatter</h1>
-        <p>Paste your text below and click "Fix" to format:</p>
+        <h1 style="text-align: center;">Text Formatter</h1>
+        <p style="text-align: center;">Paste your text below and click "Fix" to format:</p>
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
         <br>
-        <button onclick="formatText()">Fix</button>
+        <button class="copy-button" onclick="formatText()">Fix</button>
         <div id="fixed-text"></div>
         <button class="copy-button" onclick="copyToClipboard()">Copy Result</button>
     </div>
@@ -90,7 +96,7 @@
                 return '<a href="mailto:' + match + '" class="email-link">' + match + '</a><br><br>';
             });
 
-            // Apply Times New Roman font and font size 12px
+            // Apply Times New Roman font and font size 16px
             fixedText.innerHTML = '<p style="font-family: \'Times New Roman\', Times, serif; font-size: 16px;">' + formattedText + '</p>';
         }
 
