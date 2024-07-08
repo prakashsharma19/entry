@@ -5,7 +5,7 @@
 <title>Fix Entries PPH</title>
 <style>
     body {
-        font-family: 'Times New Roman', Times, serif;
+        font-family: Arial, sans-serif;
         font-size: 16px;
         line-height: 1.6;
         margin: 20px;
@@ -23,7 +23,7 @@
     #text-area {
         width: calc(100% - 150px); /* Reduced width for button space */
         height: 200px;
-        font-family: 'Times New Roman', Times, serif;
+        font-family: Arial, sans-serif;
         font-size: 16px;
         padding: 10px;
         box-sizing: border-box;
@@ -94,10 +94,10 @@
             // Replace email addresses with links and add paragraph breaks after each line
             var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
                 return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
-            }).replace(/\n/g, '<br><br>');
+            }).replace(/\n/g, '<br>');
 
-            // Apply Times New Roman font and font size 16px
-            fixedText.innerHTML = '<p style="font-family: \'Times New Roman\', Times, serif; font-size: 16px;">' + formattedText + '</p>';
+            // Apply Arial font and font size 16px
+            fixedText.innerHTML = '<div style="font-family: Arial, sans-serif; font-size: 16px;">' + formattedText + '</div>';
         }
 
         function copyToClipboard() {
@@ -105,7 +105,7 @@
 
             // Create a range and select the fixedText div
             var range = document.createRange();
-            range.selectNode(fixedText);
+            range.selectNodeContents(fixedText);
 
             // Remove previous selection and add new range
             var selection = window.getSelection();
