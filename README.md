@@ -2,7 +2,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text Formatter</title>
+<title>Fix Entries</title>
 <style>
     body {
         font-family: 'Times New Roman', Times, serif;
@@ -15,16 +15,22 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        overflow: hidden;
     }
     .container {
         width: 80%;
-        max-width: 800px;
+        max-width: 1000px;
         padding: 20px;
         background-color: #fff; /* White background for main content */
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for container */
+        text-align: center; /* Center align the content */
     }
-    #text-area {
+    .logo {
+        max-width: 150px;
+        margin-bottom: 20px;
+    }
+    #text-area, #fixed-text {
         width: 100%;
         height: 200px;
         font-family: 'Times New Roman', Times, serif;
@@ -32,13 +38,13 @@
         padding: 10px;
         box-sizing: border-box;
         margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
     }
     #fixed-text {
-        margin-top: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
+        height: 300px; /* Make the fixed-text box bigger */
+        overflow-y: scroll; /* Add a scroll bar */
         background-color: #f9f9f9;
-        border-radius: 8px;
     }
     a.email-link {
         text-decoration: underline;
@@ -72,12 +78,13 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align: center;">Text Formatter</h1>
-        <p style="text-align: center;">Paste your text below and click "Fix" to format:</p>
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1>Fix Entries</h1>
+        <p>Paste your text below and click "Fix" to format:</p>
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
         <br>
         <button class="copy-button" onclick="formatText()">Fix</button>
-        <div id="fixed-text"></div>
+        <div id="fixed-text" contenteditable="true"></div>
         <button class="copy-button" onclick="copyToClipboard()">Copy Result</button>
     </div>
 
@@ -91,12 +98,24 @@
             var fixedText = document.getElementById('fixed-text');
             var text = textarea.value.trim();
 
-            // Replace email addresses with links and add paragraph breaks
-            var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
-                return '<a href="mailto:' + match + '" class="email-link">' + match + '</a><br><br>';
-            });
+            // Split text into lines
+            var lines = text.split('\n');
+            var formattedText = '';
 
-            // Apply Times New Roman font and font size 16px
+            for (var i = 0; i < lines.length; i++) {
+                // Trim the line to remove extra spaces
+                var line = lines[i].trim();
+                // Check if the line contains an email
+                if (/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/.test(line)) {
+                    // Replace email with a link
+                    line = line.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
+                        return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
+                    });
+                }
+                formattedText += line + '<br>';
+            }
+
+            // Update the fixed text box with the formatted text
             fixedText.innerHTML = '<p style="font-family: \'Times New Roman\', Times, serif; font-size: 16px;">' + formattedText + '</p>';
         }
 
