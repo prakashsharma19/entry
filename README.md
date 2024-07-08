@@ -95,21 +95,22 @@
         }
 
         function copyToClipboard() {
-            var textToCopy = document.getElementById('fixed-text').innerText;
+            var fixedText = document.getElementById('fixed-text');
 
-            // Create a temporary textarea to copy the text
-            var tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textToCopy;
-            document.body.appendChild(tempTextArea);
+            // Create a range and select the fixedText div
+            var range = document.createRange();
+            range.selectNode(fixedText);
 
-            // Select and copy the text
-            tempTextArea.select();
+            // Remove previous selection and add new range
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            // Execute the copy command
             document.execCommand('copy');
 
-            // Remove the temporary textarea
-            document.body.removeChild(tempTextArea);
-
-            // Alert copied text (optional)
+            // Remove the range and alert (optional)
+            selection.removeAllRanges();
             alert('Copied to clipboard!');
         }
     </script>
