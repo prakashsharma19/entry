@@ -2,7 +2,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text Formatter</title>
+<title>Fix Entries PPH</title>
 <style>
     body {
         font-family: 'Times New Roman', Times, serif;
@@ -21,13 +21,14 @@
         box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for container */
     }
     #text-area {
-        width: 100%;
+        width: calc(100% - 150px); /* Reduced width for button space */
         height: 200px;
         font-family: 'Times New Roman', Times, serif;
         font-size: 16px;
         padding: 10px;
         box-sizing: border-box;
         margin-bottom: 10px;
+        float: left;
     }
     #fixed-text {
         margin-top: 10px;
@@ -35,26 +36,32 @@
         border: 1px solid #ccc;
         background-color: #f9f9f9;
         border-radius: 8px;
+        width: calc(100% - 150px); /* Reduced width for button space */
+        float: left;
     }
     a.email-link {
         text-decoration: underline;
         color: blue;
     }
-    .copy-button {
+    .copy-button, .fix-button {
         display: inline-block;
-        padding: 10px 20px;
-        background-color: #4CAF50;
+        padding: 15px 25px; /* Bigger buttons */
+        background-color: #A29E2A; /* Custom button color */
         color: white;
         text-align: center;
-        font-size: 16px;
+        font-size: 18px; /* Larger font size */
         cursor: pointer;
         border: none;
         border-radius: 4px;
-        margin-top: 10px;
+        margin-left: 10px;
         text-decoration: none;
+        transition: background-color 0.2s, transform 0.2s; /* Clicky button effect */
     }
-    .copy-button:hover {
-        background-color: #45a049;
+    .copy-button:hover, .fix-button:hover {
+        background-color: #8c8a24; /* Slightly darker on hover */
+    }
+    .copy-button:active, .fix-button:active {
+        transform: scale(0.95); /* Clicky button effect */
     }
     .footer {
         text-align: center;
@@ -66,11 +73,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Text Formatter</h1>
+        <h1>Fix Entries PPH</h1>
         <p>Paste your text below and click "Fix" to format:</p>
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
-        <br>
-        <button onclick="formatText()">Fix</button>
+        <button class="fix-button" onclick="formatText()">Fix</button>
         <div id="fixed-text"></div>
         <button class="copy-button" onclick="copyToClipboard()">Copy Result</button>
     </div>
@@ -85,12 +91,12 @@
             var fixedText = document.getElementById('fixed-text');
             var text = textarea.value.trim();
 
-            // Replace email addresses with links and add paragraph breaks
+            // Replace email addresses with links and add paragraph breaks after each line
             var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
-                return '<a href="mailto:' + match + '" class="email-link">' + match + '</a><br><br>';
-            });
+                return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
+            }).replace(/\n/g, '<br><br>');
 
-            // Apply Times New Roman font and font size 12px
+            // Apply Times New Roman font and font size 16px
             fixedText.innerHTML = '<p style="font-family: \'Times New Roman\', Times, serif; font-size: 16px;">' + formattedText + '</p>';
         }
 
