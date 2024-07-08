@@ -19,7 +19,7 @@
     }
     .container {
         width: 80%;
-        max-width: 1000px;
+        max-width: 1200px;
         padding: 20px;
         background-color: #fff; /* White background for main content */
         border-radius: 8px;
@@ -31,8 +31,8 @@
         margin-bottom: 20px;
     }
     #text-area, #fixed-text {
-        width: 100%;
-        height: 200px;
+        width: calc(100% - 110px);
+        height: 300px;
         font-family: 'Times New Roman', Times, serif;
         font-size: 16px;
         padding: 10px;
@@ -42,7 +42,6 @@
         border-radius: 8px;
     }
     #fixed-text {
-        height: 300px; /* Make the fixed-text box bigger */
         overflow-y: scroll; /* Add a scroll bar */
         background-color: #f9f9f9;
     }
@@ -50,7 +49,7 @@
         text-decoration: underline;
         color: blue;
     }
-    .copy-button {
+    .copy-button, .fix-button {
         display: inline-block;
         padding: 10px 20px;
         background-color: #4CAF50;
@@ -60,11 +59,11 @@
         cursor: pointer;
         border: none;
         border-radius: 4px;
-        margin-top: 10px;
         text-decoration: none;
         transition: background-color 0.3s ease, transform 0.1s ease;
+        margin-left: 10px;
     }
-    .copy-button:hover {
+    .copy-button:hover, .fix-button:hover {
         background-color: #45a049;
         transform: scale(1.05);
     }
@@ -74,6 +73,12 @@
         font-style: italic;
         color: #777;
     }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 </head>
 <body>
@@ -81,11 +86,14 @@
         <img src="logo.png" alt="Logo" class="logo">
         <h1>Fix Entries</h1>
         <p>Paste your text below and click "Fix" to format:</p>
-        <textarea id="text-area" placeholder="Paste your text here..."></textarea>
-        <br>
-        <button class="copy-button" onclick="formatText()">Fix</button>
+        <div style="display: flex; justify-content: space-between;">
+            <textarea id="text-area" placeholder="Paste your text here..."></textarea>
+            <div class="button-container">
+                <button class="fix-button" onclick="formatText()">Fix</button>
+                <button class="copy-button" onclick="copyToClipboard()">Copy Result</button>
+            </div>
+        </div>
         <div id="fixed-text" contenteditable="true"></div>
-        <button class="copy-button" onclick="copyToClipboard()">Copy Result</button>
     </div>
 
     <div class="footer">
