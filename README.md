@@ -1,123 +1,136 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fix Entries PPH</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.6;
-        margin: 20px;
-        background-color: #f3f3f3; /* Light background color */
-        color: #333; /* Darker text color */
-    }
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #fff; /* White background for main content */
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for container */
-    }
-    #text-area {
-        width: calc(100% - 150px); /* Reduced width for button space */
-        height: 200px;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        padding: 10px;
-        box-sizing: border-box;
-        margin-bottom: 10px;
-        float: left;
-    }
-    #fixed-text {
-        margin-top: 10px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        width: calc(100% - 150px); /* Reduced width for button space */
-        float: left;
-    }
-    a.email-link {
-        text-decoration: underline;
-        color: blue;
-    }
-    .copy-button, .fix-button {
-        display: inline-block;
-        padding: 15px 25px; /* Bigger buttons */
-        background-color: #A29E2A; /* Custom button color */
-        color: white;
-        text-align: center;
-        font-size: 18px; /* Larger font size */
-        cursor: pointer;
-        border: none;
-        border-radius: 4px;
-        margin-left: 10px;
-        text-decoration: none;
-        transition: background-color 0.2s, transform 0.2s; /* Clicky button effect */
-    }
-    .copy-button:hover, .fix-button:hover {
-        background-color: #8c8a24; /* Slightly darker on hover */
-    }
-    .copy-button:active, .fix-button:active {
-        transform: scale(0.95); /* Clicky button effect */
-    }
-    .footer {
-        text-align: center;
-        margin-top: 20px;
-        font-style: italic;
-        color: #777;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Proofreader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Fix Entries PPH</h1>
-        <p>Paste your text below and click "Fix" to format:</p>
-        <textarea id="text-area" placeholder="Paste your text here..."></textarea>
-        <button class="fix-button" onclick="formatText()">Fix</button>
-        <div id="fixed-text"></div>
-        <button class="copy-button" onclick="copyToClipboard()">Copy Result</button>
-    </div>
-
-    <div class="footer">
-        <p>This page is developed by Prakash.</p>
-    </div>
+    <h1>Document Proofreader</h1>
+    <textarea id="documentInput" rows="20" placeholder="Paste your document here..."></textarea>
+    <br>
+    <button onclick="proofreadDocument()">Check Document</button>
+    <div id="results"></div>
 
     <script>
-        function formatText() {
-            var textarea = document.getElementById('text-area');
-            var fixedText = document.getElementById('fixed-text');
-            var text = textarea.value.trim();
+        function proofreadDocument() {
+            const content = document.getElementById('documentInput').value;
+            let results = document.getElementById('results');
+            results.innerHTML = ''; // Clear previous results
 
-            // Replace email addresses with links and add paragraph breaks after each line
-            var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
-                return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
-            }).replace(/\n/g, '<br>');
+            // Validate numbering sequences
+            let numberingErrors = validateNumbering(content);
 
-            // Apply Arial font and font size 16px
-            fixedText.innerHTML = '<div style="font-family: Arial, sans-serif; font-size: 16px;">' + formattedText + '</div>';
+            // Validate citations and references
+            let { citations, references, citationErrors } = validateCitationsAndReferences(content);
+
+            // Display results
+            if (numberingErrors.length === 0 && citationErrors.length === 0) {
+                results.innerHTML = '<p class="success">No errors found! The document looks good.</p>';
+            } else {
+                if (numberingErrors.length > 0) {
+                    results.innerHTML += '<h3>Numbering Errors:</h3>';
+                    numberingErrors.forEach(error => {
+                        results.innerHTML += `<p class="error">${error}</p>`;
+                    });
+                }
+
+                if (citationErrors.length > 0) {
+                    results.innerHTML += '<h3>Citation/Reference Errors:</h3>';
+                    citationErrors.forEach(error => {
+                        results.innerHTML += `<p class="error">${error}</p>`;
+                    });
+                }
+            }
         }
 
-        function copyToClipboard() {
-            var fixedText = document.getElementById('fixed-text');
+        function validateNumbering(content) {
+            const lines = content.split('\n');
+            let errors = [];
+            let sectionNumber = 0;
+            let subsectionNumber = 0;
 
-            // Create a range and select the fixedText div
-            var range = document.createRange();
-            range.selectNodeContents(fixedText);
+            lines.forEach(line => {
+                let sectionMatch = line.match(/^(\d+)\./);
+                let subsectionMatch = line.match(/^(\d+)\.(\d+)\./);
 
-            // Remove previous selection and add new range
-            var selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+                if (sectionMatch) {
+                    let currentSection = parseInt(sectionMatch[1]);
+                    if (currentSection !== sectionNumber + 1) {
+                        errors.push(`Section ${currentSection} is out of order. Expected ${sectionNumber + 1}.`);
+                    }
+                    sectionNumber = currentSection;
+                    subsectionNumber = 0; // Reset subsection number
+                } else if (subsectionMatch) {
+                    let currentSection = parseInt(subsectionMatch[1]);
+                    let currentSubsection = parseInt(subsectionMatch[2]);
 
-            // Execute the copy command
-            document.execCommand('copy');
+                    if (currentSection !== sectionNumber) {
+                        errors.push(`Subsection ${currentSection}.${currentSubsection} belongs to section ${currentSection} but current section is ${sectionNumber}.`);
+                    } else if (currentSubsection !== subsectionNumber + 1) {
+                        errors.push(`Subsection ${currentSection}.${currentSubsection} is out of order. Expected ${sectionNumber}.${subsectionNumber + 1}.`);
+                    }
+                    subsectionNumber = currentSubsection;
+                }
+            });
 
-            // Remove the range and alert (optional)
-            selection.removeAllRanges();
-            alert('Copied to clipboard!');
+            return errors;
+        }
+
+        function validateCitationsAndReferences(content) {
+            let citationPattern = /\((.*?)\)\s*\[(\d+)\]/g;
+            let referencePattern = /\[(\d+)\]\s*(.*)/g;
+
+            let citations = {};
+            let references = {};
+
+            let citationErrors = [];
+
+            let match;
+
+            while ((match = citationPattern.exec(content)) !== null) {
+                let author = match[1];
+                let citationNumber = parseInt(match[2]);
+                citations[citationNumber] = author;
+            }
+
+            while ((match = referencePattern.exec(content)) !== null) {
+                let referenceNumber = parseInt(match[1]);
+                let referenceContent = match[2];
+                references[referenceNumber] = referenceContent;
+            }
+
+            for (let number in citations) {
+                if (!references[number]) {
+                    citationErrors.push(`Citation [${number}] by ${citations[number]} not found in references.`);
+                }
+            }
+
+            return { citations, references, citationErrors };
         }
     </script>
 </body>
