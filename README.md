@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -44,24 +45,29 @@
             let address = '';
             let email = '';
             
+            // Initial placeholders for capturing the lines
+            let departmentLine = '';
+            let collegeLine = '';
+            let addressLine = '';
+            
             lines.forEach(line => {
-                if (line.startsWith('Department')) {
-                    department = line.split(',')[0];
+                if (line.includes('Department')) {
+                    departmentLine = line;
                 } else if (line.includes('University') || line.includes('College')) {
-                    college = line;
+                    collegeLine = line;
                 } else if (line.includes('@')) {
                     email = line;
                 } else if (line.match(/^[A-Za-z]/) && !line.includes('@')) {
-                    address = line;
+                    addressLine = line;
                 }
             });
 
-            // Format output
+            // Format output with detailed department, college, and address
             const formattedText = [
                 name,
-                department,
-                college,
-                address,
+                departmentLine,
+                collegeLine,
+                addressLine,
                 email
             ].filter(line => line).join('\n');
 
