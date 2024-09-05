@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,6 +27,12 @@
             padding: 10px;
             margin-top: 10px;
         }
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +51,9 @@
         <button onclick="searchArxiv()">Search</button>
 
         <div id="results"></div>
+
+        <!-- PDF Viewer -->
+        <iframe id="pdfViewer" class="pdf-viewer" src="" style="display: none;"></iframe>
     </div>
 
     <script>
@@ -53,7 +61,9 @@
             const searchType = document.getElementById('searchType').value;
             const query = document.getElementById('searchQuery').value;
             const resultsDiv = document.getElementById('results');
+            const pdfViewer = document.getElementById('pdfViewer');
             resultsDiv.innerHTML = '';  // Clear previous results
+            pdfViewer.style.display = 'none'; // Hide PDF viewer
 
             if (!query) {
                 resultsDiv.innerHTML = '<p>Please enter a search query.</p>';
@@ -68,7 +78,7 @@
                 searchField = `ti:${encodeURIComponent(query)}`;
             }
 
-            // Use another CORS proxy
+            // Use CORS proxy for fetching data
             const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('http://export.arxiv.org/api/query?search_query=' + searchField + '&start=0&max_results=5')}`;
 
             fetch(apiUrl)
@@ -95,8 +105,9 @@
                         }
 
                         const link = entries[i].getElementsByTagName('id')[0].textContent;
+                        const pdfLink = link.replace('abs', 'pdf');  // Generate PDF link
 
-                        // Create the result HTML
+                        // Create the result HTML and add button to display the PDF
                         const paperDiv = document.createElement('div');
                         paperDiv.classList.add('result');
                         paperDiv.innerHTML = `
@@ -104,7 +115,7 @@
                             <p><strong>Authors:</strong> ${paperAuthors.join(', ')}</p>
                             <p><strong>Published:</strong> ${published}</p>
                             <p>${summary}</p>
-                            <a href="${link}" target="_blank">Read Full Paper</a>
+                            <button onclick="showPdf('${pdfLink}')">View PDF</button>
                         `;
                         resultsDiv.appendChild(paperDiv);
                     }
@@ -113,6 +124,12 @@
                     resultsDiv.innerHTML = '<p>Error fetching data. Please try again later.</p>';
                     console.error('Error:', error);
                 });
+        }
+
+        function showPdf(pdfUrl) {
+            const pdfViewer = document.getElementById('pdfViewer');
+            pdfViewer.src = pdfUrl;  // Set the PDF URL
+            pdfViewer.style.display = 'block';  // Show the PDF viewer
         }
     </script>
 
