@@ -68,8 +68,8 @@
                 searchField = `ti:${encodeURIComponent(query)}`;
             }
 
-            // Use a CORS proxy to fetch the data
-            const apiUrl = `https://cors-anywhere.herokuapp.com/http://export.arxiv.org/api/query?search_query=${searchField}&start=0&max_results=5`;
+            // Use another CORS proxy
+            const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('http://export.arxiv.org/api/query?search_query=' + searchField + '&start=0&max_results=5')}`;
 
             fetch(apiUrl)
                 .then(response => response.text())
