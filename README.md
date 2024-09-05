@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>arXiv Search</title>
+    <title>Elsevier API Search</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,17 +53,17 @@
 <body>
 
     <div class="container">
-        <h1>Search arXiv Papers</h1>
+        <h1>Search Elsevier Articles</h1>
         
         <!-- Search Input -->
         <input type="text" id="searchQuery" placeholder="Enter search term">
-        <button onclick="searchArxiv()">Search</button>
+        <button onclick="searchElsevier()">Search</button>
         <div id="loading" class="loading" style="display: none;">Loading...</div>
         <div id="results"></div>
     </div>
 
     <script>
-        function searchArxiv() {
+        function searchElsevier() {
             const query = document.getElementById('searchQuery').value;
             const resultsDiv = document.getElementById('results');
             const loadingIndicator = document.getElementById('loading');
@@ -77,47 +77,39 @@
             }
 
             // Build the search query
-            const searchField = `all:${encodeURIComponent(query)}`;
+            const apiKey = 
+1e696708ab7dc6a923779f7cfc51cb21; // Replace with your Elsevier API key
+            const searchUrl = `https://api.elsevier.com/content/search/scopus?query=${encodeURIComponent(query)}&apiKey=${apiKey}`;
 
-            // Use CORS proxy for fetching data
-            const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('http://export.arxiv.org/api/query?search_query=' + searchField + '&start=0&max_results=5')}`;
-
-            fetch(apiUrl)
-                .then(response => response.text())
+            fetch(searchUrl, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+                .then(response => response.json())
                 .then(data => {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(data, "application/xml");
-                    const entries = xmlDoc.getElementsByTagName('entry');
-
-                    if (entries.length === 0) {
+                    if (!data || !data['search-results'] || !data['search-results']['entry']) {
                         resultsDiv.innerHTML = '<p>No results found for this query.</p>';
                         loadingIndicator.style.display = 'none'; // Hide loading indicator
                         return;
                     }
 
+                    const entries = data['search-results']['entry'];
+
                     for (let i = 0; i < entries.length; i++) {
-                        const title = entries[i].getElementsByTagName('title')[0].textContent;
-                        const summary = entries[i].getElementsByTagName('summary')[0].textContent;
-                        const published = entries[i].getElementsByTagName('published')[0].textContent;
-                        const authors = entries[i].getElementsByTagName('author');
-                        const paperAuthors = [];
-                        
-                        for (let j = 0; j < authors.length; j++) {
-                            paperAuthors.push(authors[j].getElementsByTagName('name')[0].textContent);
-                        }
+                        const title = entries[i]['dc:title'] || 'No title available';
+                        const authors = entries[i]['dc:creator'] || ['No authors available'];
+                        const published = entries[i]['prism:coverDate'] || 'No publication date available';
+                        const link = entries[i]['prism:url'] || '#';
 
-                        const link = entries[i].getElementsByTagName('id')[0].textContent;
-                        const pdfLink = link.replace('abs', 'pdf');  // Generate PDF link
-
-                        // Create the result HTML with direct PDF link
+                        // Create the result HTML with direct link to the article
                         const paperDiv = document.createElement('div');
                         paperDiv.classList.add('result');
                         paperDiv.innerHTML = `
                             <h3>${title}</h3>
-                            <p><strong>Authors:</strong> ${paperAuthors.join(', ')}</p>
+                            <p><strong>Authors:</strong> ${authors.join(', ')}</p>
                             <p><strong>Published:</strong> ${published}</p>
-                            <p>${summary}</p>
-                            <p><a href="${pdfLink}" target="_blank">Download/View PDF</a></p>
+                            <p><a href="${link}" target="_blank">Read Full Article</a></p>
                         `;
                         resultsDiv.appendChild(paperDiv);
                     }
