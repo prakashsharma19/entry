@@ -122,6 +122,8 @@
                         const link = entries[i].getElementsByTagName('id')[0].textContent;
                         const pdfLink = link.replace('abs', 'pdf');  // Generate PDF link
 
+                        console.log(`PDF URL for "${title}": ${pdfLink}`); // Debugging line
+
                         // Create the result HTML and add button to display the PDF
                         const paperDiv = document.createElement('div');
                         paperDiv.classList.add('result');
@@ -145,6 +147,7 @@
         }
 
         function showPdf(pdfUrl) {
+            console.log(`Loading PDF: ${pdfUrl}`); // Debugging line
             const pdfViewer = document.getElementById('pdfViewer');
             pdfViewer.src = pdfUrl;  // Set the PDF URL
             pdfViewer.style.display = 'block';  // Show the PDF viewer
