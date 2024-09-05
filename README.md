@@ -77,8 +77,7 @@
             }
 
             // Build the search query
-            const apiKey = 
-1e696708ab7dc6a923779f7cfc51cb21; // Replace with your Elsevier API key
+            const apiKey = '1e696708ab7dc6a923779f7cfc51cb21'; // Your Elsevier API key
             const searchUrl = `https://api.elsevier.com/content/search/scopus?query=${encodeURIComponent(query)}&apiKey=${apiKey}`;
 
             fetch(searchUrl, {
