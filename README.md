@@ -63,7 +63,7 @@
     </div>
 
     <script>
-        function searchElsevier() {
+        async function searchElsevier() {
             const query = document.getElementById('searchQuery').value;
             const resultsDiv = document.getElementById('results');
             const loadingIndicator = document.getElementById('loading');
@@ -80,46 +80,51 @@
             const apiKey = '1e696708ab7dc6a923779f7cfc51cb21'; // Your Elsevier API key
             const searchUrl = `https://api.elsevier.com/content/search/scopus?query=${encodeURIComponent(query)}&apiKey=${apiKey}`;
 
-            fetch(searchUrl, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data || !data['search-results'] || !data['search-results']['entry']) {
-                        resultsDiv.innerHTML = '<p>No results found for this query.</p>';
-                        loadingIndicator.style.display = 'none'; // Hide loading indicator
-                        return;
+            try {
+                const response = await fetch(searchUrl, {
+                    headers: {
+                        'Accept': 'application/json'
                     }
-
-                    const entries = data['search-results']['entry'];
-
-                    for (let i = 0; i < entries.length; i++) {
-                        const title = entries[i]['dc:title'] || 'No title available';
-                        const authors = entries[i]['dc:creator'] || ['No authors available'];
-                        const published = entries[i]['prism:coverDate'] || 'No publication date available';
-                        const link = entries[i]['prism:url'] || '#';
-
-                        // Create the result HTML with direct link to the article
-                        const paperDiv = document.createElement('div');
-                        paperDiv.classList.add('result');
-                        paperDiv.innerHTML = `
-                            <h3>${title}</h3>
-                            <p><strong>Authors:</strong> ${authors.join(', ')}</p>
-                            <p><strong>Published:</strong> ${published}</p>
-                            <p><a href="${link}" target="_blank">Read Full Article</a></p>
-                        `;
-                        resultsDiv.appendChild(paperDiv);
-                    }
-
-                    loadingIndicator.style.display = 'none'; // Hide loading indicator
-                })
-                .catch(error => {
-                    resultsDiv.innerHTML = '<p>Error fetching data. Please try again later.</p>';
-                    loadingIndicator.style.display = 'none'; // Hide loading indicator
-                    console.error('Error:', error);
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (!data || !data['search-results'] || !data['search-results']['entry']) {
+                    resultsDiv.innerHTML = '<p>No results found for this query.</p>';
+                    loadingIndicator.style.display = 'none'; // Hide loading indicator
+                    return;
+                }
+
+                const entries = data['search-results']['entry'];
+
+                for (let i = 0; i < entries.length; i++) {
+                    const title = entries[i]['dc:title'] || 'No title available';
+                    const authors = entries[i]['dc:creator'] || ['No authors available'];
+                    const published = entries[i]['prism:coverDate'] || 'No publication date available';
+                    const link = entries[i]['prism:url'] || '#';
+
+                    // Create the result HTML with direct link to the article
+                    const paperDiv = document.createElement('div');
+                    paperDiv.classList.add('result');
+                    paperDiv.innerHTML = `
+                        <h3>${title}</h3>
+                        <p><strong>Authors:</strong> ${authors.join(', ')}</p>
+                        <p><strong>Published:</strong> ${published}</p>
+                        <p><a href="${link}" target="_blank">Read Full Article</a></p>
+                    `;
+                    resultsDiv.appendChild(paperDiv);
+                }
+
+                loadingIndicator.style.display = 'none'; // Hide loading indicator
+            } catch (error) {
+                resultsDiv.innerHTML = '<p>Error fetching data. Please try again later.</p>';
+                loadingIndicator.style.display = 'none'; // Hide loading indicator
+                console.error('Error:', error);
+            }
         }
     </script>
 
