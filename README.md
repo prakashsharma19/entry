@@ -47,6 +47,7 @@
             height: 600px;
             border: 1px solid #ddd;
             margin-top: 20px;
+            display: none; /* Initially hidden */
         }
         .loading {
             text-align: center;
@@ -80,6 +81,7 @@
             const loadingIndicator = document.getElementById('loading');
             resultsDiv.innerHTML = '';  // Clear previous results
             pdfViewer.innerHTML = '';  // Clear previous PDF
+            pdfViewer.style.display = 'none'; // Hide PDF viewer
             loadingIndicator.style.display = 'block'; // Show loading indicator
 
             if (!query) {
@@ -146,32 +148,41 @@
         function showPdf(pdfUrl) {
             const pdfViewer = document.getElementById('pdfViewer');
             pdfViewer.innerHTML = '';  // Clear previous content
+            pdfViewer.style.display = 'block';  // Show the PDF viewer
 
             // PDF.js setup
             const loadingTask = pdfjsLib.getDocument(pdfUrl);
             loadingTask.promise.then(pdf => {
-                pdf.getPage(1).then(page => {
-                    const scale = 1.5;
-                    const viewport = page.getViewport({ scale });
-                    
-                    // Prepare canvas using PDF page dimensions
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    pdfViewer.appendChild(canvas);
+                // Clear any existing content
+                pdfViewer.innerHTML = '';
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(page => {
+                        const scale = 1.5;
+                        const viewport = page.getViewport({ scale });
 
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    const renderTask = page.render(renderContext);
-                    renderTask.promise.then(() => {
-                        console.log('Page rendered');
+                        // Prepare canvas using PDF page dimensions
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        pdfViewer.appendChild(canvas);
+
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        page.render(renderContext).promise.then(() => {
+                            console.log(`Page ${pageNum} rendered`);
+                        }).catch(renderError => {
+                            console.error(`Page ${pageNum} render error:`, renderError);
+                        });
+                    }).catch(pageError => {
+                        console.error(`Page ${pageNum} fetch error:`, pageError);
                     });
-                });
-            }, reason => {
-                console.error(reason);
+                }
+            }).catch(error => {
+                console.error('PDF.js error:', error);
+                pdfViewer.innerHTML = '<p>Failed to load PDF.</p>';
             });
         }
     </script>
