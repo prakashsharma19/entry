@@ -42,12 +42,11 @@
             border-radius: 4px;
             background: #f9f9f9;
         }
-        .pdf-viewer {
+        #pdfViewer {
             width: 100%;
             height: 600px;
             border: 1px solid #ddd;
             margin-top: 20px;
-            display: none; /* Initially hidden */
         }
         .loading {
             text-align: center;
@@ -56,6 +55,7 @@
             color: #007bff;
         }
     </style>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 </head>
 <body>
 
@@ -69,7 +69,7 @@
         <div id="results"></div>
 
         <!-- PDF Viewer -->
-        <iframe id="pdfViewer" class="pdf-viewer" src=""></iframe>
+        <div id="pdfViewer"></div>
     </div>
 
     <script>
@@ -79,7 +79,7 @@
             const pdfViewer = document.getElementById('pdfViewer');
             const loadingIndicator = document.getElementById('loading');
             resultsDiv.innerHTML = '';  // Clear previous results
-            pdfViewer.style.display = 'none'; // Hide PDF viewer
+            pdfViewer.innerHTML = '';  // Clear previous PDF
             loadingIndicator.style.display = 'block'; // Show loading indicator
 
             if (!query) {
@@ -145,8 +145,34 @@
 
         function showPdf(pdfUrl) {
             const pdfViewer = document.getElementById('pdfViewer');
-            pdfViewer.src = pdfUrl;  // Set the PDF URL
-            pdfViewer.style.display = 'block';  // Show the PDF viewer
+            pdfViewer.innerHTML = '';  // Clear previous content
+
+            // PDF.js setup
+            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            loadingTask.promise.then(pdf => {
+                pdf.getPage(1).then(page => {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale });
+                    
+                    // Prepare canvas using PDF page dimensions
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    pdfViewer.appendChild(canvas);
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    const renderTask = page.render(renderContext);
+                    renderTask.promise.then(() => {
+                        console.log('Page rendered');
+                    });
+                });
+            }, reason => {
+                console.error(reason);
+            });
         }
     </script>
 
