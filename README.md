@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -62,7 +63,7 @@
         <h1>Search arXiv Papers</h1>
         
         <!-- Search Input -->
-        <input type="text" id="searchQuery" placeholder="Enter any search term">
+        <input type="text" id="searchQuery" placeholder="Enter search term">
         <button onclick="searchArxiv()">Search</button>
         <div id="loading" class="loading" style="display: none;">Loading...</div>
         <div id="results"></div>
