@@ -42,13 +42,6 @@
             border-radius: 4px;
             background: #f9f9f9;
         }
-        #pdfViewer {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #ddd;
-            margin-top: 20px;
-            display: none;
-        }
         .loading {
             text-align: center;
             margin-top: 20px;
@@ -67,20 +60,14 @@
         <button onclick="searchArxiv()">Search</button>
         <div id="loading" class="loading" style="display: none;">Loading...</div>
         <div id="results"></div>
-
-        <!-- PDF Viewer -->
-        <iframe id="pdfViewer" src="" frameborder="0"></iframe>
     </div>
 
     <script>
         function searchArxiv() {
             const query = document.getElementById('searchQuery').value;
             const resultsDiv = document.getElementById('results');
-            const pdfViewer = document.getElementById('pdfViewer');
             const loadingIndicator = document.getElementById('loading');
             resultsDiv.innerHTML = '';  // Clear previous results
-            pdfViewer.src = ''; // Clear PDF viewer source
-            pdfViewer.style.display = 'none'; // Hide PDF viewer
             loadingIndicator.style.display = 'block'; // Show loading indicator
 
             if (!query) {
@@ -122,7 +109,7 @@
                         const link = entries[i].getElementsByTagName('id')[0].textContent;
                         const pdfLink = link.replace('abs', 'pdf');  // Generate PDF link
 
-                        // Create the result HTML and add button to display the PDF
+                        // Create the result HTML with direct PDF link
                         const paperDiv = document.createElement('div');
                         paperDiv.classList.add('result');
                         paperDiv.innerHTML = `
@@ -130,7 +117,7 @@
                             <p><strong>Authors:</strong> ${paperAuthors.join(', ')}</p>
                             <p><strong>Published:</strong> ${published}</p>
                             <p>${summary}</p>
-                            <button onclick="showPdf('${pdfLink}')">View PDF</button>
+                            <p><a href="${pdfLink}" target="_blank">Download/View PDF</a></p>
                         `;
                         resultsDiv.appendChild(paperDiv);
                     }
@@ -142,13 +129,6 @@
                     loadingIndicator.style.display = 'none'; // Hide loading indicator
                     console.error('Error:', error);
                 });
-        }
-
-        function showPdf(pdfUrl) {
-            console.log(`Loading PDF: ${pdfUrl}`); // Debugging line
-            const pdfViewer = document.getElementById('pdfViewer');
-            pdfViewer.src = pdfUrl;  // Set the PDF URL
-            pdfViewer.style.display = 'block';  // Show the PDF viewer
         }
     </script>
 
