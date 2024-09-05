@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>arXiv Author Search</title>
+    <title>arXiv Search</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +17,7 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        input[type="text"], button {
+        input[type="text"], button, select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -32,25 +33,43 @@
 <body>
 
     <div class="container">
-        <h1>Search for arXiv Author</h1>
-        <input type="text" id="authorName" placeholder="Enter author name">
-        <button onclick="searchAuthor()">Search</button>
+        <h1>Search arXiv by Author or Title</h1>
+        
+        <!-- Search Options -->
+        <select id="searchType">
+            <option value="author">Search by Author</option>
+            <option value="title">Search by Title</option>
+        </select>
+        
+        <!-- Search Input -->
+        <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
+        <button onclick="searchArxiv()">Search</button>
 
         <div id="results"></div>
     </div>
 
     <script>
-        function searchAuthor() {
-            const authorName = document.getElementById('authorName').value;
+        function searchArxiv() {
+            const searchType = document.getElementById('searchType').value;
+            const query = document.getElementById('searchQuery').value;
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';  // Clear previous results
 
-            if (!authorName) {
-                resultsDiv.innerHTML = '<p>Please enter an author name.</p>';
+            if (!query) {
+                resultsDiv.innerHTML = '<p>Please enter a search query.</p>';
                 return;
             }
 
-            const apiUrl = `http://export.arxiv.org/api/query?search_query=au:${encodeURIComponent(authorName)}&start=0&max_results=5`;
+            // Build the search query based on type (author or title)
+            let searchField = '';
+            if (searchType === 'author') {
+                searchField = `au:${encodeURIComponent(query)}`;
+            } else if (searchType === 'title') {
+                searchField = `ti:${encodeURIComponent(query)}`;
+            }
+
+            // Use a CORS proxy to fetch the data
+            const apiUrl = `https://cors-anywhere.herokuapp.com/http://export.arxiv.org/api/query?search_query=${searchField}&start=0&max_results=5`;
 
             fetch(apiUrl)
                 .then(response => response.text())
@@ -60,7 +79,7 @@
                     const entries = xmlDoc.getElementsByTagName('entry');
 
                     if (entries.length === 0) {
-                        resultsDiv.innerHTML = '<p>No papers found for this author.</p>';
+                        resultsDiv.innerHTML = '<p>No results found for this query.</p>';
                         return;
                     }
 
