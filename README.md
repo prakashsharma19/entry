@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Author Details Search Tool</title>
+  <title>Author and Article Search Tool</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,13 +21,17 @@
       margin-bottom: 15px;
       border-radius: 5px;
     }
-    .copy-btn {
+    .copy-btn, .fetch-btn {
       background-color: #4CAF50;
       color: white;
       border: none;
       padding: 5px 10px;
       cursor: pointer;
       border-radius: 3px;
+      margin-right: 5px;
+    }
+    .fetch-btn {
+      background-color: #2196F3;
     }
   </style>
 </head>
@@ -42,7 +46,7 @@
   <div class="results" id="results"></div>
 
   <script>
-    // Function to search for author details using OpenAlex API and CrossRef API
+    // Function to search for author details using OpenAlex API, CrossRef API, and arXiv API
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -52,7 +56,7 @@
 
       // Build the OpenAlex API request URL
       const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
-
+      
       // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
         .then(response => response.json())
@@ -66,6 +70,7 @@
             data.results.forEach(work => {
               const title = work.title;
               const authors = work.authorships;
+              const arxivId = work.arxiv_id || null; // Get arXiv ID if available
 
               let authorList = '';
               authors.forEach(author => {
@@ -96,10 +101,17 @@
                 }
               });
 
+              // Fetch article from arXiv if available
+              let arxivLink = '';
+              if (arxivId) {
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">Fetch Article</a>`;
+              }
+
               const resultItem = `
                 <div class="result-item">
                   <h3>${title}</h3>
                   ${authorList}
+                  ${arxivLink}
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
