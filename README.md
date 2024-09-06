@@ -17,29 +17,29 @@
       height: 100%;
     }
     .pdf-container {
-      flex: 2;
-      padding: 20px;
+      flex: 3;
+      padding: 10px;
       background: #fff;
-      border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-    }
-    .search-container {
-      flex: 1;
-      padding: 20px;
-      background: #fff;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
+      height: 100%;
     }
     .pdf-viewer iframe {
       width: 100%;
-      height: 100%;
+      height: calc(100% - 40px);
       border: none;
     }
-    .search-container input[type="text"] {
+    .search-container {
+      flex: 2;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    input[type="text"] {
       width: calc(100% - 20px);
       padding: 10px;
       font-size: 16px;
@@ -47,7 +47,7 @@
       border: 1px solid #ccc;
       margin-bottom: 10px;
     }
-    .search-container button {
+    button {
       padding: 10px 20px;
       font-size: 16px;
       border-radius: 5px;
@@ -74,6 +74,7 @@
     }
     .results {
       margin-top: 20px;
+      overflow-y: auto;
     }
     .result-item {
       border: 1px solid #ddd;
@@ -95,8 +96,6 @@
       border-radius: 3px;
       margin-right: 5px;
       text-decoration: none;
-      display: inline-block;
-      text-align: center;
     }
     .fetch-btn {
       background-color: #2196F3;
@@ -118,13 +117,13 @@
       color: #2196F3;
     }
     h1 {
-      font-size: 16px;
+      font-size: 14px;
       margin-bottom: 10px;
     }
     iframe {
       border: none;
       width: 100%;
-      height: 90%;
+      height: 100%;
     }
   </style>
 </head>
@@ -135,7 +134,6 @@
         <input type="file" id="fileInput" accept=".pdf,.docx">
         <button class="upload-btn" onclick="handleFile()">Upload Document</button>
       </div>
-
       <div id="pdfViewer">
         <!-- PDF/Word file will be embedded here -->
       </div>
@@ -210,12 +208,10 @@
               let pdfLink = '';
               let doiLink = '';
               let pdfEmbed = '';
-              let arxivHomeLink = '';
 
               if (arxivId) {
                 arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
-                arxivHomeLink = `<a href="https://arxiv.org" target="_blank" class="fetch-btn">Visit arXiv.org</a>`;
                 pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer" width="100%" height="500px"></iframe>`;
               }
               if (doi) {
@@ -283,10 +279,10 @@
       const fileExtension = file.name.split('.').pop().toLowerCase();
 
       if (fileExtension === 'pdf') {
-        fileViewer.innerHTML = `<iframe src="${fileURL}" title="PDF Viewer" width="100%" height="90%"></iframe>`;
+        fileViewer.innerHTML = `<iframe src="${fileURL}" title="PDF Viewer" width="100%" height="100%"></iframe>`;
       } else if (fileExtension === 'docx') {
         // You would need a service that can render Word files in the browser.
-        fileViewer.innerHTML = `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="90%"></iframe>`;
+        fileViewer.innerHTML = `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="100%"></iframe>`;
       } else {
         alert('Unsupported file format. Only PDF and Word documents are allowed.');
       }
