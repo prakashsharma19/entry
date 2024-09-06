@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -41,6 +42,8 @@
   <div class="results" id="results"></div>
 
   <script>
+    const apiKey = '1e696708ab7dc6a923779f7cfc51cb00'; // Elsevier API key
+
     // Function to search articles by author name or title
     function searchArticles() {
       const query = document.getElementById('searchQuery').value;
@@ -49,48 +52,50 @@
         return;
       }
       
-      // Fetching articles from arXiv
-      fetch(`https://export.arxiv.org/api/query?search_query=all:${query}&start=0&max_results=5`)
-        .then(response => response.text())
+      // Fetching articles from Elsevier API (ScienceDirect)
+      fetch(`https://api.elsevier.com/content/search/sciencedirect?query=${encodeURIComponent(query)}&apiKey=${apiKey}`)
+        .then(response => response.json())
         .then(data => {
-          // Parsing the XML response from arXiv
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(data, "text/xml");
-          const entries = xmlDoc.getElementsByTagName("entry");
-
           // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
-          // Display results
-          for (let i = 0; i < entries.length; i++) {
-            const entry = entries[i];
-            const title = entry.getElementsByTagName('title')[0].textContent;
-            const authors = entry.getElementsByTagName('author');
-            const published = entry.getElementsByTagName('published')[0].textContent;
-            const institution = entry.getElementsByTagName('arxiv:affiliation')[0]?.textContent || 'Institution not available';
+          // Check if results exist
+          if (data && data['search-results'] && data['search-results'].entry.length > 0) {
+            // Display results
+            data['search-results'].entry.forEach(entry => {
+              const title = entry['dc:title'];
+              const authors = entry['authors'] ? entry['authors']['author'] : [];
+              const publicationName = entry['prism:publicationName'] || 'Publication not available';
+              const publicationDate = entry['prism:coverDate'] || 'Date not available';
 
-            let authorList = '';
-            for (let j = 0; j < authors.length; j++) {
-              const name = authors[j].getElementsByTagName('name')[0].textContent;
-              const email = authors[j].getElementsByTagName('arxiv:email')[0]?.textContent || 'Email not available';
-              const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Email:</strong> ${email}<br><strong>Institution:</strong> ${institution}`;
-              authorList += `
-                <div class="author-info">
-                  ${authorInfo}
-                  <button class="copy-btn" onclick="copyToClipboard('${authorInfo}')">Copy</button>
-                </div><br>
+              let authorList = '';
+              authors.forEach(author => {
+                const name = author['$'] || 'Name not available';
+                const affiliation = author['affiliation'] || 'Institution not available';
+                const email = 'Email not available'; // Elsevier API does not provide email in search results
+
+                const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Institution:</strong> ${affiliation}`;
+                authorList += `
+                  <div class="author-info">
+                    ${authorInfo}
+                    <button class="copy-btn" onclick="copyToClipboard('${authorInfo}')">Copy</button>
+                  </div><br>
+                `;
+              });
+
+              const resultItem = `
+                <div class="result-item">
+                  <h3>${title}</h3>
+                  <p><strong>Publication:</strong> ${publicationName}</p>
+                  <p><strong>Published:</strong> ${publicationDate}</p>
+                  ${authorList}
+                </div>
               `;
-            }
-
-            const resultItem = `
-              <div class="result-item">
-                <h3>${title}</h3>
-                <p><strong>Published:</strong> ${published}</p>
-                ${authorList}
-              </div>
-            `;
-            resultsContainer.innerHTML += resultItem;
+              resultsContainer.innerHTML += resultItem;
+            });
+          } else {
+            resultsContainer.innerHTML = '<p>No results found.</p>';
           }
         })
         .catch(error => {
