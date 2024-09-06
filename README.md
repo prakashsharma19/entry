@@ -85,7 +85,7 @@
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || 'Name not available';
-                
+
                 // Use raw affiliation string if available
                 const fullAffiliation = author.raw_affiliation_string || '';
 
@@ -103,14 +103,15 @@
                 const authorInfo = `
                   ${name}<br>
                   ${affiliationDetails}<br>
+                  ${country}<br>
                   ${email}<br>
                 `;
-                
+
                 // Adding a copy button for each author info
                 authorList += `
                   <div class="author-info" id="author-${name}">
                     ${authorInfo}
-                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${email}')">Copy</button>
+                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${country}, ${email}')">Copy</button>
                   </div><br>
                 `;
               });
