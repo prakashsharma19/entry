@@ -9,22 +9,28 @@
       margin: 20px;
       background-color: #f4f4f4;
       color: #333;
+      display: flex;
     }
-    h1 {
-      text-align: center;
-      color: #333;
+    .container {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
     }
     .search-container {
-      text-align: center;
-      margin-bottom: 20px;
+      flex: 1;
+      margin-right: 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .search-container input[type="text"] {
-      width: 70%;
+      width: 100%;
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      margin-right: 10px;
+      margin-bottom: 10px;
     }
     .search-container button {
       padding: 10px 20px;
@@ -42,6 +48,15 @@
     .file-upload-container input[type="file"] {
       font-size: 16px;
       padding: 5px;
+    }
+    .file-upload-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      background-color: #FFC107;
+      color: white;
+      cursor: pointer;
     }
     .results {
       margin-top: 20px;
@@ -84,6 +99,13 @@
       gap: 10px;
       margin-top: 10px;
     }
+    .pdf-viewer {
+      flex: 1;
+      padding: 20px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
     iframe {
       width: 100%;
       height: 600px;
@@ -94,19 +116,24 @@
   </style>
 </head>
 <body>
-  <h1>Search Article Details</h1>
+  <div class="container">
+    <div class="search-container">
+      <h1>Search Author Details by Paper Title or Name</h1>
+      <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
+      <button onclick="searchAuthor()">Search</button>
 
-  <div class="search-container">
-    <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
-    <button onclick="searchAuthor()">Search</button>
+      <div class="file-upload-container">
+        <input type="file" id="fileInput" accept=".pdf">
+        <button class="upload-btn" onclick="handleFile()">Upload PDF</button>
+      </div>
+
+      <div class="results" id="results"></div>
+    </div>
+
+    <div class="pdf-viewer" id="pdfViewer">
+      <!-- PDF will be embedded here -->
+    </div>
   </div>
-
-  <div class="file-upload-container">
-    <input type="file" id="fileInput" accept=".pdf" />
-    <button class="upload-btn" onclick="handleFile()">Upload PDF</button>
-  </div>
-
-  <div class="results" id="results"></div>
 
   <script>
     function searchAuthor() {
@@ -175,7 +202,7 @@
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
               }
 
-              const googleScholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(authors[0].author.display_name)}" target="_blank" class="scholar-link">Recent Articles on Google Scholar</a>`;
+              const googleScholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(authors[0].author.display_name)}" target="_blank" class="fetch-btn">Recent Articles on Google Scholar</a>`;
 
               const resultItem = `
                 <div class="result-item">
@@ -216,16 +243,16 @@
     function handleFile() {
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
-      if (file) {
+      if (file && file.type === 'application/pdf') {
         const reader = new FileReader();
         reader.onload = function(e) {
           const pdfEmbed = `<iframe src="${e.target.result}" title="PDF Viewer"></iframe>`;
-          const resultsContainer = document.getElementById('results');
-          resultsContainer.innerHTML += pdfEmbed;
+          const pdfViewer = document.getElementById('pdfViewer');
+          pdfViewer.innerHTML = pdfEmbed;
         };
         reader.readAsDataURL(file);
       } else {
-        alert('Please select a PDF file to upload.');
+        alert('Please select a valid PDF file to upload.');
       }
     }
   </script>
