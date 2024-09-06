@@ -79,17 +79,33 @@
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || 'Name not available';
-                const institution = author.institutions.length > 0 ? author.institutions[0].display_name : 'Institution not available';
+                const institutions = author.institutions || [];
+                const primaryInstitution = institutions.length > 0 ? institutions[0] : {};
+                const institution = primaryInstitution.display_name || 'Institution not available';
+                const country = primaryInstitution.country_code || 'Country not available';
+                const email = author.author.email || 'Email not available'; // Assuming email is available
+
+                // Construct the full affiliation
+                const fullAffiliation = primaryInstitution.display_name
+                  ? `${primaryInstitution.display_name}, Faculty of ${primaryInstitution.type}, ${country}`
+                  : 'Affiliation not available';
 
                 // ORCID ID (if available)
                 const orcid = author.author.orcid || null;
 
-                // Display author details
-                const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Institution:</strong> ${institution}`;
+                // Display author details in the required format
+                const authorInfo = `
+                  <strong>Name:</strong> ${name}<br>
+                  <strong>Full Affiliation:</strong> ${fullAffiliation}<br>
+                  <strong>Country:</strong> ${country}<br>
+                  <strong>Email:</strong> ${email}<br>
+                `;
+                
+                // Adding a copy button for each author info
                 authorList += `
                   <div class="author-info" id="author-${name}">
                     ${authorInfo}
-                    <button class="copy-btn" onclick="copyToClipboard('${authorInfo}')">Copy</button>
+                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${fullAffiliation}, ${country}, ${email}')">Copy</button>
                   </div><br>
                 `;
 
