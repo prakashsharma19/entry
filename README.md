@@ -42,7 +42,7 @@
   <div class="results" id="results"></div>
 
   <script>
-    // Function to search for author details using OpenAlex API
+    // Function to search for author details using OpenAlex API and CrossRef API
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -51,10 +51,10 @@
       }
 
       // Build the OpenAlex API request URL
-      const url = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
+      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
 
       // Fetch author details from OpenAlex API
-      fetch(url)
+      fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
           // Clear previous results
@@ -72,6 +72,10 @@
                 const name = author.author.display_name || 'Name not available';
                 const institution = author.institutions.length > 0 ? author.institutions[0].display_name : 'Institution not available';
 
+                // ORCID ID (if available)
+                const orcid = author.author.orcid || null;
+
+                // Display author details
                 const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Institution:</strong> ${institution}`;
                 authorList += `
                   <div class="author-info">
@@ -79,6 +83,17 @@
                     <button class="copy-btn" onclick="copyToClipboard('${authorInfo}')">Copy</button>
                   </div><br>
                 `;
+
+                // Fetch more details from ORCID if available
+                if (orcid) {
+                  fetch(`https://pub.orcid.org/v3.0/${orcid}/record`)
+                    .then(response => response.json())
+                    .then(orcidData => {
+                      const orcidAffiliations = orcidData.affiliations.map(aff => aff.organization.name).join(', ');
+                      const orcidInfo = `<strong>ORCID:</strong> ${orcid}<br><strong>Affiliations:</strong> ${orcidAffiliations}`;
+                      document.querySelector(`#author-${name}`).innerHTML += `<br>${orcidInfo}`;
+                    });
+                }
               });
 
               const resultItem = `
