@@ -1,132 +1,113 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elsevier API Search</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        input[type="text"], button {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .result {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 4px;
-            background: #f9f9f9;
-        }
-        .loading {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 18px;
-            color: #007bff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Article Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .search-container {
+      margin-bottom: 20px;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    .result-item {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+    .copy-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Research Article and Author Details</h1>
 
-    <div class="container">
-        <h1>Search Elsevier Articles</h1>
-        
-        <!-- Search Input -->
-        <input type="text" id="searchQuery" placeholder="Enter search term">
-        <button onclick="searchElsevier()">Search</button>
-        <div id="loading" class="loading" style="display: none;">Loading...</div>
-        <div id="results"></div>
-    </div>
+  <div class="search-container">
+    <input type="text" id="searchQuery" placeholder="Enter author name or article title">
+    <button onclick="searchArticles()">Search</button>
+  </div>
 
-    <script>
-        async function searchElsevier() {
-            const query = document.getElementById('searchQuery').value;
-            const resultsDiv = document.getElementById('results');
-            const loadingIndicator = document.getElementById('loading');
-            resultsDiv.innerHTML = '';  // Clear previous results
-            loadingIndicator.style.display = 'block'; // Show loading indicator
+  <div class="results" id="results"></div>
 
-            if (!query) {
-                resultsDiv.innerHTML = '<p>Please enter a search query.</p>';
-                loadingIndicator.style.display = 'none'; // Hide loading indicator
-                return;
+  <script>
+    // Function to search articles by author name or title
+    function searchArticles() {
+      const query = document.getElementById('searchQuery').value;
+      if (!query) {
+        alert('Please enter a search query');
+        return;
+      }
+      
+      // Fetching articles from arXiv
+      fetch(`https://export.arxiv.org/api/query?search_query=all:${query}&start=0&max_results=5`)
+        .then(response => response.text())
+        .then(data => {
+          // Parsing the XML response from arXiv
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(data, "text/xml");
+          const entries = xmlDoc.getElementsByTagName("entry");
+
+          // Clear previous results
+          const resultsContainer = document.getElementById('results');
+          resultsContainer.innerHTML = '';
+
+          // Display results
+          for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            const title = entry.getElementsByTagName('title')[0].textContent;
+            const authors = entry.getElementsByTagName('author');
+            const published = entry.getElementsByTagName('published')[0].textContent;
+            const institution = entry.getElementsByTagName('arxiv:affiliation')[0]?.textContent || 'Institution not available';
+
+            let authorList = '';
+            for (let j = 0; j < authors.length; j++) {
+              const name = authors[j].getElementsByTagName('name')[0].textContent;
+              const email = authors[j].getElementsByTagName('arxiv:email')[0]?.textContent || 'Email not available';
+              const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Email:</strong> ${email}<br><strong>Institution:</strong> ${institution}`;
+              authorList += `
+                <div class="author-info">
+                  ${authorInfo}
+                  <button class="copy-btn" onclick="copyToClipboard('${authorInfo}')">Copy</button>
+                </div><br>
+              `;
             }
 
-            // Build the search query
-            const apiKey = '1e696708ab7dc6a923779f7cfc51cb21'; // Your Elsevier API key
-            const searchUrl = `https://api.elsevier.com/content/search/scopus?query=${encodeURIComponent(query)}&apiKey=${apiKey}`;
+            const resultItem = `
+              <div class="result-item">
+                <h3>${title}</h3>
+                <p><strong>Published:</strong> ${published}</p>
+                ${authorList}
+              </div>
+            `;
+            resultsContainer.innerHTML += resultItem;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
 
-            try {
-                const response = await fetch(searchUrl, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (!data || !data['search-results'] || !data['search-results']['entry']) {
-                    resultsDiv.innerHTML = '<p>No results found for this query.</p>';
-                    loadingIndicator.style.display = 'none'; // Hide loading indicator
-                    return;
-                }
-
-                const entries = data['search-results']['entry'];
-
-                for (let i = 0; i < entries.length; i++) {
-                    const title = entries[i]['dc:title'] || 'No title available';
-                    const authors = entries[i]['dc:creator'] || ['No authors available'];
-                    const published = entries[i]['prism:coverDate'] || 'No publication date available';
-                    const link = entries[i]['prism:url'] || '#';
-
-                    // Create the result HTML with direct link to the article
-                    const paperDiv = document.createElement('div');
-                    paperDiv.classList.add('result');
-                    paperDiv.innerHTML = `
-                        <h3>${title}</h3>
-                        <p><strong>Authors:</strong> ${authors.join(', ')}</p>
-                        <p><strong>Published:</strong> ${published}</p>
-                        <p><a href="${link}" target="_blank">Read Full Article</a></p>
-                    `;
-                    resultsDiv.appendChild(paperDiv);
-                }
-
-                loadingIndicator.style.display = 'none'; // Hide loading indicator
-            } catch (error) {
-                resultsDiv.innerHTML = '<p>Error fetching data. Please try again later.</p>';
-                loadingIndicator.style.display = 'none'; // Hide loading indicator
-                console.error('Error:', error);
-            }
-        }
-    </script>
-
+    // Function to copy text to clipboard
+    function copyToClipboard(text) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert('Copied to clipboard!');
+    }
+  </script>
 </body>
 </html>
