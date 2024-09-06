@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -60,7 +59,6 @@
       font-size: 18px;
       color: #888;
     }
-    /* Styling the page to look more professional */
     h1 {
       text-align: center;
     }
@@ -76,6 +74,11 @@
       font-size: 16px;
       cursor: pointer;
     }
+    input[type="file"] {
+      padding: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -84,7 +87,7 @@
   <div class="container">
     <div class="left">
       <h2>Document Viewer</h2>
-      <p>Open PDF or Word file here:</p>
+      <input type="file" id="fileInput" accept=".pdf, .docx" onchange="loadFile(event)">
       <iframe id="documentViewer" title="PDF/Word Viewer"></iframe>
     </div>
 
@@ -221,14 +224,23 @@
     }
 
     // Function to load PDF or Word file in the iframe (Last page first functionality)
-    function loadDocument(url, type) {
+    function loadFile(event) {
+      const file = event.target.files[0];
       const viewer = document.getElementById('documentViewer');
-      if (type === 'pdf') {
-        // Loading the PDF file
-        viewer.src = url + '#view=fit&page=last'; // Open last page first
-      } else if (type === 'word') {
-        // For Word files
-        viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+
+      if (file) {
+        const fileURL = URL.createObjectURL(file);
+        const fileType = file.type;
+
+        if (fileType === 'application/pdf') {
+          // Load PDF in iframe (starting with the last page)
+          viewer.src = fileURL + '#view=fit&page=last';
+        } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+          // For Word files, use Microsoft Office viewer
+          viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileURL)}`;
+        } else {
+          alert('Please upload a valid PDF or Word document.');
+        }
       }
     }
   </script>
