@@ -35,6 +35,14 @@
       color: white;
       cursor: pointer;
     }
+    .file-upload-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .file-upload-container input[type="file"] {
+      font-size: 16px;
+      padding: 5px;
+    }
     .results {
       margin-top: 20px;
     }
@@ -49,7 +57,7 @@
     .author-info {
       margin-bottom: 10px;
     }
-    .copy-btn, .fetch-btn, .pdf-btn {
+    .copy-btn, .fetch-btn, .pdf-btn, .upload-btn {
       background-color: #4CAF50;
       color: white;
       border: none;
@@ -67,21 +75,14 @@
     .pdf-btn {
       background-color: #FF5722;
     }
+    .upload-btn {
+      background-color: #FFC107;
+    }
     .links-container {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-top: 10px;
-    }
-    .scholar-link {
-      background-color: #f8f9fa;
-      border: 1px solid #ddd;
-      padding: 8px 12px;
-      border-radius: 3px;
-      text-decoration: none;
-      color: #007bff;
-      display: inline-block;
-      margin-left: 10px;
     }
     iframe {
       width: 100%;
@@ -93,11 +94,16 @@
   </style>
 </head>
 <body>
-  <h1>Search Details</h1>
+  <h1>Search Article Details</h1>
 
   <div class="search-container">
     <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
     <button onclick="searchAuthor()">Search</button>
+  </div>
+
+  <div class="file-upload-container">
+    <input type="file" id="fileInput" accept=".pdf" />
+    <button class="upload-btn" onclick="handleFile()">Upload PDF</button>
   </div>
 
   <div class="results" id="results"></div>
@@ -169,7 +175,6 @@
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
               }
 
-              // Example Google Scholar search link
               const googleScholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(authors[0].author.display_name)}" target="_blank" class="scholar-link">Recent Articles on Google Scholar</a>`;
 
               const resultItem = `
@@ -206,6 +211,22 @@
       document.execCommand('copy');
       document.body.removeChild(tempInput);
       alert('Copied to clipboard!');
+    }
+
+    function handleFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const pdfEmbed = `<iframe src="${e.target.result}" title="PDF Viewer"></iframe>`;
+          const resultsContainer = document.getElementById('results');
+          resultsContainer.innerHTML += pdfEmbed;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please select a PDF file to upload.');
+      }
     }
   </script>
 </body>
