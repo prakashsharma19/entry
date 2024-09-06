@@ -121,10 +121,12 @@
               let pdfLink = '';
               let doiLink = '';
               let pdfEmbed = '';
+              let arxivHomeLink = '';
 
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article</a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
+                arxivHomeLink = `<a href="https://arxiv.org" target="_blank" class="fetch-btn">Visit arXiv.org</a>`;
                 // Embed the PDF in an iframe
                 pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer"></iframe>`;
               }
@@ -139,6 +141,7 @@
                   ${arxivLink}
                   ${pdfLink}
                   ${doiLink}
+                  ${arxivHomeLink}
                   ${pdfEmbed}
                 </div>
               `;
