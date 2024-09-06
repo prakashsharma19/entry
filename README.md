@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Research Article Search</title>
+  <title>Author Details Search Tool</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,58 +32,47 @@
   </style>
 </head>
 <body>
-  <h1>Research Article and Author Details</h1>
+  <h1>Search Author Details by Paper Title or Name</h1>
 
   <div class="search-container">
-    <input type="text" id="searchQuery" placeholder="Enter author name or article title">
-    <button onclick="searchArticles()">Search</button>
+    <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
+    <button onclick="searchAuthor()">Search</button>
   </div>
 
   <div class="results" id="results"></div>
 
   <script>
-    const apiKey = '1e696708ab7dc6a923779f7cfc51cb21'; // Elsevier API key
-
-    // Function to search articles by author name or title
-    function searchArticles() {
+    // Function to search for author details using OpenAlex API
+    function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
         alert('Please enter a search query');
         return;
       }
 
-      // Build the request URL
-      const url = `https://api.elsevier.com/content/search/sciencedirect?query=${encodeURIComponent(query)}&apiKey=${apiKey}`;
+      // Build the OpenAlex API request URL
+      const url = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
 
-      // Fetching articles from Elsevier API (ScienceDirect)
+      // Fetch author details from OpenAlex API
       fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
           // Check if results exist
-          if (data && data['search-results'] && data['search-results'].entry.length > 0) {
-            // Display results
-            data['search-results'].entry.forEach(entry => {
-              const title = entry['dc:title'];
-              const authors = entry['authors'] ? entry['authors']['author'] : [];
-              const publicationName = entry['prism:publicationName'] || 'Publication not available';
-              const publicationDate = entry['prism:coverDate'] || 'Date not available';
+          if (data.results && data.results.length > 0) {
+            data.results.forEach(work => {
+              const title = work.title;
+              const authors = work.authorships;
 
               let authorList = '';
               authors.forEach(author => {
-                const name = author['$'] || 'Name not available';
-                const affiliation = author['affiliation'] || 'Institution not available';
-                const email = 'Email not available'; // Elsevier API does not provide email in search results
+                const name = author.author.display_name || 'Name not available';
+                const institution = author.institutions.length > 0 ? author.institutions[0].display_name : 'Institution not available';
 
-                const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Institution:</strong> ${affiliation}`;
+                const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Institution:</strong> ${institution}`;
                 authorList += `
                   <div class="author-info">
                     ${authorInfo}
@@ -95,8 +84,6 @@
               const resultItem = `
                 <div class="result-item">
                   <h3>${title}</h3>
-                  <p><strong>Publication:</strong> ${publicationName}</p>
-                  <p><strong>Published:</strong> ${publicationDate}</p>
                   ${authorList}
                 </div>
               `;
@@ -108,7 +95,7 @@
         })
         .catch(error => {
           console.error('Error fetching data:', error);
-          alert('An error occurred while fetching data. Please check the console for more details.');
+          alert('An error occurred while fetching data.');
         });
     }
 
