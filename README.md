@@ -21,7 +21,7 @@
       margin-bottom: 15px;
       border-radius: 5px;
     }
-    .copy-btn, .fetch-btn {
+    .copy-btn, .fetch-btn, .pdf-btn {
       background-color: #4CAF50;
       color: white;
       border: none;
@@ -32,6 +32,9 @@
     }
     .fetch-btn {
       background-color: #2196F3;
+    }
+    .pdf-btn {
+      background-color: #FF5722;
     }
   </style>
 </head>
@@ -101,12 +104,12 @@
                 }
               });
 
-              // Fetch article from arXiv if available
+              // Generate links for arXiv
               let arxivLink = '';
-              let sourceLink = '';
+              let pdfLink = '';
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">Fetch Article</a>`;
-                sourceLink = `<br><a href="https://arxiv.org/abs/${arxivId}" target="_blank">View Source</a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article</a>`;
+                pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
               }
 
               const resultItem = `
@@ -114,7 +117,7 @@
                   <h3>${title}</h3>
                   ${authorList}
                   ${arxivLink}
-                  ${sourceLink}
+                  ${pdfLink}
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
