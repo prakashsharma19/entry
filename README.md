@@ -15,6 +15,15 @@
       width: 100%;
       height: 100%;
     }
+    .search-container {
+      flex: 1;
+      padding: 20px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
     .pdf-viewer {
       flex: 2;
       padding: 20px;
@@ -28,13 +37,6 @@
       width: 100%;
       height: 100%;
       border: none;
-    }
-    .search-container {
-      flex: 1;
-      padding: 20px;
-      background: #fff;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .search-container input[type="text"] {
       width: calc(100% - 20px);
@@ -54,21 +56,24 @@
       cursor: pointer;
     }
     .file-upload-container {
-      text-align: center;
-      margin: 20px 0;
+      text-align: left;
+      margin-bottom: 10px;
     }
     .file-upload-container input[type="file"] {
-      font-size: 16px;
+      font-size: 14px;
       padding: 5px;
     }
     .file-upload-container button {
-      padding: 10px 20px;
-      font-size: 16px;
+      padding: 6px 12px;
+      font-size: 14px;
       border-radius: 5px;
       border: none;
       background-color: #FFC107;
       color: white;
       cursor: pointer;
+    }
+    .file-upload-container button:hover {
+      background-color: #e0a800;
     }
     .results {
       margin-top: 20px;
@@ -118,26 +123,29 @@
       font-size: 18px;
       color: #2196F3;
     }
+    h1 {
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="pdf-viewer" id="pdfViewer">
-      <!-- PDF will be embedded here -->
-    </div>
-
     <div class="search-container">
-      <h1>Search Author Details by Paper Title or Name</h1>
-      <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
-      <button onclick="searchAuthor()">Search</button>
-
       <div class="file-upload-container">
         <input type="file" id="fileInput" accept=".pdf">
         <button class="upload-btn" onclick="handleFile()">Upload PDF</button>
       </div>
 
+      <h1>Search Article Details</h1>
+      <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
+      <button onclick="searchAuthor()">Search</button>
+
       <div class="results" id="results"></div>
       <div class="loading-indicator" id="loadingIndicator">Loading...</div>
+    </div>
+
+    <div class="pdf-viewer" id="pdfViewer">
+      <!-- PDF will be embedded here -->
     </div>
   </div>
 
@@ -206,7 +214,7 @@
                 arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
                 arxivHomeLink = `<a href="https://arxiv.org" target="_blank" class="fetch-btn">Visit arXiv.org</a>`;
-                pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer"></iframe>`;
+                pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer" width="100%" height="500px"></iframe>`;
               }
               if (doi) {
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
@@ -255,33 +263,24 @@
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
       if (file && file.type === 'application/pdf') {
-        const fileURL = URL.createObjectURL(file);
-        document.getElementById('pdfViewer').innerHTML = `
-          <iframe src="${fileURL}" type="application/pdf" width="100%" height="100%"></iframe>
-        `;
+        const url = URL.createObjectURL(file);
+        const pdfViewer = document.getElementById('pdfViewer');
+        pdfViewer.innerHTML = `<iframe src="${url}" title="PDF Viewer" width="100%" height="100%"></iframe>`;
       } else {
         alert('Please upload a valid PDF file.');
       }
     }
 
-    // Enable text drag and drop from PDF to search input
-    document.getElementById('pdfViewer').addEventListener('dragstart', function (event) {
-      const text = window.getSelection().toString();
-      if (text) {
-        event.dataTransfer.setData('text/plain', text);
-      }
+    document.getElementById('pdfViewer').addEventListener('dragover', function (event) {
+      event.preventDefault();
     });
 
-    document.getElementById('searchQuery').addEventListener('drop', function (event) {
+    document.getElementById('pdfViewer').addEventListener('drop', function (event) {
       event.preventDefault();
       const text = event.dataTransfer.getData('text/plain');
       if (text) {
         document.getElementById('searchQuery').value = text;
       }
-    });
-
-    document.getElementById('searchQuery').addEventListener('dragover', function (event) {
-      event.preventDefault();
     });
   </script>
 </body>
