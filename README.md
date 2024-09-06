@@ -8,27 +8,59 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
     }
     .search-container {
+      text-align: center;
       margin-bottom: 20px;
+    }
+    .search-container input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+    .search-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      background-color: #2196F3;
+      color: white;
+      cursor: pointer;
     }
     .results {
       margin-top: 20px;
     }
     .result-item {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .author-info {
+      margin-bottom: 10px;
     }
     .copy-btn, .fetch-btn, .pdf-btn {
       background-color: #4CAF50;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 8px 12px;
       cursor: pointer;
       border-radius: 3px;
       margin-right: 5px;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
     }
     .fetch-btn {
       background-color: #2196F3;
@@ -36,16 +68,18 @@
     .pdf-btn {
       background-color: #FF5722;
     }
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-      margin-top: 20px;
-    }
     .links-container {
       display: flex;
       align-items: center;
       gap: 10px;
+      margin-top: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      margin-top: 20px;
+      background-color: #fff;
     }
   </style>
 </head>
@@ -60,7 +94,6 @@
   <div class="results" id="results"></div>
 
   <script>
-    // Function to search for author details using OpenAlex API, CrossRef API, and arXiv API
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -68,60 +101,49 @@
         return;
       }
 
-      // Build the OpenAlex API request URL
       const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
 
-      // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
-          // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
-          // Check if results exist
           if (data.results && data.results.length > 0) {
             data.results.forEach(work => {
               const title = work.title;
               const authors = work.authorships;
-              const arxivId = work.arxiv_id || null; // Get arXiv ID if available
-              const doi = work.doi || null; // Get DOI if available
+              const arxivId = work.arxiv_id || null;
+              const doi = work.doi || null;
 
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || 'Name not available';
-
-                // Use raw affiliation string if available
                 const fullAffiliation = author.raw_affiliation_string || '';
-
-                // Fallback to construct address from available fields
                 const institutions = author.institutions || [];
                 const primaryInstitution = institutions.length > 0 ? institutions[0] : {};
                 const institution = primaryInstitution.display_name || 'Institution not available';
                 const country = primaryInstitution.country_code || 'Country not available';
-                const email = author.author.email || 'Email not available'; // Assuming email is available
-
-                // Construct the full affiliation in a simplified format, prioritizing raw affiliation
+                const email = author.author.email || 'Email not available';
                 const affiliationDetails = fullAffiliation || `${institution}, ${country}`;
 
-                // Direct format display
                 const authorInfo = `
-                  ${name}<br>
-                  ${affiliationDetails}<br>
-                  ${country}<br>
-                  ${email}<br>
+                  <div class="author-info">
+                    ${name}<br>
+                    ${affiliationDetails}<br>
+                    ${country}<br>
+                    ${email}<br>
+                  </div>
                 `;
 
-                // Adding a copy button for each author info
                 authorList += `
-                  <div class="author-info" id="author-${name}">
+                  <div id="author-${name}">
                     ${authorInfo}
                     <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${country}, ${email}')">Copy</button>
                   </div><br>
                 `;
               });
 
-              // Generate links for DOI and arXiv
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
@@ -132,7 +154,6 @@
                 arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
                 arxivHomeLink = `<a href="https://arxiv.org" target="_blank" class="fetch-btn">Visit arXiv.org</a>`;
-                // Embed the PDF in an iframe
                 pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer"></iframe>`;
               }
               if (doi) {
@@ -164,7 +185,6 @@
         });
     }
 
-    // Function to copy text to clipboard
     function copyToClipboard(text) {
       const tempInput = document.createElement('textarea');
       tempInput.value = text;
