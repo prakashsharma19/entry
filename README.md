@@ -9,6 +9,18 @@
       font-family: Arial, sans-serif;
       margin: 20px;
     }
+    .container {
+      display: flex;
+    }
+    .left {
+      flex: 2;
+      padding-right: 20px;
+    }
+    .right {
+      flex: 1;
+      padding-left: 20px;
+      border-left: 2px solid #ccc;
+    }
     .search-container {
       margin-bottom: 20px;
     }
@@ -38,21 +50,53 @@
     }
     iframe {
       width: 100%;
-      height: 500px;
+      height: 600px;
       border: none;
       margin-top: 20px;
+    }
+    .loading {
+      display: none;
+      margin-top: 10px;
+      font-size: 18px;
+      color: #888;
+    }
+    /* Styling the page to look more professional */
+    h1 {
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h1>Search Author Details by Paper Title or Name</h1>
 
-  <div class="search-container">
-    <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
-    <button onclick="searchAuthor()">Search</button>
-  </div>
+  <div class="container">
+    <div class="left">
+      <h2>Document Viewer</h2>
+      <p>Open PDF or Word file here:</p>
+      <iframe id="documentViewer" title="PDF/Word Viewer"></iframe>
+    </div>
 
-  <div class="results" id="results"></div>
+    <div class="right">
+      <div class="search-container">
+        <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
+        <button onclick="searchAuthor()">Search</button>
+      </div>
+      <p class="loading" id="loading">Loading...</p>
+      <div class="results" id="results"></div>
+    </div>
+  </div>
 
   <script>
     // Function to search for author details using OpenAlex API, CrossRef API, and arXiv API
@@ -63,13 +107,22 @@
         return;
       }
 
+      // Show loading indicator
+      document.getElementById('loading').style.display = 'block';
+
+      // Clean the query by removing special characters (like commas and full stops)
+      const sanitizedQuery = query.replace(/[.,]/g, '');
+
       // Build the OpenAlex API request URL
-      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
+      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(sanitizedQuery)}&per-page=5`;
 
       // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
+          // Hide loading indicator
+          document.getElementById('loading').style.display = 'none';
+
           // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
@@ -85,7 +138,7 @@
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || 'Name not available';
-                
+
                 // Use raw affiliation string if available
                 const fullAffiliation = author.raw_affiliation_string || '';
 
@@ -105,7 +158,7 @@
                   ${affiliationDetails}<br>
                   ${email}<br>
                 `;
-                
+
                 // Adding a copy button for each author info
                 authorList += `
                   <div class="author-info" id="author-${name}">
@@ -129,6 +182,8 @@
               }
               if (doi) {
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
+                // Add Google Scholar link
+                doiLink += ` <a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">Google Scholar</a>`;
               }
 
               const resultItem = `
@@ -150,6 +205,7 @@
         .catch(error => {
           console.error('Error fetching data:', error);
           alert('An error occurred while fetching data.');
+          document.getElementById('loading').style.display = 'none'; // Hide loading indicator on error
         });
     }
 
@@ -162,6 +218,18 @@
       document.execCommand('copy');
       document.body.removeChild(tempInput);
       alert('Copied to clipboard!');
+    }
+
+    // Function to load PDF or Word file in the iframe (Last page first functionality)
+    function loadDocument(url, type) {
+      const viewer = document.getElementById('documentViewer');
+      if (type === 'pdf') {
+        // Loading the PDF file
+        viewer.src = url + '#view=fit&page=last'; // Open last page first
+      } else if (type === 'word') {
+        // For Word files
+        viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+      }
     }
   </script>
 </body>
