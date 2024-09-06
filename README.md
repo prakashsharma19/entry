@@ -73,6 +73,16 @@
       gap: 10px;
       margin-top: 10px;
     }
+    .scholar-link {
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      border-radius: 3px;
+      text-decoration: none;
+      color: #007bff;
+      display: inline-block;
+      margin-left: 10px;
+    }
     iframe {
       width: 100%;
       height: 600px;
@@ -83,7 +93,7 @@
   </style>
 </head>
 <body>
-  <h1>Search Details</h1>
+  <h1>Search Author Details by Paper Title or Name</h1>
 
   <div class="search-container">
     <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
@@ -159,6 +169,9 @@
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
               }
 
+              // Example Google Scholar search link
+              const googleScholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(authors[0].author.display_name)}" target="_blank" class="scholar-link">Recent Articles on Google Scholar</a>`;
+
               const resultItem = `
                 <div class="result-item">
                   <h3>${title}</h3>
@@ -167,6 +180,7 @@
                     ${doiLink}
                     ${arxivLink}
                     ${arxivHomeLink}
+                    ${googleScholarLink}
                   </div>
                   ${pdfLink}
                   ${pdfEmbed}
