@@ -83,7 +83,7 @@
   </style>
 </head>
 <body>
-  <h1>Search Author Details by Paper Title or Name</h1>
+  <h1>Search Details</h1>
 
   <div class="search-container">
     <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
