@@ -56,7 +56,7 @@
 
       // Build the OpenAlex API request URL
       const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
-      
+
       // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
         .then(response => response.json())
@@ -83,7 +83,7 @@
                 // Display author details
                 const authorInfo = `<strong>Name:</strong> ${name}<br><strong>Institution:</strong> ${institution}`;
                 authorList += `
-                  <div class="author-info">
+                  <div class="author-info" id="author-${name}">
                     ${authorInfo}
                     <button class="copy-btn" onclick="copyToClipboard('${authorInfo}')">Copy</button>
                   </div><br>
@@ -103,8 +103,10 @@
 
               // Fetch article from arXiv if available
               let arxivLink = '';
+              let sourceLink = '';
               if (arxivId) {
                 arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">Fetch Article</a>`;
+                sourceLink = `<br><a href="https://arxiv.org/abs/${arxivId}" target="_blank">View Source</a>`;
               }
 
               const resultItem = `
@@ -112,6 +114,7 @@
                   <h3>${title}</h3>
                   ${authorList}
                   ${arxivLink}
+                  ${sourceLink}
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
