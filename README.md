@@ -2,30 +2,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Author and Article Search Tool</title>
+  <title>Article Search</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-      color: #333;
+      margin: 0;
       display: flex;
+      height: 100vh;
     }
     .container {
       display: flex;
       width: 100%;
-      justify-content: space-between;
+      height: 100%;
+    }
+    .pdf-viewer {
+      flex: 2;
+      padding: 20px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+    }
+    .pdf-viewer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
     .search-container {
       flex: 1;
-      margin-right: 20px;
       padding: 20px;
       background: #fff;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .search-container input[type="text"] {
-      width: 100%;
+      width: calc(100% - 20px);
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
@@ -99,24 +111,21 @@
       gap: 10px;
       margin-top: 10px;
     }
-    .pdf-viewer {
-      flex: 1;
-      padding: 20px;
-      background: #fff;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
+    .loading-indicator {
+      display: none;
+      text-align: center;
       margin-top: 20px;
-      background-color: #fff;
+      font-size: 18px;
+      color: #2196F3;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="pdf-viewer" id="pdfViewer">
+      <!-- PDF will be embedded here -->
+    </div>
+
     <div class="search-container">
       <h1>Search Author Details by Paper Title or Name</h1>
       <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
@@ -128,10 +137,7 @@
       </div>
 
       <div class="results" id="results"></div>
-    </div>
-
-    <div class="pdf-viewer" id="pdfViewer">
-      <!-- PDF will be embedded here -->
+      <div class="loading-indicator" id="loadingIndicator">Loading...</div>
     </div>
   </div>
 
@@ -143,6 +149,9 @@
         return;
       }
 
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      loadingIndicator.style.display = 'block';
+
       const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
 
       fetch(openAlexUrl)
@@ -150,6 +159,7 @@
         .then(data => {
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
+          loadingIndicator.style.display = 'none';
 
           if (data.results && data.results.length > 0) {
             data.results.forEach(work => {
@@ -226,6 +236,7 @@
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          loadingIndicator.style.display = 'none';
           alert('An error occurred while fetching data.');
         });
     }
@@ -244,17 +255,34 @@
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
       if (file && file.type === 'application/pdf') {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const pdfEmbed = `<iframe src="${e.target.result}" title="PDF Viewer"></iframe>`;
-          const pdfViewer = document.getElementById('pdfViewer');
-          pdfViewer.innerHTML = pdfEmbed;
-        };
-        reader.readAsDataURL(file);
+        const fileURL = URL.createObjectURL(file);
+        document.getElementById('pdfViewer').innerHTML = `
+          <iframe src="${fileURL}" type="application/pdf" width="100%" height="100%"></iframe>
+        `;
       } else {
-        alert('Please select a valid PDF file to upload.');
+        alert('Please upload a valid PDF file.');
       }
     }
+
+    // Enable text drag and drop from PDF to search input
+    document.getElementById('pdfViewer').addEventListener('dragstart', function (event) {
+      const text = window.getSelection().toString();
+      if (text) {
+        event.dataTransfer.setData('text/plain', text);
+      }
+    });
+
+    document.getElementById('searchQuery').addEventListener('drop', function (event) {
+      event.preventDefault();
+      const text = event.dataTransfer.getData('text/plain');
+      if (text) {
+        document.getElementById('searchQuery').value = text;
+      }
+    });
+
+    document.getElementById('searchQuery').addEventListener('dragover', function (event) {
+      event.preventDefault();
+    });
   </script>
 </body>
 </html>
