@@ -2,18 +2,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Article Search</title>
+  <title>Author and Article Search Tool</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       display: flex;
       height: 100vh;
+      background-color: #f4f4f4;
     }
     .container {
       display: flex;
       width: 100%;
       height: 100%;
+    }
+    .pdf-container {
+      flex: 2;
+      padding: 20px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
     }
     .search-container {
       flex: 1;
@@ -23,15 +33,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-    }
-    .pdf-viewer {
-      flex: 2;
-      padding: 20px;
-      background: #fff;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
-      position: relative;
     }
     .pdf-viewer iframe {
       width: 100%;
@@ -56,7 +57,6 @@
       cursor: pointer;
     }
     .file-upload-container {
-      text-align: left;
       margin-bottom: 10px;
     }
     .file-upload-container input[type="file"] {
@@ -72,9 +72,6 @@
       color: white;
       cursor: pointer;
     }
-    .file-upload-container button:hover {
-      background-color: #e0a800;
-    }
     .results {
       margin-top: 20px;
     }
@@ -89,7 +86,7 @@
     .author-info {
       margin-bottom: 10px;
     }
-    .copy-btn, .fetch-btn, .pdf-btn, .upload-btn {
+    .copy-btn, .fetch-btn, .pdf-btn {
       background-color: #4CAF50;
       color: white;
       border: none;
@@ -107,9 +104,6 @@
     .pdf-btn {
       background-color: #FF5722;
     }
-    .upload-btn {
-      background-color: #FFC107;
-    }
     .links-container {
       display: flex;
       align-items: center;
@@ -124,28 +118,36 @@
       color: #2196F3;
     }
     h1 {
-      font-size: 18px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 90%;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="search-container">
+    <div class="pdf-container">
       <div class="file-upload-container">
-        <input type="file" id="fileInput" accept=".pdf">
-        <button class="upload-btn" onclick="handleFile()">Upload PDF</button>
+        <input type="file" id="fileInput" accept=".pdf,.docx">
+        <button class="upload-btn" onclick="handleFile()">Upload Document</button>
       </div>
 
-      <h1>Search Article Details</h1>
+      <div id="pdfViewer">
+        <!-- PDF/Word file will be embedded here -->
+      </div>
+    </div>
+
+    <div class="search-container">
+      <h1>Search Author Details by Paper Title or Name</h1>
       <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
       <button onclick="searchAuthor()">Search</button>
 
       <div class="results" id="results"></div>
       <div class="loading-indicator" id="loadingIndicator">Loading...</div>
-    </div>
-
-    <div class="pdf-viewer" id="pdfViewer">
-      <!-- PDF will be embedded here -->
     </div>
   </div>
 
@@ -221,6 +223,8 @@
               }
 
               const googleScholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(authors[0].author.display_name)}" target="_blank" class="fetch-btn">Recent Articles on Google Scholar</a>`;
+              const scienceGateLink = `<a href="https://www.sciencegate.app/search?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">ScienceGate</a>`;
+              const corsLink = `<a href="https://www.corescholar.org/search?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">CORS Scholar</a>`;
 
               const resultItem = `
                 <div class="result-item">
@@ -229,48 +233,66 @@
                   <div class="links-container">
                     ${doiLink}
                     ${arxivLink}
-                    ${arxivHomeLink}
                     ${googleScholarLink}
+                    ${scienceGateLink}
+                    ${corsLink}
                   </div>
-                  ${pdfLink}
                   ${pdfEmbed}
                 </div>
               `;
+
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            resultsContainer.innerHTML = '<p>No results found.</p>';
+            const googleSearchLink = `<a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" class="fetch-btn">Search on Google</a>`;
+            resultsContainer.innerHTML = `
+              <div class="result-item">
+                <h3>No results found. Try a Google Search:</h3>
+                ${googleSearchLink}
+              </div>
+            `;
           }
         })
         .catch(error => {
-          console.error('Error fetching data:', error);
+          console.error('Error:', error);
           loadingIndicator.style.display = 'none';
-          alert('An error occurred while fetching data.');
         });
     }
 
     function copyToClipboard(text) {
-      const tempInput = document.createElement('textarea');
+      const tempInput = document.createElement('input');
       tempInput.value = text;
       document.body.appendChild(tempInput);
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
-      alert('Copied to clipboard!');
+      alert('Copied to clipboard');
     }
 
     function handleFile() {
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
-      if (file && file.type === 'application/pdf') {
-        const url = URL.createObjectURL(file);
-        const pdfViewer = document.getElementById('pdfViewer');
-        pdfViewer.innerHTML = `<iframe src="${url}" title="PDF Viewer" width="100%" height="100%"></iframe>`;
+      const fileViewer = document.getElementById('pdfViewer');
+
+      if (!file) {
+        alert('Please upload a valid file.');
+        return;
+      }
+
+      const fileURL = URL.createObjectURL(file);
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      if (fileExtension === 'pdf') {
+        fileViewer.innerHTML = `<iframe src="${fileURL}" title="PDF Viewer" width="100%" height="90%"></iframe>`;
+      } else if (fileExtension === 'docx') {
+        // You would need a service that can render Word files in the browser.
+        fileViewer.innerHTML = `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="90%"></iframe>`;
       } else {
-        alert('Please upload a valid PDF file.');
+        alert('Unsupported file format. Only PDF and Word documents are allowed.');
       }
     }
 
+    // Drag and drop text functionality
     document.getElementById('pdfViewer').addEventListener('dragover', function (event) {
       event.preventDefault();
     });
