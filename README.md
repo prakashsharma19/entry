@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -34,6 +35,12 @@
     }
     .pdf-btn {
       background-color: #FF5722;
+    }
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -106,26 +113,19 @@
                     <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${email}')">Copy</button>
                   </div><br>
                 `;
-
-                // Fetch more details from ORCID if available
-                const orcid = author.author.orcid || null;
-                if (orcid) {
-                  fetch(`https://pub.orcid.org/v3.0/${orcid}/record`)
-                    .then(response => response.json())
-                    .then(orcidData => {
-                      const orcidAffiliations = orcidData.affiliations.map(aff => aff.organization.name).join(', ');
-                      document.querySelector(`#author-${name}`).innerHTML += `<br>${orcidAffiliations}`;
-                    });
-                }
               });
 
               // Generate links for arXiv and DOI
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
+              let pdfEmbed = '';
+
               if (arxivId) {
                 arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
+                // Embed the PDF in an iframe
+                pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer"></iframe>`;
               }
               if (doi) {
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
@@ -138,6 +138,7 @@
                   ${arxivLink}
                   ${pdfLink}
                   ${doiLink}
+                  ${pdfEmbed}
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
