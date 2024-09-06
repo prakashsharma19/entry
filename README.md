@@ -79,22 +79,24 @@
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || 'Name not available';
+                
+                // Use raw affiliation string if available
+                const fullAffiliation = author.raw_affiliation_string || '';
+
+                // Fallback to construct address from available fields
                 const institutions = author.institutions || [];
                 const primaryInstitution = institutions.length > 0 ? institutions[0] : {};
                 const institution = primaryInstitution.display_name || 'Institution not available';
                 const country = primaryInstitution.country_code || 'Country not available';
                 const email = author.author.email || 'Email not available'; // Assuming email is available
 
-                // Construct the full affiliation in a simplified format
-                const fullAffiliation = primaryInstitution.display_name
-                  ? `${primaryInstitution.display_name}, Faculty of ${primaryInstitution.type}, ${country}`
-                  : 'Affiliation not available';
+                // Construct the full affiliation in a simplified format, prioritizing raw affiliation
+                const affiliationDetails = fullAffiliation || `${institution}, ${country}`;
 
                 // Direct format display
                 const authorInfo = `
                   ${name}<br>
-                  ${fullAffiliation}<br>
-                  ${country}<br>
+                  ${affiliationDetails}<br>
                   ${email}<br>
                 `;
                 
@@ -102,7 +104,7 @@
                 authorList += `
                   <div class="author-info" id="author-${name}">
                     ${authorInfo}
-                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${fullAffiliation}, ${country}, ${email}')">Copy</button>
+                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${email}')">Copy</button>
                   </div><br>
                 `;
 
@@ -113,8 +115,7 @@
                     .then(response => response.json())
                     .then(orcidData => {
                       const orcidAffiliations = orcidData.affiliations.map(aff => aff.organization.name).join(', ');
-                      const orcidInfo = `${orcidAffiliations}`;
-                      document.querySelector(`#author-${name}`).innerHTML += `<br>${orcidInfo}`;
+                      document.querySelector(`#author-${name}`).innerHTML += `<br>${orcidAffiliations}`;
                     });
                 }
               });
