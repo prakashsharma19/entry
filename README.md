@@ -85,20 +85,17 @@
                 const country = primaryInstitution.country_code || 'Country not available';
                 const email = author.author.email || 'Email not available'; // Assuming email is available
 
-                // Construct the full affiliation
+                // Construct the full affiliation in a simplified format
                 const fullAffiliation = primaryInstitution.display_name
                   ? `${primaryInstitution.display_name}, Faculty of ${primaryInstitution.type}, ${country}`
                   : 'Affiliation not available';
 
-                // ORCID ID (if available)
-                const orcid = author.author.orcid || null;
-
-                // Display author details in the required format
+                // Direct format display
                 const authorInfo = `
-                  <strong>Name:</strong> ${name}<br>
-                  <strong>Full Affiliation:</strong> ${fullAffiliation}<br>
-                  <strong>Country:</strong> ${country}<br>
-                  <strong>Email:</strong> ${email}<br>
+                  ${name}<br>
+                  ${fullAffiliation}<br>
+                  ${country}<br>
+                  ${email}<br>
                 `;
                 
                 // Adding a copy button for each author info
@@ -110,12 +107,13 @@
                 `;
 
                 // Fetch more details from ORCID if available
+                const orcid = author.author.orcid || null;
                 if (orcid) {
                   fetch(`https://pub.orcid.org/v3.0/${orcid}/record`)
                     .then(response => response.json())
                     .then(orcidData => {
                       const orcidAffiliations = orcidData.affiliations.map(aff => aff.organization.name).join(', ');
-                      const orcidInfo = `<strong>ORCID:</strong> ${orcid}<br><strong>Affiliations:</strong> ${orcidAffiliations}`;
+                      const orcidInfo = `${orcidAffiliations}`;
                       document.querySelector(`#author-${name}`).innerHTML += `<br>${orcidInfo}`;
                     });
                 }
