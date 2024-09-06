@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -42,7 +41,7 @@
   <div class="results" id="results"></div>
 
   <script>
-    const apiKey = '1e696708ab7dc6a923779f7cfc51cb21'; // Elsevier API key
+    const apiKey = '1e696708ab7dc6a923779f7cfc51cb00'; // Elsevier API key
 
     // Function to search articles by author name or title
     function searchArticles() {
@@ -54,17 +53,25 @@
       
       // Fetching articles from Elsevier API (ScienceDirect)
       fetch(`https://api.elsevier.com/content/search/sciencedirect?query=${encodeURIComponent(query)}&apiKey=${apiKey}`)
-        .then(response => response.json())
+        .then(response => {
+          // Check if the response is successful
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
         .then(data => {
+          console.log('API Response:', data); // Log the full response for debugging
+
           // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
           // Check if results exist
-          if (data && data['search-results'] && data['search-results'].entry.length > 0) {
+          if (data && data['search-results'] && data['search-results'].entry && data['search-results'].entry.length > 0) {
             // Display results
             data['search-results'].entry.forEach(entry => {
-              const title = entry['dc:title'];
+              const title = entry['dc:title'] || 'Title not available';
               const authors = entry['authors'] ? entry['authors']['author'] : [];
               const publicationName = entry['prism:publicationName'] || 'Publication not available';
               const publicationDate = entry['prism:coverDate'] || 'Date not available';
@@ -100,6 +107,7 @@
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          alert('There was an error fetching data. Please check the console for more details.');
         });
     }
 
