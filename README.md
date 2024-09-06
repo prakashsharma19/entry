@@ -42,6 +42,11 @@
       border: none;
       margin-top: 20px;
     }
+    .links-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
   </style>
 </head>
 <body>
@@ -116,7 +121,7 @@
                 `;
               });
 
-              // Generate links for arXiv and DOI
+              // Generate links for DOI and arXiv
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
@@ -138,10 +143,12 @@
                 <div class="result-item">
                   <h3>${title}</h3>
                   ${authorList}
-                  ${arxivLink}
+                  <div class="links-container">
+                    ${doiLink}
+                    ${arxivLink}
+                    ${arxivHomeLink}
+                  </div>
                   ${pdfLink}
-                  ${doiLink}
-                  ${arxivHomeLink}
                   ${pdfEmbed}
                 </div>
               `;
