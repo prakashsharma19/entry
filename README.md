@@ -42,7 +42,7 @@
   <div class="results" id="results"></div>
 
   <script>
-    const apiKey = '1e696708ab7dc6a923779f7cfc51cb00'; // Elsevier API key
+    const apiKey = '1e696708ab7dc6a923779f7cfc51cb21'; // Elsevier API key
 
     // Function to search articles by author name or title
     function searchArticles() {
