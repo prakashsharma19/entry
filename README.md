@@ -6,96 +6,28 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      height: 100vh;
-      background-color: #f4f4f4;
-    }
-    .container {
-      display: flex;
-      width: 100%;
-      height: 100%;
-    }
-    .pdf-container {
-      flex: 3;
-      padding: 10px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    .pdf-viewer iframe {
-      width: 100%;
-      height: calc(100% - 40px);
-      border: none;
+      margin: 20px;
     }
     .search-container {
-      flex: 2;
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    input[type="text"] {
-      width: calc(100% - 20px);
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: none;
-      background-color: #2196F3;
-      color: white;
-      cursor: pointer;
-    }
-    .file-upload-container {
-      margin-bottom: 10px;
-    }
-    .file-upload-container input[type="file"] {
-      font-size: 14px;
-      padding: 5px;
-    }
-    .file-upload-container button {
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 5px;
-      border: none;
-      background-color: #FFC107;
-      color: white;
-      cursor: pointer;
+      margin-bottom: 20px;
     }
     .results {
       margin-top: 20px;
-      overflow-y: auto;
     }
     .result-item {
-      border: 1px solid #ddd;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      background-color: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .author-info {
-      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
     }
     .copy-btn, .fetch-btn, .pdf-btn {
       background-color: #4CAF50;
       color: white;
       border: none;
-      padding: 8px 12px;
+      padding: 5px 10px;
       cursor: pointer;
       border-radius: 3px;
       margin-right: 5px;
-      text-decoration: none;
     }
     .fetch-btn {
       background-color: #2196F3;
@@ -103,53 +35,20 @@
     .pdf-btn {
       background-color: #FF5722;
     }
-    .links-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .loading-indicator {
-      display: none;
-      text-align: center;
-      margin-top: 20px;
-      font-size: 18px;
-      color: #2196F3;
-    }
-    h1 {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
-    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="pdf-container">
-      <div class="file-upload-container">
-        <input type="file" id="fileInput" accept=".pdf,.docx">
-        <button class="upload-btn" onclick="handleFile()">Upload Document</button>
-      </div>
-      <div id="pdfViewer">
-        <!-- PDF/Word file will be embedded here -->
-      </div>
-    </div>
+  <h1>Search Author Details by Paper Title or Name</h1>
 
-    <div class="search-container">
-      <h1>Search Author Details by Paper Title or Name</h1>
-      <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
-      <button onclick="searchAuthor()">Search</button>
-
-      <div class="results" id="results"></div>
-      <div class="loading-indicator" id="loadingIndicator">Loading...</div>
-    </div>
+  <div class="search-container">
+    <input type="text" id="searchQuery" placeholder="Enter author name or paper title">
+    <button onclick="searchAuthor()">Search</button>
   </div>
 
+  <div class="results" id="results"></div>
+
   <script>
+    // Function to search for author details using OpenAlex API, CrossRef API, and arXiv API
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -157,149 +56,112 @@
         return;
       }
 
-      const loadingIndicator = document.getElementById('loadingIndicator');
-      loadingIndicator.style.display = 'block';
-
+      // Build the OpenAlex API request URL
       const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
 
+      // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
+          // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
-          loadingIndicator.style.display = 'none';
 
+          // Check if results exist
           if (data.results && data.results.length > 0) {
             data.results.forEach(work => {
               const title = work.title;
               const authors = work.authorships;
-              const arxivId = work.arxiv_id || null;
-              const doi = work.doi || null;
+              const arxivId = work.arxiv_id || null; // Get arXiv ID if available
+              const doi = work.doi || null; // Get DOI if available
 
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || 'Name not available';
+                
+                // Use raw affiliation string if available
                 const fullAffiliation = author.raw_affiliation_string || '';
+
+                // Fallback to construct address from available fields
                 const institutions = author.institutions || [];
                 const primaryInstitution = institutions.length > 0 ? institutions[0] : {};
                 const institution = primaryInstitution.display_name || 'Institution not available';
                 const country = primaryInstitution.country_code || 'Country not available';
-                const email = author.author.email || 'Email not available';
+                const email = author.author.email || 'Email not available'; // Assuming email is available
+
+                // Construct the full affiliation in a simplified format, prioritizing raw affiliation
                 const affiliationDetails = fullAffiliation || `${institution}, ${country}`;
 
+                // Direct format display
                 const authorInfo = `
-                  <div class="author-info">
-                    ${name}<br>
-                    ${affiliationDetails}<br>
-                    ${country}<br>
-                    ${email}<br>
-                  </div>
+                  ${name}<br>
+                  ${affiliationDetails}<br>
+                  ${email}<br>
                 `;
-
+                
+                // Adding a copy button for each author info
                 authorList += `
-                  <div id="author-${name}">
+                  <div class="author-info" id="author-${name}">
                     ${authorInfo}
-                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${country}, ${email}')">Copy</button>
+                    <button class="copy-btn" onclick="copyToClipboard('${name}, ${affiliationDetails}, ${email}')">Copy</button>
                   </div><br>
                 `;
+
+                // Fetch more details from ORCID if available
+                const orcid = author.author.orcid || null;
+                if (orcid) {
+                  fetch(`https://pub.orcid.org/v3.0/${orcid}/record`)
+                    .then(response => response.json())
+                    .then(orcidData => {
+                      const orcidAffiliations = orcidData.affiliations.map(aff => aff.organization.name).join(', ');
+                      document.querySelector(`#author-${name}`).innerHTML += `<br>${orcidAffiliations}`;
+                    });
+                }
               });
 
+              // Generate links for arXiv and DOI
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
-              let pdfEmbed = '';
-
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
-                pdfEmbed = `<iframe src="https://arxiv.org/pdf/${arxivId}" title="PDF Viewer" width="100%" height="500px"></iframe>`;
               }
               if (doi) {
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
               }
 
-              const googleScholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(authors[0].author.display_name)}" target="_blank" class="fetch-btn">Recent Articles on Google Scholar</a>`;
-              const scienceGateLink = `<a href="https://www.sciencegate.app/search?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">ScienceGate</a>`;
-              const corsLink = `<a href="https://www.corescholar.org/search?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">CORS Scholar</a>`;
-
               const resultItem = `
                 <div class="result-item">
                   <h3>${title}</h3>
                   ${authorList}
-                  <div class="links-container">
-                    ${doiLink}
-                    ${arxivLink}
-                    ${googleScholarLink}
-                    ${scienceGateLink}
-                    ${corsLink}
-                  </div>
-                  ${pdfEmbed}
+                  ${arxivLink}
+                  ${pdfLink}
+                  ${doiLink}
                 </div>
               `;
-
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            const googleSearchLink = `<a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" class="fetch-btn">Search on Google</a>`;
-            resultsContainer.innerHTML = `
-              <div class="result-item">
-                <h3>No results found. Try a Google Search:</h3>
-                ${googleSearchLink}
-              </div>
-            `;
+            resultsContainer.innerHTML = '<p>No results found.</p>';
           }
         })
         .catch(error => {
-          console.error('Error:', error);
-          loadingIndicator.style.display = 'none';
+          console.error('Error fetching data:', error);
+          alert('An error occurred while fetching data.');
         });
     }
 
+    // Function to copy text to clipboard
     function copyToClipboard(text) {
-      const tempInput = document.createElement('input');
+      const tempInput = document.createElement('textarea');
       tempInput.value = text;
       document.body.appendChild(tempInput);
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
-      alert('Copied to clipboard');
+      alert('Copied to clipboard!');
     }
-
-    function handleFile() {
-      const fileInput = document.getElementById('fileInput');
-      const file = fileInput.files[0];
-      const fileViewer = document.getElementById('pdfViewer');
-
-      if (!file) {
-        alert('Please upload a valid file.');
-        return;
-      }
-
-      const fileURL = URL.createObjectURL(file);
-      const fileExtension = file.name.split('.').pop().toLowerCase();
-
-      if (fileExtension === 'pdf') {
-        fileViewer.innerHTML = `<iframe src="${fileURL}" title="PDF Viewer" width="100%" height="100%"></iframe>`;
-      } else if (fileExtension === 'docx') {
-        // You would need a service that can render Word files in the browser.
-        fileViewer.innerHTML = `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="100%"></iframe>`;
-      } else {
-        alert('Unsupported file format. Only PDF and Word documents are allowed.');
-      }
-    }
-
-    // Drag and drop text functionality
-    document.getElementById('pdfViewer').addEventListener('dragover', function (event) {
-      event.preventDefault();
-    });
-
-    document.getElementById('pdfViewer').addEventListener('drop', function (event) {
-      event.preventDefault();
-      const text = event.dataTransfer.getData('text/plain');
-      if (text) {
-        document.getElementById('searchQuery').value = text;
-      }
-    });
   </script>
 </body>
 </html>
