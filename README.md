@@ -106,7 +106,7 @@
   </div>
 
   <script>
-    // Function to search for author details using OpenAlex API and arXiv API via PHP
+    // Function to search for author details using OpenAlex API and arXiv API
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -117,46 +117,68 @@
       // Show loading indicator
       document.getElementById('loading').style.display = 'block';
 
-      // Clean the query
+      // Clean the query and split into parts to handle full citation, title, author, etc.
       const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
 
-      // Fetch author details from OpenAlex API
+      // Build the OpenAlex API request URL
       const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(sanitizedQuery)}&per-page=5`;
 
+      // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
+          // Hide loading indicator
           document.getElementById('loading').style.display = 'none';
 
+          // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
-          // Check if OpenAlex has results
+          // Check if results exist
           if (data.results && data.results.length > 0) {
             data.results.forEach(work => {
               const title = work.title;
               const authors = work.authorships;
-              const arxivId = work.arxiv_id || null;
-              const doi = work.doi || null;
+              const arxivId = work.arxiv_id || null; // Get arXiv ID if available
+              const doi = work.doi || null; // Get DOI if available
 
               let authorList = '';
               authors.forEach(author => {
                 const name = author.author.display_name || '';
-                const affiliation = author.raw_affiliation_string || '';
+                const fullAffiliation = author.raw_affiliation_string || '';
+                const institutions = author.institutions || [];
+                const primaryInstitution = institutions.length > 0 ? institutions[0] : {};
+                const institution = primaryInstitution.display_name || '';
+                const country = primaryInstitution.country_code || '';
                 const email = author.author.email || '';
-                authorList += `<div>${name} ${affiliation ? ' - ' + affiliation : ''} ${email ? '<br>' + email : ''}</div><br>`;
+
+                // Only display fields that are available
+                const affiliationDetails = fullAffiliation || `${institution}${country ? ', ' + country : ''}`;
+                const emailDisplay = email ? `<br>${email}<br>` : '';
+
+                if (name || affiliationDetails || email) {
+                  authorList += `
+                    <div class="author-info">
+                      ${name ? name + '<br>' : ''}
+                      ${affiliationDetails ? affiliationDetails + '<br>' : ''}
+                      ${emailDisplay}
+                    </div><br>
+                  `;
+                }
               });
 
+              // Generate links for arXiv and DOI
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
 
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View on arXiv</a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article (arXiv)</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
               }
               if (doi) {
-                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">DOI Link</a>`;
+                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
+                doiLink += ` <a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">Google Scholar</a>`;
               }
 
               const resultItem = `
@@ -171,51 +193,64 @@
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            resultsContainer.innerHTML = `<p>No results found in OpenAlex.</p>`;
+            // No results found, suggest searching on Google Scholar
+            resultsContainer.innerHTML = `
+              <p>No results found in the database.</p>
+              <button class="search-btn" onclick="searchOnGoogleScholar('${query}')">Try Google Scholar</button>
+            `;
           }
         })
         .catch(error => {
-          console.error('Error fetching OpenAlex data:', error);
-          alert('An error occurred while fetching data from OpenAlex.');
-          document.getElementById('loading').style.display = 'none';
+          console.error('Error fetching data:', error);
+          alert('An error occurred while fetching data.');
+          document.getElementById('loading').style.display = 'none'; // Hide loading indicator on error
         });
 
-      // Fetch articles from arXiv API via PHP
-      const arxivApiUrl = `arxiv.php?query=${encodeURIComponent(sanitizedQuery)}`;
+      // Fetch arXiv data
+      fetchArxivData(query);
+    }
 
-      fetch(arxivApiUrl)
+    // Function to fetch data from arXiv API
+    function fetchArxivData(query) {
+      const arxivUrl = `http://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&start=0&max_results=5`;
+      
+      fetch(arxivUrl)
         .then(response => response.text())
+        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
         .then(data => {
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(data, "application/xml");
-          const entries = xmlDoc.getElementsByTagName("entry");
+          const entries = data.getElementsByTagName('entry');
+          const resultsContainer = document.getElementById('results');
 
-          if (entries.length > 0) {
-            const entry = entries[0];
-            const title = entry.getElementsByTagName("title")[0].textContent;
-            const pdfLink = entry.getElementsByTagName("id")[0].textContent.replace('/abs/', '/pdf/') + '.pdf';
+          for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            const title = entry.getElementsByTagName('title')[0].textContent;
+            const summary = entry.getElementsByTagName('summary')[0].textContent;
+            const link = entry.getElementsByTagName('link')[0].getAttribute('href');
+            const pdfLink = link.replace('/abs/', '/pdf/');
 
             const resultItem = `
               <div class="result-item">
                 <h3>${title}</h3>
-                <a href="${pdfLink}" target="_blank" class="pdf-btn">Download PDF from arXiv</a>
+                <p>${summary}</p>
+                <a href="${link}" target="_blank" class="fetch-btn">View Article (arXiv)</a>
+                <a href="${pdfLink}" target="_blank" class="pdf-btn">Download PDF</a>
               </div>
             `;
-            document.getElementById('results').innerHTML += resultItem;
+            resultsContainer.innerHTML += resultItem;
           }
         })
         .catch(error => {
           console.error('Error fetching arXiv data:', error);
-          alert('An error occurred while fetching data from arXiv.');
         });
     }
 
+    // Function to search on Google Scholar when no results found
     function searchOnGoogleScholar(query) {
       const scholarUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`;
       window.open(scholarUrl, '_blank');
     }
 
-    // Function to load PDF or Word file in the iframe (Google Docs/OneDrive for Word files)
+    // Function to load PDF or Word file in the iframe (supports both .doc and .docx files)
     function loadFile(event) {
       const file = event.target.files[0];
       const viewer = document.getElementById('documentViewer');
@@ -225,16 +260,11 @@
         const fileType = file.type;
 
         if (fileType === 'application/pdf') {
+          // Load PDF in iframe (starting with the last page)
           viewer.src = fileURL + '#view=fit&page=last';
         } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-          // Option 1: Google Docs Viewer (only for public URLs)
-          // viewer.src = `https://docs.google.com/viewer?url=${encodeURIComponent(fileURL)}&embedded=true`;
-
-          // Option 2: Alert for Word files suggesting upload to OneDrive or Google Drive
-          alert('For Word files, please upload them to a cloud service (like Google Drive or OneDrive) for viewing.');
-          
-          // Option 3: Embed OneDrive document (example URL, adjust accordingly)
-          // viewer.src = "https://onedrive.live.com/embed?cid=YOURCID&resid=YOURRESID&authkey=YOURAUTHKEY&em=2";
+          // For Word files, use Google Docs viewer (more reliable)
+          viewer.src = `https://docs.google.com/viewer?url=${encodeURIComponent(fileURL)}&embedded=true`;
         } else {
           alert('Please upload a valid PDF, DOC, or DOCX document.');
         }
