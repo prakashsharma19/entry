@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -182,17 +183,6 @@
           console.error('Error fetching data:', error);
           alert('An error occurred while fetching data.');
         });
-    }
-
-    // Function to copy text to clipboard
-    function copyToClipboard(text) {
-      const tempInput = document.createElement('textarea');
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      alert('Copied to clipboard!');
     }
 
     // Function to open PDF or Word in iframe and load the last page first
