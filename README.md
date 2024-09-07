@@ -120,16 +120,20 @@
       // Clean the query and split into parts to handle full citation, title, author, etc.
       const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
 
-      // Build the OpenAlex API request URL
-      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(sanitizedQuery)}&per-page=5`;
-
       // Fetch author details from OpenAlex API
+      fetchOpenAlexData(sanitizedQuery);
+
+      // Fetch arXiv data
+      fetchArxivData(sanitizedQuery);
+    }
+
+    // Function to fetch data from OpenAlex API
+    function fetchOpenAlexData(query) {
+      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(query)}&per-page=5`;
+
       fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
-          // Hide loading indicator
-          document.getElementById('loading').style.display = 'none';
-
           // Clear previous results
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
@@ -139,7 +143,6 @@
             data.results.forEach(work => {
               const title = work.title;
               const authors = work.authorships;
-              const arxivId = work.arxiv_id || null; // Get arXiv ID if available
               const doi = work.doi || null; // Get DOI if available
 
               let authorList = '';
@@ -167,15 +170,9 @@
                 }
               });
 
-              // Generate links for arXiv and DOI
-              let arxivLink = '';
-              let pdfLink = '';
+              // Generate DOI and Google Scholar buttons
               let doiLink = '';
 
-              if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article (arXiv)</a>`;
-                pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
-              }
               if (doi) {
                 doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
                 doiLink += ` <a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">Google Scholar</a>`;
@@ -185,29 +182,21 @@
                 <div class="result-item">
                   <h3>${title}</h3>
                   ${authorList}
-                  ${arxivLink}
-                  ${pdfLink}
                   ${doiLink}
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            // No results found, suggest searching on Google Scholar
-            resultsContainer.innerHTML = `
-              <p>No results found in the database.</p>
-              <button class="search-btn" onclick="searchOnGoogleScholar('${query}')">Try Google Scholar</button>
+            // No results found
+            document.getElementById('results').innerHTML = `
+              <p>No results found in the OpenAlex database.</p>
             `;
           }
         })
         .catch(error => {
-          console.error('Error fetching data:', error);
-          alert('An error occurred while fetching data.');
-          document.getElementById('loading').style.display = 'none'; // Hide loading indicator on error
+          console.error('Error fetching data from OpenAlex:', error);
         });
-
-      // Fetch arXiv data
-      fetchArxivData(query);
     }
 
     // Function to fetch data from arXiv API
@@ -238,16 +227,14 @@
             `;
             resultsContainer.innerHTML += resultItem;
           }
+
+          // Hide loading indicator after arXiv data is fetched
+          document.getElementById('loading').style.display = 'none';
         })
         .catch(error => {
-          console.error('Error fetching arXiv data:', error);
+          console.error('Error fetching data from arXiv:', error);
+          document.getElementById('loading').style.display = 'none';
         });
-    }
-
-    // Function to search on Google Scholar when no results found
-    function searchOnGoogleScholar(query) {
-      const scholarUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`;
-      window.open(scholarUrl, '_blank');
     }
 
     // Function to load PDF or Word file in the iframe (supports both .doc and .docx files)
