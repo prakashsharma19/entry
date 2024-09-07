@@ -193,9 +193,11 @@
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            // No results found in OpenAlex, search Google Scholar
-            resultsContainer.innerHTML = `<p>No results found in the database. Searching Google Scholar...</p>`;
-            window.open(`https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`, '_blank');
+            // No results found, suggest searching on Google Scholar
+            resultsContainer.innerHTML = `
+              <p>No results found in the database.</p>
+              <button class="search-btn" onclick="searchOnGoogleScholar('${query}')">Try Google Scholar</button>
+            `;
           }
         })
         .catch(error => {
@@ -203,6 +205,12 @@
           alert('An error occurred while fetching data.');
           document.getElementById('loading').style.display = 'none'; // Hide loading indicator on error
         });
+    }
+
+    // Function to search on Google Scholar when no results found
+    function searchOnGoogleScholar(query) {
+      const scholarUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`;
+      window.open(scholarUrl, '_blank');
     }
 
     // Function to load PDF or Word file in the iframe (supports both .doc and .docx files)
