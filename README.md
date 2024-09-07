@@ -106,7 +106,7 @@
   </div>
 
   <script>
-    // Function to search for author details using OpenAlex API and arXiv API
+    // Function to search for articles using OpenAlex API and arXiv API
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -117,14 +117,65 @@
       // Show loading indicator
       document.getElementById('loading').style.display = 'block';
 
-      // Clean the query and split into parts to handle full citation, title, author, etc.
-      const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
+      // Clear previous results
+      const resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = '';
 
-      // Fetch author details from OpenAlex API
-      fetchOpenAlexData(sanitizedQuery);
+      // Fetch data from arXiv first
+      fetchArxivData(query)
+        .then((arxivFound) => {
+          // If no arXiv results are found, fetch from OpenAlex
+          if (!arxivFound) {
+            fetchOpenAlexData(query);
+          }
+        });
+    }
 
-      // Fetch arXiv data
-      fetchArxivData(sanitizedQuery);
+    // Function to fetch data from arXiv API
+    function fetchArxivData(query) {
+      const arxivUrl = `http://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&start=0&max_results=5`;
+
+      return fetch(arxivUrl)
+        .then(response => response.text())
+        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+        .then(data => {
+          const entries = data.getElementsByTagName('entry');
+          const resultsContainer = document.getElementById('results');
+
+          // If no arXiv results found, return false
+          if (entries.length === 0) {
+            return false;
+          }
+
+          for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            const title = entry.getElementsByTagName('title')[0].textContent;
+            const summary = entry.getElementsByTagName('summary')[0].textContent;
+            const link = entry.getElementsByTagName('link')[0].getAttribute('href');
+            const pdfLink = link.replace('/abs/', '/pdf/');
+
+            const resultItem = `
+              <div class="result-item">
+                <h3>${title}</h3>
+                <p>${summary}</p>
+                <a href="${link}" target="_blank" class="fetch-btn">View Article (arXiv)</a>
+                <a href="${pdfLink}" target="_blank" class="pdf-btn">Download PDF</a>
+              </div>
+            `;
+            resultsContainer.innerHTML += resultItem;
+          }
+
+          // Hide loading indicator after arXiv data is fetched
+          document.getElementById('loading').style.display = 'none';
+
+          // Return true as arXiv results were found
+          return true;
+        })
+        .catch(error => {
+          console.error('Error fetching data from arXiv:', error);
+          document.getElementById('loading').style.display = 'none';
+          return false;
+        });
     }
 
     // Function to fetch data from OpenAlex API
@@ -134,16 +185,13 @@
       fetch(openAlexUrl)
         .then(response => response.json())
         .then(data => {
-          // Clear previous results
           const resultsContainer = document.getElementById('results');
-          resultsContainer.innerHTML = '';
 
-          // Check if results exist
           if (data.results && data.results.length > 0) {
             data.results.forEach(work => {
               const title = work.title;
               const authors = work.authorships;
-              const doi = work.doi || null; // Get DOI if available
+              const doi = work.doi || null;
 
               let authorList = '';
               authors.forEach(author => {
@@ -189,50 +237,14 @@
             });
           } else {
             // No results found
-            document.getElementById('results').innerHTML = `
-              <p>No results found in the OpenAlex database.</p>
-            `;
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data from OpenAlex:', error);
-        });
-    }
-
-    // Function to fetch data from arXiv API
-    function fetchArxivData(query) {
-      const arxivUrl = `http://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(query)}&start=0&max_results=5`;
-      
-      fetch(arxivUrl)
-        .then(response => response.text())
-        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-        .then(data => {
-          const entries = data.getElementsByTagName('entry');
-          const resultsContainer = document.getElementById('results');
-
-          for (let i = 0; i < entries.length; i++) {
-            const entry = entries[i];
-            const title = entry.getElementsByTagName('title')[0].textContent;
-            const summary = entry.getElementsByTagName('summary')[0].textContent;
-            const link = entry.getElementsByTagName('link')[0].getAttribute('href');
-            const pdfLink = link.replace('/abs/', '/pdf/');
-
-            const resultItem = `
-              <div class="result-item">
-                <h3>${title}</h3>
-                <p>${summary}</p>
-                <a href="${link}" target="_blank" class="fetch-btn">View Article (arXiv)</a>
-                <a href="${pdfLink}" target="_blank" class="pdf-btn">Download PDF</a>
-              </div>
-            `;
-            resultsContainer.innerHTML += resultItem;
+            resultsContainer.innerHTML = `<p>No results found in the OpenAlex database.</p>`;
           }
 
-          // Hide loading indicator after arXiv data is fetched
+          // Hide loading indicator after OpenAlex data is fetched
           document.getElementById('loading').style.display = 'none';
         })
         .catch(error => {
-          console.error('Error fetching data from arXiv:', error);
+          console.error('Error fetching data from OpenAlex:', error);
           document.getElementById('loading').style.display = 'none';
         });
     }
