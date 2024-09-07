@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -87,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>Search Author Details by Paper Title or Name</h1>
+  <h1>Search Articles</h1>
 
   <div class="container">
     <div class="left">
@@ -106,7 +107,7 @@
   </div>
 
   <script>
-    // Function to search for author details using OpenAlex API, CrossRef API, and arXiv API
+    // Function to search for author details using OpenAlex API and arXiv API via PHP
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -152,7 +153,6 @@
                 const country = primaryInstitution.country_code || '';
                 const email = author.author.email || '';
 
-                // Only display fields that are available
                 const affiliationDetails = fullAffiliation || `${institution}${country ? ', ' + country : ''}`;
                 const emailDisplay = email ? `<br>${email}<br>` : '';
 
@@ -193,7 +193,6 @@
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            // No results found, suggest searching on Google Scholar
             resultsContainer.innerHTML = `
               <p>No results found in the database.</p>
               <button class="search-btn" onclick="searchOnGoogleScholar('${query}')">Try Google Scholar</button>
@@ -203,11 +202,37 @@
         .catch(error => {
           console.error('Error fetching data:', error);
           alert('An error occurred while fetching data.');
-          document.getElementById('loading').style.display = 'none'; // Hide loading indicator on error
+          document.getElementById('loading').style.display = 'none';
+        });
+
+      // Fetch results from the arXiv API via PHP
+      const arxivApiUrl = `arxiv.php?query=${encodeURIComponent(sanitizedQuery)}`;
+
+      fetch(arxivApiUrl)
+        .then(response => response.text())
+        .then(data => {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(data, "application/xml");
+          const entry = xmlDoc.getElementsByTagName("entry")[0];
+
+          if (entry) {
+            const title = entry.getElementsByTagName("title")[0].textContent;
+            const pdfLink = entry.getElementsByTagName("id")[0].textContent.replace('/abs/', '/pdf/') + '.pdf';
+
+            const resultItem = `
+              <div class="result-item">
+                <h3>${title}</h3>
+                <a href="${pdfLink}" target="_blank" class="pdf-btn">Download PDF from arXiv</a>
+              </div>
+            `;
+            document.getElementById('results').innerHTML += resultItem;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data from arXiv:', error);
         });
     }
 
-    // Function to search on Google Scholar when no results found
     function searchOnGoogleScholar(query) {
       const scholarUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`;
       window.open(scholarUrl, '_blank');
@@ -223,11 +248,9 @@
         const fileType = file.type;
 
         if (fileType === 'application/pdf') {
-          // Load PDF in iframe (starting with the last page)
           viewer.src = fileURL + '#view=fit&page=last';
         } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-          // For Word files, use Microsoft Office viewer
-          viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileURL)}`;
+          alert('Word files cannot be viewed locally in the iframe. Please upload them to a server or use Google Docs manually.');
         } else {
           alert('Please upload a valid PDF, DOC, or DOCX document.');
         }
