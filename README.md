@@ -91,7 +91,7 @@
 
   <div class="container">
     <div class="left">
-      <input type="file" id="fileInput" accept=".pdf, .docx" onchange="loadFile(event)">
+      <input type="file" id="fileInput" accept=".pdf, .doc, .docx" onchange="loadFile(event)">
       <iframe id="documentViewer" title="PDF/Word Viewer"></iframe>
     </div>
 
@@ -193,7 +193,9 @@
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            resultsContainer.innerHTML = '<p>No results found.</p>';
+            // No results found in OpenAlex, search Google Scholar
+            resultsContainer.innerHTML = `<p>No results found in the database. Searching Google Scholar...</p>`;
+            window.open(`https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`, '_blank');
           }
         })
         .catch(error => {
@@ -203,7 +205,7 @@
         });
     }
 
-    // Function to load PDF or Word file in the iframe (Last page first functionality)
+    // Function to load PDF or Word file in the iframe (supports both .doc and .docx files)
     function loadFile(event) {
       const file = event.target.files[0];
       const viewer = document.getElementById('documentViewer');
@@ -215,11 +217,11 @@
         if (fileType === 'application/pdf') {
           // Load PDF in iframe (starting with the last page)
           viewer.src = fileURL + '#view=fit&page=last';
-        } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
           // For Word files, use Microsoft Office viewer
           viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileURL)}`;
         } else {
-          alert('Please upload a valid PDF or Word document.');
+          alert('Please upload a valid PDF, DOC, or DOCX document.');
         }
       }
     }
