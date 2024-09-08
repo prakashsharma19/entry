@@ -5,8 +5,10 @@
   <title>Author and Article Search Tool</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
       margin: 20px;
+      background-color: #f0f2f5;
+      color: #333;
     }
     .container {
       display: flex;
@@ -22,27 +24,36 @@
     }
     .search-container {
       margin-bottom: 20px;
+      padding: 10px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
     .results {
       margin-top: 20px;
     }
     .result-item {
-      border: 1px solid #ccc;
-      padding: 15px;
+      border: 1px solid #ddd;
+      padding: 20px;
       margin-bottom: 15px;
-      border-radius: 5px;
+      border-radius: 8px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
     }
-    .fetch-btn, .pdf-btn {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-right: 5px;
+    .result-item:hover {
+      transform: translateY(-5px);
     }
-    .pdf-btn {
-      background-color: #FF5722;
+    .fetch-btn {
+      display: inline-block;
+      margin-right: 10px;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+    .fetch-btn img {
+      height: 40px;
+      width: auto;
+      vertical-align: middle;
     }
     iframe {
       width: 100%;
@@ -61,10 +72,11 @@
     }
     input[type="text"] {
       width: 70%;
-      padding: 8px;
+      padding: 12px;
       font-size: 16px;
-      border-radius: 4px;
+      border-radius: 5px;
       border: 1px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     button {
       padding: 10px;
@@ -83,6 +95,11 @@
       padding: 10px 20px;
       font-size: 16px;
       border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    button.search-btn:hover {
+      transform: translateY(-3px);
     }
     textarea {
       width: 100%;
@@ -101,6 +118,14 @@
       padding: 8px 15px;
       cursor: pointer;
       border-radius: 5px;
+      transition: transform 0.2s ease;
+    }
+    .save-btn:hover {
+      transform: translateY(-3px);
+    }
+    .author-info {
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
@@ -142,8 +167,8 @@
         const fileType = file.type;
 
         if (fileType === 'application/pdf') {
-          // Load PDF in iframe
-          viewer.src = fileURL + '#view=fit&page=last';
+          // Load PDF in iframe with zoom 100%
+          viewer.src = fileURL + '#zoom=100';
         } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
           // For Word files, use Google Docs viewer (more reliable)
           viewer.src = `https://docs.google.com/viewer?url=${encodeURIComponent(fileURL)}&embedded=true`;
@@ -175,11 +200,11 @@
       // Show loading indicator
       document.getElementById('loading').style.display = 'block';
 
-      // Clean the query and split into parts to handle full citation, title, author, etc.
-      const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
+      // Sanitize query by encoding special characters
+      const sanitizedQuery = encodeURIComponent(query);
 
       // Build the OpenAlex API request URL
-      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(sanitizedQuery)}&per-page=5`;
+      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${sanitizedQuery}&per-page=5`;
 
       // Fetch author details from OpenAlex API
       fetch(openAlexUrl)
@@ -225,22 +250,22 @@
                 }
               });
 
-              // Generate links for arXiv, DOI, and Google Scholar
+              // Generate links for ArXiv, DOI, and Google Scholar with images
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
               let scholarLink = '';
-              let arxivSearchLink = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank" class="fetch-btn">Search on arXiv</a>`;
+              let arxivSearchLink = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
 
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
-                pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
+                pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="PDF"></a>`;
               }
               if (doi) {
-                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
+                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"></a>`;
               }
 
-              scholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">Google Scholar</a>`;
+              scholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"></a>`;
 
               const resultItem = `
                 <div class="result-item">
