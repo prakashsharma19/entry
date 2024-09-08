@@ -44,16 +44,29 @@
     .result-item:hover {
       transform: translateY(-5px);
     }
-    .fetch-btn {
-      display: inline-block;
-      margin-right: 10px;
-      text-decoration: none;
-      transition: transform 0.2s ease;
+    .button-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
     }
-    .fetch-btn img {
-      height: 40px;
-      width: auto;
+    .button-container a {
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 50px;
+      background-color: #ffffff;
+      border: 2px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+    .button-container a img {
+      height: 25px;
       vertical-align: middle;
+      margin-right: 5px;
+    }
+    .button-container a:hover {
+      transform: translateY(-3px);
+      background-color: #f9f9f9;
     }
     iframe {
       width: 100%;
@@ -255,37 +268,48 @@
               let pdfLink = '';
               let doiLink = '';
               let scholarLink = '';
-              let arxivSearchLink = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
+              let arxivSearchLink = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"> ArXiv</a>`;
 
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
-                pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="PDF"></a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"> View on ArXiv</a>`;
+                pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="PDF"> Download PDF</a>`;
               }
               if (doi) {
-                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"></a>`;
+                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"> DOI</a>`;
               }
 
-              scholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"></a>`;
+              scholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"> Google Scholar</a>`;
 
               const resultItem = `
                 <div class="result-item">
                   <h3>${title}</h3>
                   ${authorList}
-                  ${arxivLink}
-                  ${pdfLink}
-                  ${doiLink}
-                  ${scholarLink}
-                  ${arxivSearchLink}
+                  <div class="button-container">
+                    ${arxivLink}
+                    ${pdfLink}
+                    ${doiLink}
+                    ${scholarLink}
+                    ${arxivSearchLink}
+                  </div>
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
             });
           } else {
             // No results found, suggest searching on Google Scholar and arXiv
+            const noResultButtons = `
+              <div class="button-container">
+                <a href="https://scholar.google.com/scholar?q=${sanitizedQuery}" target="_blank">
+                  <img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"> Google Scholar
+                </a>
+                <a href="https://arxiv.org/search/?query=${sanitizedQuery}&searchtype=all" target="_blank">
+                  <img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"> ArXiv
+                </a>
+              </div>
+            `;
             resultsContainer.innerHTML = `
               <p>No results found in the database.</p>
-              <button class="search-btn" onclick="searchOnGoogleScholar('${query}')">Try Google Scholar</button>
-              <button class="search-btn" onclick="searchOnArxiv('${query}')">Try arXiv</button>
+              ${noResultButtons}
             `;
           }
         })
