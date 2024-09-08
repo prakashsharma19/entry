@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -39,10 +40,6 @@
       border-radius: 8px;
       background-color: #ffffff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
-    }
-    .result-item:hover {
-      transform: translateY(-5px);
     }
     .button-container {
       display: flex;
@@ -51,9 +48,9 @@
     }
     .button-container a {
       display: inline-block;
-      width: 40px;
+      width: 80px;
       height: 40px;
-      border-radius: 50%;
+      border-radius: 8px;
       background-color: #fff;
       border: 2px solid #ccc;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -63,7 +60,7 @@
     .button-container a img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
     .button-container a:hover {
       transform: translateY(-3px);
@@ -85,7 +82,7 @@
       text-align: center;
     }
     input[type="text"] {
-      width: 70%;
+      width: 90%; /* Increased the width */
       padding: 12px;
       font-size: 16px;
       border-radius: 5px;
