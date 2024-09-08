@@ -225,16 +225,22 @@
                 }
               });
 
-              // Generate links for arXiv and DOI
+              // Generate links for arXiv, DOI, and Google Scholar
               let arxivLink = '';
               let pdfLink = '';
               let doiLink = '';
+              let scholarLink = '';
+              let arxivSearchLink = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank" class="fetch-btn">Search on arXiv</a>`;
 
               if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article</a>`;
+                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank" class="fetch-btn">View Article on arXiv</a>`;
                 pdfLink = `<a href="https://arxiv.org/pdf/${arxivId}" target="_blank" class="pdf-btn">Download PDF</a>`;
-                doiLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">Google Scholar</a>`;
               }
+              if (doi) {
+                doiLink = `<a href="https://doi.org/${doi}" target="_blank" class="fetch-btn">Source (DOI)</a>`;
+              }
+
+              scholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank" class="fetch-btn">Google Scholar</a>`;
 
               const resultItem = `
                 <div class="result-item">
@@ -243,12 +249,14 @@
                   ${arxivLink}
                   ${pdfLink}
                   ${doiLink}
+                  ${scholarLink}
+                  ${arxivSearchLink}
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            // No results found, suggest searching on Google Scholar
+            // No results found, suggest searching on Google Scholar and arXiv
             resultsContainer.innerHTML = `
               <p>No results found in the database.</p>
               <button class="search-btn" onclick="searchOnGoogleScholar('${query}')">Try Google Scholar</button>
