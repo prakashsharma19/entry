@@ -50,7 +50,7 @@
     .button-container a {
       display: inline-block;
       width: 60px;
-      height: 30px; /* Adjusted for smaller size */
+      height: 30px;
       border-radius: 8px;
       background-color: #fff;
       border: 2px solid #ccc;
@@ -82,7 +82,7 @@
       text-align: center;
     }
     input[type="text"] {
-      width: 75%; /* Reduced the width */
+      width: 75%;
       padding: 12px;
       font-size: 16px;
       border-radius: 5px;
@@ -220,11 +220,15 @@
       link.click();
     }
 
-    // Helper function to extract DOI from a string
+    // Helper function to extract DOI from a string and handle trailing punctuation
     function extractDOI(text) {
       const doiPattern = /10\.\d{4,9}\/[-._;()/:A-Z0-9]+/i;
-      const match = text.match(doiPattern);
-      return match ? match[0] : null;
+      let match = text.match(doiPattern);
+      if (match) {
+        // Remove trailing punctuation (e.g., periods or commas)
+        match = match[0].replace(/[.,;!?]+$/, '');
+      }
+      return match;
     }
 
     // Function to search for author details using CrossRef API (for DOI-based search)
