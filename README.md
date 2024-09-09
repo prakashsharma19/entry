@@ -23,6 +23,8 @@
       border-left: 2px solid #ccc;
     }
     .search-container {
+      display: flex;
+      align-items: center;
       margin-bottom: 20px;
       padding: 10px;
       background-color: #ffffff;
@@ -58,8 +60,7 @@
     }
     .button-container a img {
       width: 100%;
-      height: 100%;
-      object-fit: cover; /* Ensures the image fills the button */
+      height: auto; /* Prevents stretching and maintains aspect ratio */
     }
     .button-container a:hover {
       transform: translateY(-3px);
@@ -81,7 +82,7 @@
       text-align: center;
     }
     input[type="text"] {
-      width: 90%; /* Increased the width */
+      width: 75%; /* Reduced the width */
       padding: 12px;
       font-size: 16px;
       border-radius: 5px;
@@ -105,6 +106,7 @@
       padding: 10px 20px;
       font-size: 16px;
       border-radius: 5px;
+      margin-left: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       transition: transform 0.2s ease;
     }
@@ -275,7 +277,7 @@
                 `<a href="https://scholar.google.com/scholar?q=${authorSearchQuery}" target="_blank">${author.given} ${author.family}</a>`
               ).join(', ');
 
-              // Generate buttons for DOI, Google Scholar, and ArXiv
+              // Generate buttons for DOI, Google Scholar, ArXiv, and PDF
               let doiButton = '';
               let scholarButton = '';
               let arxivButton = '';
@@ -291,7 +293,7 @@
               // If PDF link is available (for ArXiv or similar), add a button
               if (work['link'] && work['link'].some(link => link['content-type'] === 'application/pdf')) {
                 const pdfLink = work['link'].find(link => link['content-type'] === 'application/pdf').URL;
-                pdfButton = `<a href="${pdfLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/PDF-removebg-preview.png?raw=true" alt="PDF"></a>`;
+                pdfButton = `<a href="${pdfLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/PDf.jpg?raw=true" alt="PDF"></a>`;
               }
 
               const resultItem = `
