@@ -201,8 +201,8 @@
           // Load PDF in iframe with zoom 100%
           viewer.src = fileURL + '#zoom=100';
         } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-          // For Word files, use Google Docs viewer (more reliable)
-          viewer.src = `https://docs.google.com/viewer?url=${encodeURIComponent(fileURL)}&embedded=true`;
+          // Use Office Online viewer for Word documents
+          viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileURL)}`;
         } else {
           alert('Please upload a valid PDF, DOC, or DOCX document.');
         }
