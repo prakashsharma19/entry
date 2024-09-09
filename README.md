@@ -47,8 +47,8 @@
     }
     .button-container a {
       display: inline-block;
-      width: 80px;
-      height: 40px;
+      width: 60px;
+      height: 30px; /* Adjusted for smaller size */
       border-radius: 8px;
       background-color: #fff;
       border: 2px solid #ccc;
@@ -59,7 +59,7 @@
     .button-container a img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Ensures the image fills the button without white space */
+      object-fit: cover; /* Ensures the image fills the button */
     }
     .button-container a:hover {
       transform: translateY(-3px);
@@ -136,6 +136,25 @@
     .author-info {
       font-size: 14px;
       color: #666;
+    }
+    .author-line {
+      font-size: 14px;
+      color: #333;
+    }
+    .author-line a {
+      color: #4CAF50;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .author-line a:hover {
+      text-decoration: underline;
+    }
+    h3 a {
+      color: #333;
+      text-decoration: none;
+    }
+    h3 a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -247,16 +266,20 @@
               const authors = work.author || [];
               const doiLink = work.DOI || null;
 
-              let authorList = '';
-              authors.forEach(author => {
-                const name = `${author.given} ${author.family}`;
-                authorList += `<div class="author-info">${name}</div>`;
-              });
+              // Prepare authors as a comma-separated string
+              const authorNames = authors.map(author => `${author.given} ${author.family}`).join(', ');
+
+              // Generate the search URL for all authors (clicking on any author will search for all)
+              const authorSearchQuery = encodeURIComponent(authorNames);
+              const authorLinks = authors.map(author => 
+                `<a href="https://scholar.google.com/scholar?q=${authorSearchQuery}" target="_blank">${author.given} ${author.family}</a>`
+              ).join(', ');
 
               // Generate buttons for DOI, Google Scholar, and ArXiv
               let doiButton = '';
               let scholarButton = '';
               let arxivButton = '';
+              let pdfButton = '';
 
               if (doiLink) {
                 doiButton = `<a href="https://doi.org/${doiLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"></a>`;
@@ -265,14 +288,21 @@
               scholarButton = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"></a>`;
               arxivButton = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
 
+              // If PDF link is available (for ArXiv or similar), add a button
+              if (work['link'] && work['link'].some(link => link['content-type'] === 'application/pdf')) {
+                const pdfLink = work['link'].find(link => link['content-type'] === 'application/pdf').URL;
+                pdfButton = `<a href="${pdfLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/PDF-removebg-preview.png?raw=true" alt="PDF"></a>`;
+              }
+
               const resultItem = `
                 <div class="result-item">
-                  <h3>${title}</h3>
-                  ${authorList}
+                  <h3><a href="https://www.google.com/search?q=${encodeURIComponent(title)}" target="_blank">${title}</a></h3>
+                  <p class="author-line">by: ${authorLinks}</p>
                   <div class="button-container">
                     ${doiButton}
                     ${scholarButton}
                     ${arxivButton}
+                    ${pdfButton}
                   </div>
                 </div>
               `;
