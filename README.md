@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -60,7 +59,7 @@
     .button-container a img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover; /* Ensures the image fills the button without white space */
     }
     .button-container a:hover {
       transform: translateY(-3px);
@@ -207,7 +206,7 @@
       return match ? match[0] : null;
     }
 
-    // Function to search for author details using OpenAlex API, CrossRef API, and arXiv API
+    // Function to search for author details using CrossRef API (for DOI-based search)
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
       if (!query) {
@@ -218,14 +217,20 @@
       // Show loading indicator
       document.getElementById('loading').style.display = 'block';
 
-      // Sanitize and split the query to handle full citation, titles, DOIs, etc.
-      const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
+      // Check if the query contains a DOI
       const doi = extractDOI(query);
+      let crossRefUrl;
 
-      // Build the OpenAlex API request URL
-      const openAlexUrl = `https://api.openalex.org/works?filter=title.search:${encodeURIComponent(sanitizedQuery)}&per-page=5`;
+      // If a DOI is found, use it to search via CrossRef API
+      if (doi) {
+        crossRefUrl = `https://api.crossref.org/works/${encodeURIComponent(doi)}`;
+      } else {
+        // Otherwise, search using titles, authors, or other keywords via CrossRef
+        const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
+        crossRefUrl = `https://api.crossref.org/works?query=${encodeURIComponent(sanitizedQuery)}&rows=5`;
+      }
 
-      fetch(openAlexUrl)
+      fetch(crossRefUrl)
         .then(response => response.json())
         .then(data => {
           // Hide loading indicator
@@ -234,65 +239,48 @@
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
-          // If there are results, show them
-          if (data.results && data.results.length > 0) {
-            data.results.forEach(work => {
-              const title = work.title;
-              const authors = work.authorships;
-              const arxivId = work.arxiv_id || null; // Get arXiv ID if available
-              const resultDoi = work.doi || null; // Get DOI if available
+          // Check if there are results
+          let works = data.message.items || (data.message.title ? [data.message] : []);
+          if (works.length > 0) {
+            works.forEach(work => {
+              const title = work.title ? work.title[0] : 'Untitled';
+              const authors = work.author || [];
+              const doiLink = work.DOI || null;
 
               let authorList = '';
               authors.forEach(author => {
-                const name = author.author.display_name || '';
-                const affiliation = author.raw_affiliation_string || '';
-                if (name || affiliation) {
-                  authorList += `<div class="author-info">${name ? name + ', ' : ''}${affiliation}</div>`;
-                }
+                const name = `${author.given} ${author.family}`;
+                authorList += `<div class="author-info">${name}</div>`;
               });
 
-              // Generate the buttons for DOI, Google Scholar, and ArXiv
-              let arxivLink = '';
-              let doiLink = '';
-              let scholarLink = '';
+              // Generate buttons for DOI, Google Scholar, and ArXiv
+              let doiButton = '';
+              let scholarButton = '';
+              let arxivButton = '';
 
-              if (arxivId) {
-                arxivLink = `<a href="https://arxiv.org/abs/${arxivId}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
+              if (doiLink) {
+                doiButton = `<a href="https://doi.org/${doiLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"></a>`;
               }
 
-              if (resultDoi || doi) {
-                const doiToUse = resultDoi || doi; // Use either the result DOI or the extracted DOI
-                doiLink = `<a href="https://doi.org/${doiToUse}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"></a>`;
-              }
-
-              scholarLink = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"></a>`;
+              scholarButton = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"></a>`;
+              arxivButton = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
 
               const resultItem = `
                 <div class="result-item">
                   <h3>${title}</h3>
                   ${authorList}
                   <div class="button-container">
-                    ${arxivLink}
-                    ${doiLink}
-                    ${scholarLink}
+                    ${doiButton}
+                    ${scholarButton}
+                    ${arxivButton}
                   </div>
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            // No results, suggest searching on Google Scholar and ArXiv
-            const noResultButtons = `
-              <div class="button-container">
-                <a href="https://scholar.google.com/scholar?q=${sanitizedQuery}" target="_blank">
-                  <img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar">
-                </a>
-                <a href="https://arxiv.org/search/?query=${sanitizedQuery}&searchtype=all" target="_blank">
-                  <img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv">
-                </a>
-              </div>
-            `;
-            resultsContainer.innerHTML = `<p>No results found in the database.</p>${noResultButtons}`;
+            // No results found
+            resultsContainer.innerHTML = `<p>No results found.</p>`;
           }
         })
         .catch(error => {
