@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Author and Article Search Tool</title>
+  <title>Author and Article Search Tool with ORCID API</title>
   <style>
     body {
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -42,30 +42,6 @@
       background-color: #ffffff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .button-container {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .button-container a {
-      display: inline-block;
-      width: 60px;
-      height: 30px;
-      border-radius: 8px;
-      background-color: #fff;
-      border: 2px solid #ccc;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: all 0.2s ease;
-      overflow: hidden;
-    }
-    .button-container a img {
-      width: 100%;
-      height: auto; /* Prevents stretching and maintains aspect ratio */
-    }
-    .button-container a:hover {
-      transform: translateY(-3px);
-      background-color: #f9f9f9;
-    }
     iframe {
       width: 100%;
       height: 600px;
@@ -94,11 +70,6 @@
       font-size: 16px;
       cursor: pointer;
     }
-    input[type="file"] {
-      padding: 8px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
     button.search-btn {
       background-color: #4CAF50;
       color: white;
@@ -113,55 +84,14 @@
     button.search-btn:hover {
       transform: translateY(-3px);
     }
-    textarea {
-      width: 100%;
-      height: 150px;
-      margin-top: 20px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .save-btn {
-      margin-top: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: transform 0.2s ease;
-    }
-    .save-btn:hover {
-      transform: translateY(-3px);
-    }
-    .author-info {
-      font-size: 14px;
-      color: #666;
-    }
     .author-line {
       font-size: 14px;
       color: #333;
     }
-    .author-line a {
-      color: #4CAF50;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .author-line a:hover {
-      text-decoration: underline;
-    }
-    h3 a {
-      color: #333;
-      text-decoration: none;
-    }
-    h3 a:hover {
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
-  <h1>Search Articles</h1>
+  <h1>Search Articles and Author Details</h1>
 
   <div class="container">
     <div class="left">
@@ -177,6 +107,12 @@
         <input type="text" id="searchQuery" placeholder="Enter author name, paper title, or full citation">
         <button class="search-btn" onclick="searchAuthor()">Search</button>
       </div>
+
+      <div class="search-container">
+        <input type="text" id="orcidQuery" placeholder="Enter ORCID iD (e.g., 0000-0002-1825-0097)">
+        <button class="search-btn" onclick="searchOrcid()">Search ORCID</button>
+      </div>
+
       <p class="loading" id="loading">Loading...</p>
       <div class="results" id="results"></div>
     </div>
@@ -220,17 +156,6 @@
       link.click();
     }
 
-    // Helper function to extract DOI from a string and handle trailing punctuation
-    function extractDOI(text) {
-      const doiPattern = /10\.\d{4,9}\/[-._;()/:A-Z0-9]+/i;
-      let match = text.match(doiPattern);
-      if (match) {
-        // Remove trailing punctuation (e.g., periods or commas)
-        match = match[0].replace(/[.,;!?]+$/, '');
-      }
-      return match;
-    }
-
     // Function to search for author details using CrossRef API (for DOI-based search)
     function searchAuthor() {
       const query = document.getElementById('searchQuery').value;
@@ -243,14 +168,14 @@
       document.getElementById('loading').style.display = 'block';
 
       // Check if the query contains a DOI
-      const doi = extractDOI(query);
+      const doiPattern = /10\.\d{4,9}\/[-._;()/:A-Z0-9]+/i;
+      const doi = query.match(doiPattern) ? query.match(doiPattern)[0] : null;
+
       let crossRefUrl;
 
-      // If a DOI is found, use it to search via CrossRef API
       if (doi) {
         crossRefUrl = `https://api.crossref.org/works/${encodeURIComponent(doi)}`;
       } else {
-        // Otherwise, search using titles, authors, or other keywords via CrossRef
         const sanitizedQuery = query.replace(/[.,]/g, '').split(' ').join('+');
         crossRefUrl = `https://api.crossref.org/works?query=${encodeURIComponent(sanitizedQuery)}&rows=5`;
       }
@@ -258,13 +183,11 @@
       fetch(crossRefUrl)
         .then(response => response.json())
         .then(data => {
-          // Hide loading indicator
           document.getElementById('loading').style.display = 'none';
 
           const resultsContainer = document.getElementById('results');
           resultsContainer.innerHTML = '';
 
-          // Check if there are results
           let works = data.message.items || (data.message.title ? [data.message] : []);
           if (works.length > 0) {
             works.forEach(work => {
@@ -272,50 +195,22 @@
               const authors = work.author || [];
               const doiLink = work.DOI || null;
 
-              // Prepare authors as a comma-separated string
               const authorNames = authors.map(author => `${author.given} ${author.family}`).join(', ');
-
-              // Generate the search URL for all authors (clicking on any author will search for all)
-              const authorSearchQuery = encodeURIComponent(authorNames);
               const authorLinks = authors.map(author => 
-                `<a href="https://scholar.google.com/scholar?q=${authorSearchQuery}" target="_blank">${author.given} ${author.family}</a>`
+                `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(author.given + ' ' + author.family)}" target="_blank">${author.given} ${author.family}</a>`
               ).join(', ');
 
-              // Generate buttons for DOI, Google Scholar, ArXiv, and PDF
-              let doiButton = '';
-              let scholarButton = '';
-              let arxivButton = '';
-              let pdfButton = '';
-
-              if (doiLink) {
-                doiButton = `<a href="https://doi.org/${doiLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Doi-removebg-preview.png?raw=true" alt="DOI"></a>`;
-              }
-
-              scholarButton = `<a href="https://scholar.google.com/scholar?q=${encodeURIComponent(title)}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/Google_scholar-removebg-preview.png?raw=true" alt="Google Scholar"></a>`;
-              arxivButton = `<a href="https://arxiv.org/search/?query=${encodeURIComponent(title)}&searchtype=all" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/ArXiv%20image.png?raw=true" alt="ArXiv"></a>`;
-
-              // If PDF link is available (for ArXiv or similar), add a button
-              if (work['link'] && work['link'].some(link => link['content-type'] === 'application/pdf')) {
-                const pdfLink = work['link'].find(link => link['content-type'] === 'application/pdf').URL;
-                pdfButton = `<a href="${pdfLink}" target="_blank"><img src="https://github.com/prakashsharma19/Referee/blob/main/PDf.jpg?raw=true" alt="PDF"></a>`;
-              }
-
+              const doiButton = doiLink ? `<a href="https://doi.org/${doiLink}" target="_blank">DOI</a>` : '';
               const resultItem = `
                 <div class="result-item">
                   <h3><a href="https://www.google.com/search?q=${encodeURIComponent(title)}" target="_blank">${title}</a></h3>
                   <p class="author-line">by: ${authorLinks}</p>
-                  <div class="button-container">
-                    ${doiButton}
-                    ${scholarButton}
-                    ${arxivButton}
-                    ${pdfButton}
-                  </div>
+                  <div>${doiButton}</div>
                 </div>
               `;
               resultsContainer.innerHTML += resultItem;
             });
           } else {
-            // No results found
             resultsContainer.innerHTML = `<p>No results found.</p>`;
           }
         })
@@ -324,6 +219,45 @@
           alert('An error occurred while fetching data.');
           document.getElementById('loading').style.display = 'none';
         });
+    }
+
+    // Function to search for author details using ORCID API
+    function searchOrcid() {
+      const orcidId = document.getElementById('orcidQuery').value.trim();
+      if (!orcidId) {
+        alert('Please enter an ORCID iD');
+        return;
+      }
+
+      const orcidUrl = `https://pub.orcid.org/v3.0/${encodeURIComponent(orcidId)}`;
+
+      fetch(orcidUrl, {
+        headers: {
+          'Accept': 'application/json'  // ORCID API requires this header for JSON responses
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';  // Clear previous results
+
+        const name = data['person']['name']['given-names']['value'] + ' ' + data['person']['name']['family-name']['value'];
+        const email = data['person']['emails']['email'][0]?.email || 'Email not public';
+        const address = data['person']['addresses']['address'][0]?.city || 'Address not available';
+
+        const resultItem = `
+          <div class="result-item">
+            <h3>${name}</h3>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Address:</strong> ${address}</p>
+          </div>
+        `;
+        resultsContainer.innerHTML += resultItem;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        alert('An error occurred while fetching ORCID data.');
+      });
     }
   </script>
 </body>
