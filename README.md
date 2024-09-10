@@ -72,6 +72,21 @@
             display: none;
             color: red;
         }
+        #cutTextDisplay {
+            color: green;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .blinking-cursor {
+            animation: blink-animation 1s steps(5, start) infinite;
+            font-weight: bold;
+            color: red;
+        }
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
     </style>
 </head>
 <body>
@@ -84,6 +99,7 @@
     <label for="autoCutToggle">Automatic Cut</label>
     <input type="checkbox" id="autoCutToggle" />
     <span id="loading">Processing, please wait...</span>
+    <span id="cutTextDisplay"></span>
     <br><br>
     <div class="toolbar">
         <button class="blue" onclick="execCommand('bold')">Bold</button>
@@ -193,38 +209,53 @@
             localStorage.removeItem('outputText'); // Clear from memory
         }
 
-        // Function to jump to email link using F11 key
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'F11') {
-                let emailLinks = document.querySelectorAll('#outputContainer a[href^="mailto:"]');
-                if (emailLinks.length > 0) {
-                    emailLinks[0].focus();
-                    emailLinks[0].click();
-                }
-                e.preventDefault();
-            }
-        });
-
         // Automatic cut functionality
         document.getElementById('autoCutToggle').addEventListener('change', function() {
             if (this.checked) {
-                document.addEventListener('mouseup', autoCut);
+                document.addEventListener('mousemove', autoCut);
+                document.getElementById('textInput').classList.add('blinking-cursor'); // Change cursor
             } else {
-                document.removeEventListener('mouseup', autoCut);
+                document.removeEventListener('mousemove', autoCut);
+                document.getElementById('textInput').classList.remove('blinking-cursor'); // Reset cursor
             }
         });
 
-        function autoCut() {
-            let selection = window.getSelection();
-            let selectedText = selection.toString();
-            if (selectedText) {
-                let inputText = document.getElementById("textInput").value;
-                let regex = new RegExp(`${selectedText.trim()}[^,]*,`, 'i');
-                inputText = inputText.replace(regex, '');
-                document.getElementById("textInput").value = inputText;
-                selection.removeAllRanges(); // Clear selection
-            }
+        // Store cut text in localStorage
+        function saveCutText(text) {
+            localStorage.setItem('cutText', text);
+            document.getElementById('cutTextDisplay').innerText = `Cut text: ${text}`;
         }
+
+        // Auto cut function that cuts text until the next comma or end of line
+        function autoCut(event) {
+            const cursorPosition = event.clientX;
+            const inputText = document.getElementById('textInput').value;
+
+            // Find the next comma or end of line
+            let textUntilComma = inputText.match(/^.*?,/) || inputText;
+            textUntilComma = textUntilComma[0];
+
+            // Cut text and remove it from the textarea
+            document.getElementById('textInput').value = inputText.replace(textUntilComma, '');
+            saveCutText(textUntilComma);
+
+            // Optionally, you can store the updated text in localStorage
+            localStorage.setItem('inputText', document.getElementById('textInput').value);
+        }
+
+        // Load saved cut text and input text on page load
+        window.onload = function() {
+            const savedText = localStorage.getItem('inputText');
+            const cutText = localStorage.getItem('cutText');
+            if (savedText) {
+                document.getElementById('textInput').value = savedText;
+            }
+            if (cutText) {
+                document.getElementById('cutTextDisplay').innerText = `Cut text: ${cutText}`;
+            }
+        };
+
+        // Undo (Ctrl+Z) will automatically work as default browser behavior
     </script>
 </body>
 </html>
