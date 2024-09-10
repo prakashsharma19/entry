@@ -16,7 +16,7 @@
             width: 100%;
             height: 100px;
             padding: 10px;
-            font-size: 14px;
+            font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
@@ -30,6 +30,8 @@
             border: 1px solid #ccc;
             background-color: #fff;
             overflow-y: auto;
+            color: black;
+            font-size: 18px;
         }
         button {
             padding: 10px 20px;
@@ -44,22 +46,22 @@
         button:hover {
             background-color: #45a049;
         }
-        #outputContainer {
-            display: block;
-            font-size: 14px;
-        }
         .toolbar {
             margin-bottom: 10px;
         }
-        .toolbar button {
+        .toolbar select, .toolbar button {
             padding: 5px;
             margin-right: 5px;
             border: none;
             background-color: #ddd;
             cursor: pointer;
         }
-        .toolbar button:hover {
+        .toolbar select:hover, .toolbar button:hover {
             background-color: #ccc;
+        }
+        #loading {
+            display: none;
+            color: red;
         }
     </style>
 </head>
@@ -68,11 +70,27 @@
     <textarea id="textInput" placeholder="Paste your text here..."></textarea>
     <br>
     <button onclick="cleanText()">Fix Text</button>
+    <span id="loading">Processing, please wait...</span>
     <br><br>
     <div class="toolbar">
         <button onclick="execCommand('bold')">Bold</button>
         <button onclick="execCommand('italic')">Italic</button>
         <button onclick="execCommand('underline')">Underline</button>
+        <label for="fontSize">Text Size: </label>
+        <select id="fontSize" onchange="changeTextSize()">
+            <option value="14">Small</option>
+            <option value="18" selected>Medium</option>
+            <option value="24">Large</option>
+            <option value="32">X-Large</option>
+        </select>
+        <label for="fontFamily">Font: </label>
+        <select id="fontFamily" onchange="changeFontFamily()">
+            <option value="Arial" selected>Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+        </select>
+        <button onclick="copyToClipboard()">Copy to Clipboard</button>
     </div>
     <div id="outputContainer" contenteditable="true"></div>
 
@@ -84,33 +102,77 @@
 
         // Function to clean the text
         function cleanText() {
-            let inputText = document.getElementById("textInput").value;
+            document.getElementById("loading").style.display = "inline"; // Show loading indicator
+            setTimeout(() => {
+                let inputText = document.getElementById("textInput").value;
 
-            // Remove 'Corresponding author' text
-            inputText = inputText.replace(/Corresponding author/gi, '');
+                // Remove 'Corresponding author' text
+                inputText = inputText.replace(/Corresponding author/gi, '');
 
-            // Remove links
-            inputText = inputText.replace(/https?:\/\/\S+/g, '');
+                // Remove links
+                inputText = inputText.replace(/https?:\/\/\S+/g, '');
 
-            // Convert email addresses to mailto links
-            inputText = inputText.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi, function(email) {
-                return '<a href="mailto:' + email + '">' + email + '</a>';
-            });
+                // Convert email addresses to mailto links
+                inputText = inputText.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi, function(email) {
+                    return '<a href="mailto:' + email + '">' + email + '</a>';
+                });
 
-            // Convert special characters to regular text
-            inputText = removeDiacritics(inputText);
+                // Convert special characters to regular text
+                inputText = removeDiacritics(inputText);
 
-            // Preserve paragraph spacing
-            inputText = inputText.replace(/\n/g, '<br>');
+                // Remove unwanted full stops
+                inputText = inputText.replace(/\.\s*\./g, '.');
 
-            // Output cleaned text in the editable div
-            document.getElementById("outputContainer").innerHTML = inputText;
+                // Preserve paragraph spacing
+                inputText = inputText.replace(/\n/g, '<br>');
+
+                // Output cleaned text in the editable div
+                document.getElementById("outputContainer").innerHTML = inputText;
+
+                document.getElementById("loading").style.display = "none"; // Hide loading indicator
+            }, 1000); // Simulate processing time
         }
 
         // Function to handle text formatting (bold, italic, underline)
         function execCommand(command) {
             document.execCommand(command, false, null);
         }
+
+        // Function to change text size in the result box
+        function changeTextSize() {
+            let fontSize = document.getElementById("fontSize").value;
+            document.getElementById("outputContainer").style.fontSize = fontSize + "px";
+        }
+
+        // Function to change font family in the result box
+        function changeFontFamily() {
+            let fontFamily = document.getElementById("fontFamily").value;
+            document.getElementById("outputContainer").style.fontFamily = fontFamily;
+        }
+
+        // Function to copy cleaned text to clipboard
+        function copyToClipboard() {
+            let outputContainer = document.getElementById("outputContainer");
+            let range = document.createRange();
+            range.selectNodeContents(outputContainer);
+            let selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("copy");
+            alert("Text copied to clipboard!");
+        }
+
+        // Function to jump to email link using F11 key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F11') {
+                let emailLinks = document.querySelectorAll('#outputContainer a[href^="mailto:"]');
+                if (emailLinks.length > 0) {
+                    emailLinks[0].focus();
+                    emailLinks[0].click();
+                }
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
