@@ -5,7 +5,7 @@
     <title>Entry Workspace</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', serif;
             margin: 20px;
             background-color: #f4f4f9;
         }
@@ -16,7 +16,7 @@
             width: 100%;
             height: 100px;
             padding: 10px;
-            font-size: 16px;
+            font-size: 18px; /* Large text by default */
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
@@ -31,20 +31,30 @@
             background-color: #fff;
             overflow-y: auto;
             color: black;
-            font-size: 18px;
+            font-size: 18px; /* Large text by default */
+            font-family: 'Times New Roman', serif;
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
+        button.blue {
+            background-color: #1E90FF;
+            color: white;
+        }
+        button.red {
+            background-color: #FF6347;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
         button:hover {
-            background-color: #45a049;
+            opacity: 0.8;
         }
         .toolbar {
             margin-bottom: 10px;
@@ -53,7 +63,6 @@
             padding: 5px;
             margin-right: 5px;
             border: none;
-            background-color: #ddd;
             cursor: pointer;
         }
         .toolbar select:hover, .toolbar button:hover {
@@ -73,26 +82,28 @@
     <span id="loading">Processing, please wait...</span>
     <br><br>
     <div class="toolbar">
-        <button onclick="execCommand('bold')">Bold</button>
-        <button onclick="execCommand('italic')">Italic</button>
-        <button onclick="execCommand('underline')">Underline</button>
+        <button class="blue" onclick="execCommand('bold')">Bold</button>
+        <button class="blue" onclick="execCommand('italic')">Italic</button>
+        <button class="blue" onclick="execCommand('underline')">Underline</button>
         <label for="fontSize">Text Size: </label>
         <select id="fontSize" onchange="changeTextSize()">
             <option value="14">Small</option>
-            <option value="18" selected>Medium</option>
-            <option value="24">Large</option>
-            <option value="32">X-Large</option>
+            <option value="18" selected>Large</option>
+            <option value="24">X-Large</option>
+            <option value="32">XX-Large</option>
         </select>
         <label for="fontFamily">Font: </label>
         <select id="fontFamily" onchange="changeFontFamily()">
-            <option value="Arial" selected>Arial</option>
-            <option value="Times New Roman">Times New Roman</option>
+            <option value="Times New Roman" selected>Times New Roman</option>
+            <option value="Arial">Arial</option>
             <option value="Courier New">Courier New</option>
             <option value="Georgia">Georgia</option>
         </select>
-        <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button class="blue" onclick="copyToClipboard()">Copy to Clipboard</button>
     </div>
     <div id="outputContainer" contenteditable="true"></div>
+
+    <button class="red" onclick="deleteAll()">Delete All</button>
 
     <script>
         // Helper function to clean special characters
@@ -106,8 +117,9 @@
             setTimeout(() => {
                 let inputText = document.getElementById("textInput").value;
 
-                // Remove 'Corresponding author' text
+                // Remove 'Corresponding author' and 'View the author\'s ORCID record' texts
                 inputText = inputText.replace(/Corresponding author/gi, '');
+                inputText = inputText.replace(/View the author's ORCID record/gi, '');
 
                 // Remove links
                 inputText = inputText.replace(/https?:\/\/\S+/g, '');
@@ -126,12 +138,22 @@
                 // Preserve paragraph spacing
                 inputText = inputText.replace(/\n/g, '<br>');
 
+                // Save cleaned text in memory (local storage)
+                localStorage.setItem('outputText', inputText);
+
                 // Output cleaned text in the editable div
                 document.getElementById("outputContainer").innerHTML = inputText;
 
                 document.getElementById("loading").style.display = "none"; // Hide loading indicator
             }, 1000); // Simulate processing time
         }
+
+        // Load saved text on page load
+        window.onload = function() {
+            if (localStorage.getItem('outputText')) {
+                document.getElementById("outputContainer").innerHTML = localStorage.getItem('outputText');
+            }
+        };
 
         // Function to handle text formatting (bold, italic, underline)
         function execCommand(command) {
@@ -160,6 +182,13 @@
             selection.addRange(range);
             document.execCommand("copy");
             alert("Text copied to clipboard!");
+        }
+
+        // Function to delete all text in both input and output boxes
+        function deleteAll() {
+            document.getElementById("textInput").value = '';
+            document.getElementById("outputContainer").innerHTML = '';
+            localStorage.removeItem('outputText'); // Clear from memory
         }
 
         // Function to jump to email link using F11 key
