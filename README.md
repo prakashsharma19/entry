@@ -83,10 +83,15 @@
         }
         .draggable-item {
             cursor: move;
-            padding: 5px;
+            padding: 10px;
             border: 1px solid #ccc;
             margin: 5px 0;
             background-color: #f9f9f9;
+        }
+        .droppable {
+            border: 2px dashed #1E90FF;
+            min-height: 40px;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -132,8 +137,10 @@
         <button class="blue" onclick="copyToClipboard()">Copy to Clipboard</button>
     </div>
 
-    <!-- Output container -->
-    <div id="outputContainer" contenteditable="true"></div>
+    <!-- Output container with draggable items -->
+    <div id="outputContainer" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <!-- Draggable items will be inserted here -->
+    </div>
 
     <button class="red" onclick="deleteAll()">Delete All</button>
 
@@ -177,62 +184,59 @@
                 // Convert special characters to regular text
                 inputText = removeDiacritics(inputText);
 
-                // Preserve paragraph spacing
-                inputText = inputText.replace(/\n/g, '<br>');
+                // Split input text by line breaks
+                const lines = inputText.split('\n');
 
-                // Save cleaned text
-                document.getElementById("outputContainer").innerHTML = inputText;
-
-                // Check if sorting is enabled
-                if (document.getElementById("sortToggle").checked) {
-                    sortText();
-                }
+                // Display cleaned text in draggable format
+                displayDraggableOutput(lines);
 
                 document.getElementById("loading").style.display = "none"; // Hide loading indicator
             }, 1000); // Simulate processing time
         }
 
-        // Function to sort the text into a specific format
-        function sortText() {
+        // Function to display the cleaned text as draggable items
+        function displayDraggableOutput(lines) {
+            const outputContainer = document.getElementById("outputContainer");
+            outputContainer.innerHTML = ''; // Clear previous content
+
             const categories = [
-                { label: 'Name', text: '' },
-                { label: 'Department', text: '' },
-                { label: 'Institute', text: '' },
-                { label: 'University', text: '' },
-                { label: 'Country', text: '' },
-                { label: 'Email', text: '' }
+                { label: 'Name', text: lines[0] || '' },
+                { label: 'Department', text: lines[1] || '' },
+                { label: 'Institute', text: lines[2] || '' },
+                { label: 'University', text: lines[3] || '' },
+                { label: 'Country', text: lines[4] || '' },
+                { label: 'Email', text: lines[5] || '' }
             ];
 
-            const outputText = document.getElementById("outputContainer").innerHTML;
-            const lines = outputText.split('<br>');
-
-            // Sort text into categories (simple example, can be extended)
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].includes('@')) {
-                    categories[5].text = lines[i]; // Email
-                } else if (lines[i].includes('University')) {
-                    categories[3].text = lines[i]; // University
-                } else if (lines[i].includes('Department')) {
-                    categories[1].text = lines[i]; // Department
-                } else if (lines[i].includes('Institute')) {
-                    categories[2].text = lines[i]; // Institute
-                } else if (lines[i].trim().split(' ').length <= 3) {
-                    categories[0].text = lines[i]; // Name
-                } else {
-                    categories[4].text = lines[i]; // Country
-                }
-            }
-
-            // Build sorted output
-            let sortedText = '';
-            categories.forEach(category => {
-                if (category.text) {
-                    sortedText += category.text + '<br>';
-                }
+            categories.forEach((category, index) => {
+                let div = document.createElement('div');
+                div.className = 'draggable-item';
+                div.setAttribute('draggable', true);
+                div.setAttribute('ondragstart', 'drag(event)');
+                div.id = 'item-' + index;
+                div.innerHTML = `<strong>${category.label}:</strong> ${category.text}`;
+                outputContainer.appendChild(div);
             });
+        }
 
-            // Update output
-            document.getElementById("outputContainer").innerHTML = sortedText;
+        // Enable drag and drop functionality
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            var draggableElement = document.getElementById(data);
+            var dropzone = event.target;
+            
+            if (dropzone.classList.contains('droppable')) {
+                dropzone.appendChild(draggableElement);
+            }
         }
 
         // Other existing functions for text formatting, etc.
