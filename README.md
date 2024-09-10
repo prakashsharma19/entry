@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +32,8 @@
             background-color: #fff;
             overflow-y: auto;
             color: black;
-            font-size: 18px;
+            font-size: 24px;
+            font-family: "Times New Roman";
         }
         button {
             padding: 10px 20px;
@@ -53,15 +55,28 @@
             padding: 5px;
             margin-right: 5px;
             border: none;
-            background-color: #ddd;
+            background-color: #007BFF;
+            color: white;
             cursor: pointer;
         }
         .toolbar select:hover, .toolbar button:hover {
-            background-color: #ccc;
+            background-color: #0056b3;
         }
         #loading {
             display: none;
             color: red;
+        }
+        .delete-all-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -79,20 +94,21 @@
         <label for="fontSize">Text Size: </label>
         <select id="fontSize" onchange="changeTextSize()">
             <option value="14">Small</option>
-            <option value="18" selected>Medium</option>
-            <option value="24">Large</option>
+            <option value="18">Medium</option>
+            <option value="24" selected>Large</option>
             <option value="32">X-Large</option>
         </select>
         <label for="fontFamily">Font: </label>
         <select id="fontFamily" onchange="changeFontFamily()">
-            <option value="Arial" selected>Arial</option>
-            <option value="Times New Roman">Times New Roman</option>
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman" selected>Times New Roman</option>
             <option value="Courier New">Courier New</option>
             <option value="Georgia">Georgia</option>
         </select>
         <button onclick="copyToClipboard()">Copy to Clipboard</button>
     </div>
     <div id="outputContainer" contenteditable="true"></div>
+    <button class="delete-all-btn" onclick="deleteAll()">Delete All</button>
 
     <script>
         // Helper function to clean special characters
@@ -106,8 +122,12 @@
             setTimeout(() => {
                 let inputText = document.getElementById("textInput").value;
 
-                // Remove 'Corresponding author' text
-                inputText = inputText.replace(/Corresponding author/gi, '');
+                // Remove 'Corresponding author' and 'View the author's ORCID record' texts
+                inputText = inputText.replace(/Corresponding author at:/gi, '');
+                inputText = inputText.replace(/View the author\'s ORCID record/gi, '');
+
+                // Remove unwanted full stops
+                inputText = inputText.replace(/\.\s*\./g, '.');
 
                 // Remove links
                 inputText = inputText.replace(/https?:\/\/\S+/g, '');
@@ -120,17 +140,31 @@
                 // Convert special characters to regular text
                 inputText = removeDiacritics(inputText);
 
-                // Remove unwanted full stops
-                inputText = inputText.replace(/\.\s*\./g, '.');
-
-                // Preserve paragraph spacing
-                inputText = inputText.replace(/\n/g, '<br>');
+                // Preserve paragraph spacing and ensure single-line paragraph spacing is maintained
+                inputText = inputText.replace(/\n{2,}/g, '<br>'); // Remove excessive newlines
 
                 // Output cleaned text in the editable div
                 document.getElementById("outputContainer").innerHTML = inputText;
 
+                // Save cleaned text in memory
+                localStorage.setItem('savedText', inputText);
+
                 document.getElementById("loading").style.display = "none"; // Hide loading indicator
             }, 1000); // Simulate processing time
+        }
+
+        // Load saved text from memory on page load
+        window.onload = function() {
+            let savedText = localStorage.getItem('savedText');
+            if (savedText) {
+                document.getElementById("outputContainer").innerHTML = savedText;
+            }
+        };
+
+        // Function to delete all content
+        function deleteAll() {
+            document.getElementById("outputContainer").innerHTML = '';
+            localStorage.removeItem('savedText');
         }
 
         // Function to handle text formatting (bold, italic, underline)
