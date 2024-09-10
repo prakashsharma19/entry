@@ -16,7 +16,7 @@
             width: 100%;
             height: 100px;
             padding: 10px;
-            font-size: 18px; /* Large text by default */
+            font-size: 18px;
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
@@ -31,8 +31,9 @@
             background-color: #fff;
             overflow-y: auto;
             color: black;
-            font-size: 18px; /* Large text by default */
+            font-size: 18px;
             font-family: 'Times New Roman', serif;
+            white-space: pre-wrap;
         }
         button {
             padding: 10px 20px;
@@ -126,71 +127,46 @@
     <button class="red" onclick="deleteAll()">Delete All</button>
 
     <script>
-        // Helper function to clean special characters
         function removeDiacritics(str) {
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         }
 
-        // Function to clean the text
         function cleanText() {
-            document.getElementById("loading").style.display = "inline"; // Show loading indicator
+            document.getElementById("loading").style.display = "inline";
             setTimeout(() => {
                 let inputText = document.getElementById("textInput").value;
-
-                // Remove 'Corresponding author' and 'View the author\'s ORCID record' texts
                 inputText = inputText.replace(/Corresponding author/gi, '');
                 inputText = inputText.replace(/View the author's ORCID record/gi, '');
-
-                // Remove links
                 inputText = inputText.replace(/https?:\/\/\S+/g, '');
-
-                // Convert email addresses to mailto links
                 inputText = inputText.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi, function(email) {
                     return '<a href="mailto:' + email + '">' + email + '</a>';
                 });
-
-                // Convert special characters to regular text
                 inputText = removeDiacritics(inputText);
-
-                // Remove unwanted full stops
                 inputText = inputText.replace(/\.\s*\./g, '.');
-
-                // Preserve paragraph spacing
                 inputText = inputText.replace(/\n/g, '<br>');
-
-                // Apply break line if toggle is on
                 if (document.getElementById("breakLineToggle").checked) {
                     inputText = inputText.replace(/,\s*(?!and\b)/g, ',<br>');
                 }
-
-                // Save cleaned text in memory (local storage)
                 localStorage.setItem('outputText', inputText);
-
-                // Output cleaned text in the editable div
                 document.getElementById("outputContainer").innerHTML = inputText;
-
-                document.getElementById("loading").style.display = "none"; // Hide loading indicator
-            }, 1000); // Simulate processing time
+                document.getElementById("loading").style.display = "none";
+            }, 1000);
         }
 
-        // Function to handle text formatting (bold, italic, underline)
         function execCommand(command) {
             document.execCommand(command, false, null);
         }
 
-        // Function to change text size in the result box
         function changeTextSize() {
             let fontSize = document.getElementById("fontSize").value;
             document.getElementById("outputContainer").style.fontSize = fontSize + "px";
         }
 
-        // Function to change font family in the result box
         function changeFontFamily() {
             let fontFamily = document.getElementById("fontFamily").value;
             document.getElementById("outputContainer").style.fontFamily = fontFamily;
         }
 
-        // Function to copy cleaned text to clipboard
         function copyToClipboard() {
             let outputContainer = document.getElementById("outputContainer");
             let range = document.createRange();
@@ -202,60 +178,51 @@
             alert("Text copied to clipboard!");
         }
 
-        // Function to delete all text in both input and output boxes
         function deleteAll() {
             document.getElementById("textInput").value = '';
             document.getElementById("outputContainer").innerHTML = '';
-            localStorage.removeItem('outputText'); // Clear from memory
+            localStorage.removeItem('outputText');
         }
 
-        // Automatic cut functionality
         document.getElementById('autoCutToggle').addEventListener('change', function() {
             if (this.checked) {
-                document.addEventListener('mousemove', autoCut);
-                document.getElementById('textInput').classList.add('blinking-cursor'); // Change cursor
+                document.addEventListener('keydown', autoCutOnKey);
+                document.getElementById('outputContainer').classList.add('blinking-cursor');
             } else {
-                document.removeEventListener('mousemove', autoCut);
-                document.getElementById('textInput').classList.remove('blinking-cursor'); // Reset cursor
+                document.removeEventListener('keydown', autoCutOnKey);
+                document.getElementById('outputContainer').classList.remove('blinking-cursor');
             }
         });
 
-        // Store cut text in localStorage
         function saveCutText(text) {
             localStorage.setItem('cutText', text);
             document.getElementById('cutTextDisplay').innerText = `Cut text: ${text}`;
         }
 
-        // Auto cut function that cuts text until the next comma or end of line
-        function autoCut(event) {
-            const cursorPosition = event.clientX;
-            const inputText = document.getElementById('textInput').value;
-
-            // Find the next comma or end of line
-            let textUntilComma = inputText.match(/^.*?,/) || inputText;
-            textUntilComma = textUntilComma[0];
-
-            // Cut text and remove it from the textarea
-            document.getElementById('textInput').value = inputText.replace(textUntilComma, '');
-            saveCutText(textUntilComma);
-
-            // Optionally, you can store the updated text in localStorage
-            localStorage.setItem('inputText', document.getElementById('textInput').value);
+        function autoCutOnKey(event) {
+            if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                let outputContainer = document.getElementById('outputContainer');
+                let currentText = outputContainer.innerText;
+                let match = currentText.match(/.*?,/);
+                if (match) {
+                    let cutText = match[0];
+                    outputContainer.innerText = currentText.replace(cutText, '');
+                    saveCutText(cutText);
+                    localStorage.setItem('outputText', outputContainer.innerText);
+                }
+            }
         }
 
-        // Load saved cut text and input text on page load
         window.onload = function() {
-            const savedText = localStorage.getItem('inputText');
+            const savedText = localStorage.getItem('outputText');
             const cutText = localStorage.getItem('cutText');
             if (savedText) {
-                document.getElementById('textInput').value = savedText;
+                document.getElementById('outputContainer').innerText = savedText;
             }
             if (cutText) {
                 document.getElementById('cutTextDisplay').innerText = `Cut text: ${cutText}`;
             }
         };
-
-        // Undo (Ctrl+Z) will automatically work as default browser behavior
     </script>
 </body>
 </html>
