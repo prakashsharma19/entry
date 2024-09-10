@@ -16,11 +16,21 @@
             width: 100%;
             height: 100px;
             padding: 10px;
-            font-size: 18px;
+            font-size: 18px; /* Large text by default */
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
             resize: vertical;
+        }
+        textarea#removeInput {
+            width: 100%;
+            height: 30px;
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            resize: none;
         }
         div#outputContainer {
             width: 100%;
@@ -31,7 +41,7 @@
             background-color: #fff;
             overflow-y: auto;
             color: black;
-            font-size: 18px;
+            font-size: 18px; /* Large text by default */
             font-family: 'Times New Roman', serif;
         }
         button {
@@ -41,17 +51,8 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-        }
-        button.blue {
             background-color: #1E90FF;
             color: white;
-        }
-        button.red {
-            background-color: #FF6347;
-            color: white;
-            position: absolute;
-            top: 10px;
-            right: 20px;
         }
         button:hover {
             opacity: 0.8;
@@ -65,17 +66,9 @@
             border: none;
             cursor: pointer;
         }
-        .toolbar select:hover, .toolbar button:hover {
-            background-color: #ccc;
-        }
         #loading {
             display: none;
             color: red;
-        }
-        input[type="text"] {
-            width: 200px;
-            padding: 5px;
-            margin-right: 5px;
         }
     </style>
 </head>
@@ -83,83 +76,61 @@
     <h2>Entry Workspace</h2>
     <textarea id="textInput" placeholder="Paste your text here..."></textarea>
     <br>
-    <input type="text" id="removeText" placeholder="Text to remove">
-    <button class="blue" onclick="removeText()">Remove Text</button>
-    <br><br>
-    
-    <label for="sortOptions">Sort by: </label>
-    <select id="sortOptions">
-        <option value="none">None</option>
-        <option value="name">Name</option>
-        <option value="department">Department</option>
-        <option value="institute">Institute</option>
-        <option value="university">University</option>
-        <option value="country">Country</option>
-        <option value="email">Email</option>
-    </select>
-    <button class="blue" onclick="sortText()">Sort</button>
+
+    <textarea id="removeInput" placeholder="Enter text to remove"></textarea>
+    <br>
+    <label><input type="checkbox" id="sortCheckbox"> Sort the text</label>
     <br><br>
 
-    <button class="blue" onclick="cleanText()">Fix Text</button>
+    <div class="toolbar">
+        <label for="sortOrder">Drag to Reorder the Sorting Fields:</label>
+        <ul id="sortable">
+            <li class="sortable-item" data-type="name">Name</li>
+            <li class="sortable-item" data-type="department">Department</li>
+            <li class="sortable-item" data-type="university">University</li>
+            <li class="sortable-item" data-type="institute">Institute</li>
+            <li class="sortable-item" data-type="country">Country</li>
+            <li class="sortable-item" data-type="email">Email</li>
+        </ul>
+    </div>
+
+    <button onclick="cleanText()">Fix Text</button>
     <span id="loading">Processing, please wait...</span>
     <br><br>
-    
-    <div class="toolbar">
-        <button class="blue" onclick="execCommand('bold')">Bold</button>
-        <button class="blue" onclick="execCommand('italic')">Italic</button>
-        <button class="blue" onclick="execCommand('underline')">Underline</button>
-        <label for="fontSize">Text Size: </label>
-        <select id="fontSize" onchange="changeTextSize()">
-            <option value="14">Small</option>
-            <option value="18" selected>Large</option>
-            <option value="24">X-Large</option>
-            <option value="32">XX-Large</option>
-        </select>
-        <label for="fontFamily">Font: </label>
-        <select id="fontFamily" onchange="changeFontFamily()">
-            <option value="Times New Roman" selected>Times New Roman</option>
-            <option value="Arial">Arial</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Georgia">Georgia</option>
-        </select>
-        <button class="blue" onclick="copyToClipboard()">Copy to Clipboard</button>
-    </div>
+
     <div id="outputContainer" contenteditable="true"></div>
+    <br>
+    <button onclick="deleteAll()">Delete All</button>
 
-    <button class="red" onclick="deleteAll()">Delete All</button>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
+        $(function() {
+            $("#sortable").sortable();
+        });
+
         // Helper function to clean special characters
         function removeDiacritics(str) {
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         }
 
-        // Function to remove user specified text
-        function removeText() {
-            const removeValue = document.getElementById('removeText').value;
-            let output = document.getElementById('outputContainer').innerHTML;
-            const regex = new RegExp(removeValue, 'gi');
-            output = output.replace(regex, '');
-            document.getElementById('outputContainer').innerHTML = output;
-        }
-
-        // Function to clean and process the text
+        // Function to clean and format the text
         function cleanText() {
             document.getElementById("loading").style.display = "inline"; // Show loading indicator
             setTimeout(() => {
                 let inputText = document.getElementById("textInput").value;
+                let removeText = document.getElementById("removeInput").value;
 
-                // Remove 'Corresponding author' and 'View the author\'s ORCID record' texts
-                inputText = inputText.replace(/Corresponding author/gi, '');
-                inputText = inputText.replace(/View the author's ORCID record/gi, '');
+                // Remove specified text
+                if (removeText) {
+                    let removeRegex = new RegExp(removeText, 'gi');
+                    inputText = inputText.replace(removeRegex, '');
+                }
 
-                // Remove links
-                inputText = inputText.replace(/https?:\/\/\S+/g, '');
-
-                // Convert email addresses to mailto links
-                inputText = inputText.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi, function(email) {
-                    return '<a href="mailto:' + email + '">' + email + '</a>';
-                });
+                // If sort checkbox is selected
+                if (document.getElementById('sortCheckbox').checked) {
+                    inputText = sortTextByCategory(inputText);
+                }
 
                 // Convert special characters to regular text
                 inputText = removeDiacritics(inputText);
@@ -170,10 +141,8 @@
                 // Preserve paragraph spacing
                 inputText = inputText.replace(/\n/g, '<br>');
 
-                // Process sorting if selected
-                if (document.getElementById("sortOptions").value !== "none") {
-                    inputText = sortTextByCategory(inputText);
-                }
+                // Save cleaned text in memory (local storage)
+                localStorage.setItem('outputText', inputText);
 
                 // Output cleaned text in the editable div
                 document.getElementById("outputContainer").innerHTML = inputText;
@@ -182,84 +151,59 @@
             }, 1000); // Simulate processing time
         }
 
-        // Function to sort the text based on selected category
-        function sortText() {
-            const sortCategory = document.getElementById("sortOptions").value;
-            let outputText = document.getElementById("outputContainer").innerText;
-
-            if (sortCategory !== "none") {
-                outputText = sortTextByCategory(outputText, sortCategory);
-                document.getElementById("outputContainer").innerHTML = outputText;
-            }
-        }
-
-        // Function to sort text based on categories
-        function sortTextByCategory(text, category) {
-            let lines = text.split(', ');
-
-            let sortedText = {
+        // Function to sort text by category (Name, Department, University, Institute, Country, Email)
+        function sortTextByCategory(inputText) {
+            let lines = inputText.split(','); // Split by commas for now, can be customized for different text formats.
+            
+            let sortedData = {
                 name: '',
                 department: '',
-                institute: '',
                 university: '',
+                institute: '',
                 country: '',
-                email: ''
+                email: '',
+                others: ''
             };
 
+            // Identify each part based on keywords or structure
             lines.forEach(line => {
                 if (line.match(/@/)) {
-                    sortedText.email = line;
-                } else if (line.toLowerCase().includes('university')) {
-                    sortedText.university = line;
-                } else if (line.toLowerCase().includes('institute')) {
-                    sortedText.institute = line;
+                    sortedData.email = line.trim();
                 } else if (line.toLowerCase().includes('department')) {
-                    sortedText.department = line;
+                    sortedData.department = line.trim();
+                } else if (line.toLowerCase().includes('university')) {
+                    sortedData.university = line.trim();
+                } else if (line.toLowerCase().includes('institute')) {
+                    sortedData.institute = line.trim();
                 } else if (line.toLowerCase().includes('india') || line.toLowerCase().includes('usa')) {
-                    sortedText.country = line;
+                    sortedData.country = line.trim();
+                } else if (!sortedData.name) {
+                    sortedData.name = line.trim();
                 } else {
-                    sortedText.name = line;
+                    sortedData.others += line.trim() + ', ';
                 }
             });
 
-            return `
-                Name: ${sortedText.name}<br>
-                Department: ${sortedText.department}<br>
-                Institute: ${sortedText.institute}<br>
-                University: ${sortedText.university}<br>
-                Country: ${sortedText.country}<br>
-                Email: ${sortedText.email}
-            `;
+            // Get user-specified sorting order from the draggable list
+            let sortedOrder = $("#sortable").sortable("toArray", { attribute: "data-type" });
+
+            // Build the final sorted text
+            let finalText = '';
+            sortedOrder.forEach(type => {
+                if (sortedData[type]) {
+                    finalText += sortedData[type] + '\n';
+                }
+            });
+
+            return finalText.trim();
         }
 
-        // Function to handle text formatting (bold, italic, underline)
-        function execCommand(command) {
-            document.execCommand(command, false, null);
-        }
-
-        // Function to change text size in the result box
-        function changeTextSize() {
-            let fontSize = document.getElementById("fontSize").value;
-            document.getElementById("outputContainer").style.fontSize = fontSize + "px";
-        }
-
-        // Function to change font family in the result box
-        function changeFontFamily() {
-            let fontFamily = document.getElementById("fontFamily").value;
-            document.getElementById("outputContainer").style.fontFamily = fontFamily;
-        }
-
-        // Function to copy cleaned text to clipboard
-        function copyToClipboard() {
-            let outputContainer = document.getElementById("outputContainer");
-            let range = document.createRange();
-            range.selectNodeContents(outputContainer);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            document.execCommand("copy");
-            alert("Text copied to clipboard!");
-        }
+        // Load saved text on page load
+        window.onload = function() {
+            if (localStorage.getItem('outputText')) {
+                document.getElementById("outputContainer").innerHTML = localStorage.getItem('outputText');
+            }
+        };
 
         // Function to delete all text in both input and output boxes
         function deleteAll() {
@@ -267,18 +211,6 @@
             document.getElementById("outputContainer").innerHTML = '';
             localStorage.removeItem('outputText'); // Clear from memory
         }
-
-        // Function to jump to email link using F11 key
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'F11') {
-                let emailLinks = document.querySelectorAll('#outputContainer a[href^="mailto:"]');
-                if (emailLinks.length > 0) {
-                    emailLinks[0].focus();
-                    emailLinks[0].click();
-                }
-                e.preventDefault();
-            }
-        });
     </script>
 </body>
 </html>
