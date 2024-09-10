@@ -16,7 +16,7 @@
             width: 100%;
             height: 100px;
             padding: 10px;
-            font-size: 18px; /* Large text by default */
+            font-size: 18px;
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
@@ -31,7 +31,7 @@
             background-color: #fff;
             overflow-y: auto;
             color: black;
-            font-size: 18px; /* Large text by default */
+            font-size: 18px;
             font-family: 'Times New Roman', serif;
         }
         button {
@@ -72,15 +72,38 @@
             display: none;
             color: red;
         }
+        input[type="text"] {
+            width: 200px;
+            padding: 5px;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <h2>Entry Workspace</h2>
     <textarea id="textInput" placeholder="Paste your text here..."></textarea>
     <br>
-    <button onclick="cleanText()">Fix Text</button>
+    <input type="text" id="removeText" placeholder="Text to remove">
+    <button class="blue" onclick="removeText()">Remove Text</button>
+    <br><br>
+    
+    <label for="sortOptions">Sort by: </label>
+    <select id="sortOptions">
+        <option value="none">None</option>
+        <option value="name">Name</option>
+        <option value="department">Department</option>
+        <option value="institute">Institute</option>
+        <option value="university">University</option>
+        <option value="country">Country</option>
+        <option value="email">Email</option>
+    </select>
+    <button class="blue" onclick="sortText()">Sort</button>
+    <br><br>
+
+    <button class="blue" onclick="cleanText()">Fix Text</button>
     <span id="loading">Processing, please wait...</span>
     <br><br>
+    
     <div class="toolbar">
         <button class="blue" onclick="execCommand('bold')">Bold</button>
         <button class="blue" onclick="execCommand('italic')">Italic</button>
@@ -111,7 +134,16 @@
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         }
 
-        // Function to clean the text
+        // Function to remove user specified text
+        function removeText() {
+            const removeValue = document.getElementById('removeText').value;
+            let output = document.getElementById('outputContainer').innerHTML;
+            const regex = new RegExp(removeValue, 'gi');
+            output = output.replace(regex, '');
+            document.getElementById('outputContainer').innerHTML = output;
+        }
+
+        // Function to clean and process the text
         function cleanText() {
             document.getElementById("loading").style.display = "inline"; // Show loading indicator
             setTimeout(() => {
@@ -138,8 +170,10 @@
                 // Preserve paragraph spacing
                 inputText = inputText.replace(/\n/g, '<br>');
 
-                // Save cleaned text in memory (local storage)
-                localStorage.setItem('outputText', inputText);
+                // Process sorting if selected
+                if (document.getElementById("sortOptions").value !== "none") {
+                    inputText = sortTextByCategory(inputText);
+                }
 
                 // Output cleaned text in the editable div
                 document.getElementById("outputContainer").innerHTML = inputText;
@@ -148,12 +182,55 @@
             }, 1000); // Simulate processing time
         }
 
-        // Load saved text on page load
-        window.onload = function() {
-            if (localStorage.getItem('outputText')) {
-                document.getElementById("outputContainer").innerHTML = localStorage.getItem('outputText');
+        // Function to sort the text based on selected category
+        function sortText() {
+            const sortCategory = document.getElementById("sortOptions").value;
+            let outputText = document.getElementById("outputContainer").innerText;
+
+            if (sortCategory !== "none") {
+                outputText = sortTextByCategory(outputText, sortCategory);
+                document.getElementById("outputContainer").innerHTML = outputText;
             }
-        };
+        }
+
+        // Function to sort text based on categories
+        function sortTextByCategory(text, category) {
+            let lines = text.split(', ');
+
+            let sortedText = {
+                name: '',
+                department: '',
+                institute: '',
+                university: '',
+                country: '',
+                email: ''
+            };
+
+            lines.forEach(line => {
+                if (line.match(/@/)) {
+                    sortedText.email = line;
+                } else if (line.toLowerCase().includes('university')) {
+                    sortedText.university = line;
+                } else if (line.toLowerCase().includes('institute')) {
+                    sortedText.institute = line;
+                } else if (line.toLowerCase().includes('department')) {
+                    sortedText.department = line;
+                } else if (line.toLowerCase().includes('india') || line.toLowerCase().includes('usa')) {
+                    sortedText.country = line;
+                } else {
+                    sortedText.name = line;
+                }
+            });
+
+            return `
+                Name: ${sortedText.name}<br>
+                Department: ${sortedText.department}<br>
+                Institute: ${sortedText.institute}<br>
+                University: ${sortedText.university}<br>
+                Country: ${sortedText.country}<br>
+                Email: ${sortedText.email}
+            `;
+        }
 
         // Function to handle text formatting (bold, italic, underline)
         function execCommand(command) {
