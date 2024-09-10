@@ -79,6 +79,10 @@
     <textarea id="textInput" placeholder="Paste your text here..."></textarea>
     <br>
     <button onclick="cleanText()">Fix Text</button>
+    <label for="breakLineToggle">Break Line</label>
+    <input type="checkbox" id="breakLineToggle" />
+    <label for="autoCutToggle">Automatic Cut</label>
+    <input type="checkbox" id="autoCutToggle" />
     <span id="loading">Processing, please wait...</span>
     <br><br>
     <div class="toolbar">
@@ -138,6 +142,11 @@
                 // Preserve paragraph spacing
                 inputText = inputText.replace(/\n/g, '<br>');
 
+                // Apply break line if toggle is on
+                if (document.getElementById("breakLineToggle").checked) {
+                    inputText = inputText.replace(/,\s*(?!and\b)/g, ',<br>');
+                }
+
                 // Save cleaned text in memory (local storage)
                 localStorage.setItem('outputText', inputText);
 
@@ -147,13 +156,6 @@
                 document.getElementById("loading").style.display = "none"; // Hide loading indicator
             }, 1000); // Simulate processing time
         }
-
-        // Load saved text on page load
-        window.onload = function() {
-            if (localStorage.getItem('outputText')) {
-                document.getElementById("outputContainer").innerHTML = localStorage.getItem('outputText');
-            }
-        };
 
         // Function to handle text formatting (bold, italic, underline)
         function execCommand(command) {
@@ -202,6 +204,27 @@
                 e.preventDefault();
             }
         });
+
+        // Automatic cut functionality
+        document.getElementById('autoCutToggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.addEventListener('mouseup', autoCut);
+            } else {
+                document.removeEventListener('mouseup', autoCut);
+            }
+        });
+
+        function autoCut() {
+            let selection = window.getSelection();
+            let selectedText = selection.toString();
+            if (selectedText) {
+                let inputText = document.getElementById("textInput").value;
+                let regex = new RegExp(`${selectedText.trim()}[^,]*,`, 'i');
+                inputText = inputText.replace(regex, '');
+                document.getElementById("textInput").value = inputText;
+                selection.removeAllRanges(); // Clear selection
+            }
+        }
     </script>
 </body>
 </html>
