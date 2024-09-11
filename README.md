@@ -210,12 +210,6 @@
             }
         });
 
-        // Store cut text in localStorage
-        function saveCutText(text) {
-            localStorage.setItem('cutText', text);
-            document.getElementById('cutTextDisplay').innerText = text;
-        }
-
         // Auto cut function that cuts text until the next comma or period (on arrow key press)
         function autoCutWithArrowKeys(e) {
             if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
@@ -225,7 +219,7 @@
                     let content = outputContainer.innerText;
                     let cursorPosition = window.getSelection().anchorOffset;
 
-                    let regex = /([^,.\n]*[,.])/g; // Regex to match text till comma or period
+                    let regex = /([^,.\n]+)(?=[,.])/g; // Regex to match text till comma or period, excluding them
 
                     let matches = [];
                     let match;
@@ -249,6 +243,38 @@
                     e.preventDefault();
                 }
             }
+        }
+
+        // Quick selection of text between commas or periods
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Alt' && e.key === 'Q') {
+                selectNextEmail();
+            }
+        });
+
+        function selectNextEmail() {
+            const outputContainer = document.getElementById("outputContainer");
+            const content = outputContainer.innerText;
+            const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi;
+
+            const matches = [...content.matchAll(emailRegex)];
+
+            if (matches.length > 0) {
+                const email = matches[0];
+                const range = document.createRange();
+                const selection = window.getSelection();
+
+                range.setStart(outputContainer.firstChild, email.index);
+                range.setEnd(outputContainer.firstChild, email.index + email[0].length);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+
+        // Store cut text in localStorage
+        function saveCutText(text) {
+            localStorage.setItem('cutText', text);
+            document.getElementById('cutTextDisplay').innerText = text;
         }
 
         // Lock button functionality (Locks all buttons and scrolling)
