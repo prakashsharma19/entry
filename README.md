@@ -8,7 +8,7 @@
             font-family: 'Times New Roman', serif;
             margin: 20px;
             background-color: #f4f4f9;
-            overflow: auto; /* Enable scroll for locking */
+            overflow: auto;
         }
         h2 {
             color: #333;
@@ -34,14 +34,16 @@
             color: black;
             font-size: 18px; /* Large text by default */
             font-family: 'Times New Roman', serif;
+            white-space: pre-wrap; /* Preserve spaces */
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 5px 10px;
+            font-size: 14px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-right: 5px;
         }
         button.blue {
             background-color: #1E90FF;
@@ -61,7 +63,9 @@
         button.lock {
             background-color: #696969;
             color: white;
-            margin-right: 10px;
+        }
+        button.lock.locked {
+            background-color: red; /* Red when locked */
         }
         button:hover {
             opacity: 0.8;
@@ -69,7 +73,7 @@
         #cutTextDisplay {
             color: green;
             font-weight: bold;
-            font-size: 24px; /* Larger font size */
+            font-size: 24px;
             margin-left: 10px;
         }
         .blinking-cursor::after {
@@ -99,6 +103,21 @@
             display: none;
             color: red;
         }
+        /* Icons for Bold, Italic, Underline */
+        .toolbar button {
+            font-size: 18px;
+            padding: 5px;
+        }
+        .toolbar .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+        .toolbar .icon-button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -114,32 +133,17 @@
     <span id="cutTextDisplay"></span>
     <br><br>
     <div class="toolbar">
-        <button class="blue" onclick="execCommand('bold')">Bold</button>
-        <button class="blue" onclick="execCommand('italic')">Italic</button>
-        <button class="blue" onclick="execCommand('underline')">Underline</button>
-        <label for="fontSize">Text Size: </label>
-        <select id="fontSize" onchange="changeTextSize()">
-            <option value="14">Small</option>
-            <option value="18" selected>Large</option>
-            <option value="24">X-Large</option>
-            <option value="32">XX-Large</option>
-        </select>
-        <label for="fontFamily">Font: </label>
-        <select id="fontFamily" onchange="changeFontFamily()">
-            <option value="Times New Roman" selected>Times New Roman</option>
-            <option value="Arial">Arial</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Georgia">Georgia</option>
-        </select>
-        <button class="blue" onclick="copyToClipboard()">Copy to Clipboard</button>
-        <button class="blue" onclick="toggleFullScreen()">Full Screen</button>
+        <button class="icon-button" onclick="execCommand('bold')" title="Bold"><b>B</b></button>
+        <button class="icon-button" onclick="execCommand('italic')" title="Italic"><i>I</i></button>
+        <button class="icon-button" onclick="execCommand('underline')" title="Underline"><u>U</u></button>
         <button class="lock" id="lockButton" onclick="toggleLock()">Lock</button>
     </div>
     <div id="outputContainer" contenteditable="true"></div>
-
     <button class="red" onclick="deleteAll()">Delete All</button>
+    <br>
+    <button class="blue" onclick="toggleFullScreen()">Full Screen</button>
 
-    <div id="scrollLockNotice">Scrolling is locked, unlock first.</div>
+    <div id="scrollLockNotice">Scrolling is Locked, Unlock first.</div>
 
     <script>
         let lockActive = false;
@@ -197,45 +201,12 @@
             document.execCommand(command, false, null);
         }
 
-        // Function to change text size in the result box
-        function changeTextSize() {
-            let fontSize = document.getElementById("fontSize").value;
-            document.getElementById("outputContainer").style.fontSize = fontSize + "px";
-        }
-
-        // Function to change font family in the result box
-        function changeFontFamily() {
-            let fontFamily = document.getElementById("fontFamily").value;
-            document.getElementById("outputContainer").style.fontFamily = fontFamily;
-        }
-
-        // Function to copy cleaned text to clipboard
-        function copyToClipboard() {
-            let outputContainer = document.getElementById("outputContainer");
-            let range = document.createRange();
-            range.selectNodeContents(outputContainer);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            document.execCommand("copy");
-            alert("Text copied to clipboard!");
-        }
-
-        // Function to delete all text in both input and output boxes
-        function deleteAll() {
-            document.getElementById("textInput").value = '';
-            document.getElementById("outputContainer").innerHTML = '';
-            localStorage.removeItem('outputText'); // Clear from memory
-        }
-
-        // Automatic cut functionality
+        // Auto cut functionality
         document.getElementById('autoCutToggle').addEventListener('change', function() {
             if (this.checked) {
-                document.addEventListener('mousemove', autoCut);
-                document.getElementById('textInput').classList.add('blinking-cursor'); // Only cursor blinks
+                document.addEventListener('keydown', autoCutWithArrowKeys);
             } else {
-                document.removeEventListener('mousemove', autoCut);
-                document.getElementById('textInput').classList.remove('blinking-cursor');
+                document.removeEventListener('keydown', autoCutWithArrowKeys);
             }
         });
 
@@ -245,64 +216,37 @@
             document.getElementById('cutTextDisplay').innerText = text;
         }
 
-        // Auto cut function that cuts text until the next comma or end of line
-        function autoCut(event) {
-            const cursorPosition = event.clientX;
-            const inputText = document.getElementById('textInput').value;
+        // Auto cut function that cuts text until the next comma or period (on arrow key press)
+        function autoCutWithArrowKeys(e) {
+            if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                let outputContainer = document.getElementById("outputContainer");
+                let selectedText = window.getSelection().toString();
+                if (!selectedText) {
+                    let content = outputContainer.innerText;
+                    let cursorPosition = window.getSelection().anchorOffset;
 
-            // Find the next comma or end of line
-            let textUntilComma = inputText.match(/^.*?,/) || inputText;
-            textUntilComma = textUntilComma[0];
+                    let regex = /([^,.\n]*[,.])/g; // Regex to match text till comma or period
 
-            // Cut text and remove it from the textarea
-            document.getElementById('textInput').value = inputText.replace(textUntilComma, '');
-            saveCutText(textUntilComma);
+                    let matches = [];
+                    let match;
+                    while ((match = regex.exec(content)) !== null) {
+                        matches.push(match);
+                    }
 
-            // Optionally, you can store the updated text in localStorage
-            localStorage.setItem('inputText', document.getElementById('textInput').value);
-        }
+                    // Find match based on current cursor position
+                    for (let i = 0; i < matches.length; i++) {
+                        if (matches[i].index >= cursorPosition) {
+                            // Remove the full line till comma or period
+                            content = content.replace(matches[i][0], '');
+                            saveCutText(matches[i][0]);
+                            break;
+                        }
+                    }
 
-        // Faster selection when auto-cut is off
-        document.getElementById('autoCutToggle').addEventListener('change', function() {
-            if (!this.checked) {
-                document.addEventListener('keydown', handleQuickSelection);
-            } else {
-                document.removeEventListener('keydown', handleQuickSelection);
-            }
-        });
+                    // Update the output container with the modified content
+                    outputContainer.innerText = content;
 
-        function handleQuickSelection(e) {
-            if ((e.ctrlKey || e.shiftKey) && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
-                e.preventDefault();
-                let inputText = document.getElementById('textInput').value;
-                let cursorPos = document.getElementById('textInput').selectionStart;
-                let nextComma = inputText.indexOf(',', cursorPos);
-                let nextPeriod = inputText.indexOf('.', cursorPos);
-                let endPos = Math.min(nextComma, nextPeriod) === -1 ? inputText.length : Math.min(nextComma, nextPeriod);
-
-                document.getElementById('textInput').setSelectionRange(cursorPos, endPos);
-            }
-        }
-
-        // Load saved cut text and input text on page load
-        window.onload = function() {
-            const savedText = localStorage.getItem('inputText');
-            const cutText = localStorage.getItem('cutText');
-            if (savedText) {
-                document.getElementById('textInput').value = savedText;
-            }
-            if (cutText) {
-                document.getElementById('cutTextDisplay').innerText = cutText;
-            }
-        };
-
-        // Full screen functionality
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
+                    e.preventDefault();
                 }
             }
         }
@@ -312,12 +256,14 @@
             let lockButton = document.getElementById('lockButton');
             lockActive = !lockActive;
             if (lockActive) {
+                lockButton.classList.add('locked');
                 lockButton.textContent = 'Unlock';
                 document.querySelectorAll('button').forEach(btn => btn.disabled = true);
                 lockButton.disabled = false; // Keep lock button enabled
                 originalOverflow = document.body.style.overflow;
                 document.body.style.overflow = 'hidden'; // Lock scrolling
             } else {
+                lockButton.classList.remove('locked');
                 lockButton.textContent = 'Lock';
                 document.querySelectorAll('button').forEach(btn => btn.disabled = false);
                 document.body.style.overflow = originalOverflow; // Unlock scrolling
@@ -333,6 +279,36 @@
                 }, 2000);
             }
         });
+
+        // Full screen functionality
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Function to delete all text in both input and output boxes
+        function deleteAll() {
+            document.getElementById("textInput").value = '';
+            document.getElementById("outputContainer").innerHTML = '';
+            localStorage.removeItem('outputText'); // Clear from memory
+        }
+
+        // Load saved cut text and input text on page load
+        window.onload = function() {
+            const savedText = localStorage.getItem('outputText');
+            const cutText = localStorage.getItem('cutText');
+            if (savedText) {
+                document.getElementById('outputContainer').innerText = savedText;
+            }
+            if (cutText) {
+                document.getElementById('cutTextDisplay').innerText = cutText;
+            }
+        };
     </script>
 </body>
 </html>
