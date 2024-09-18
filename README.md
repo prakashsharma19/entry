@@ -168,13 +168,13 @@
             document.execCommand(command, false, null);
         }
 
-        // Extend text selection to next punctuation mark continuously
+        // Extend text selection to next punctuation mark continuously, including punctuation
         let autoExpandSelection = false;
 
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.key === 'ArrowRight') {
                 autoExpandSelection = true;
-                expandSelection();
+                expandSelection(true);  // Include punctuation in selection
                 e.preventDefault();
             }
         });
@@ -185,7 +185,7 @@
             }
         });
 
-        function expandSelection() {
+        function expandSelection(keepPunctuation) {
             if (!autoExpandSelection) return;
 
             let selection = window.getSelection();
@@ -195,12 +195,18 @@
             let startPos = range.startOffset;
 
             if (content) {
-                let nextPunctuationIndex = content.slice(startPos).search(/[,\.]/);
+                // Modify regex to include punctuation based on the "keepPunctuation" flag
+                let nextPunctuationIndex = content.slice(startPos).search(/[,.]/);
 
                 if (nextPunctuationIndex !== -1) {
-                    nextPunctuationIndex += startPos; // Adjust to absolute position
+                    nextPunctuationIndex += startPos;  // Adjust to absolute position
+
+                    // Include the punctuation in the selection
+                    if (keepPunctuation) {
+                        nextPunctuationIndex++;  // Extend the selection by one to include punctuation
+                    }
                 } else {
-                    nextPunctuationIndex = content.length; // If no punctuation, select till the end
+                    nextPunctuationIndex = content.length;  // If no punctuation, select till the end
                 }
 
                 range.setEnd(range.startContainer, nextPunctuationIndex);
@@ -208,7 +214,7 @@
                 selection.addRange(range);
 
                 // Continue expanding the selection every 100ms
-                setTimeout(expandSelection, 100);
+                setTimeout(() => expandSelection(keepPunctuation), 100);
             }
         }
 
