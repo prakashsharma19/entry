@@ -17,7 +17,7 @@
             width: 100%;
             height: 100px;
             padding: 10px;
-            font-size: 18px;
+            font-size: 18px; /* Large text by default */
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
@@ -32,9 +32,9 @@
             background-color: #fff;
             overflow-y: auto;
             color: black;
-            font-size: 18px;
+            font-size: 18px; /* Large text by default */
             font-family: 'Times New Roman', serif;
-            white-space: pre-wrap;
+            white-space: pre-wrap; /* Preserve spaces */
         }
         button {
             padding: 5px 10px;
@@ -50,7 +50,7 @@
             color: white;
         }
         button.green {
-            background-color: #32CD32;
+            background-color: #32CD32; /* Green color for Fix button */
             color: white;
         }
         button.red {
@@ -65,7 +65,7 @@
             color: white;
         }
         button.lock.locked {
-            background-color: red;
+            background-color: red; /* Red when locked */
         }
         button:hover {
             opacity: 0.8;
@@ -103,6 +103,21 @@
             display: none;
             color: red;
         }
+        /* Icons for Bold, Italic, Underline */
+        .toolbar button {
+            font-size: 18px;
+            padding: 5px;
+        }
+        .toolbar .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+        .toolbar .icon-button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -134,16 +149,34 @@
         let lockActive = false;
         let originalOverflow = '';
 
+        // Helper function to clean special characters
+        function removeDiacritics(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
         // Function to clean the text
         function cleanText() {
             document.getElementById("loading").style.display = "inline"; // Show loading indicator
             setTimeout(() => {
                 let inputText = document.getElementById("textInput").value;
 
-                // Remove unwanted phrases and links
+                // Remove 'Corresponding author' and 'View the author\'s ORCID record' texts
                 inputText = inputText.replace(/Corresponding author/gi, '');
                 inputText = inputText.replace(/View the author's ORCID record/gi, '');
+
+                // Remove links
                 inputText = inputText.replace(/https?:\/\/\S+/g, '');
+
+                // Convert email addresses to mailto links
+                inputText = inputText.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi, function(email) {
+                    return '<a href="mailto:' + email + '">' + email + '</a>';
+                });
+
+                // Convert special characters to regular text
+                inputText = removeDiacritics(inputText);
+
+                // Remove unwanted full stops
+                inputText = inputText.replace(/\.\s*\./g, '.');
 
                 // Preserve paragraph spacing
                 inputText = inputText.replace(/\n/g, '<br>');
@@ -153,7 +186,7 @@
                     inputText = inputText.replace(/,\s*(?!and\b)/g, ',<br>');
                 }
 
-                // Save cleaned text
+                // Save cleaned text in memory (local storage)
                 localStorage.setItem('outputText', inputText);
 
                 // Output cleaned text in the editable div
@@ -168,54 +201,80 @@
             document.execCommand(command, false, null);
         }
 
-        // Extend text selection to next punctuation mark continuously, including punctuation
-        let autoExpandSelection = false;
-
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'ArrowRight') {
-                autoExpandSelection = true;
-                expandSelection(true);  // Include punctuation in selection
-                e.preventDefault();
+        // Auto cut functionality
+        document.getElementById('autoCutToggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.addEventListener('keydown', autoCutWithArrowKeys);
+            } else {
+                document.removeEventListener('keydown', autoCutWithArrowKeys);
             }
         });
 
-        document.addEventListener('keyup', function(e) {
-            if (e.key === 'Shift') {
-                autoExpandSelection = false;
-            }
-        });
+        // Auto cut function that cuts text until the next comma or period (on arrow key press)
+        function autoCutWithArrowKeys(e) {
+            if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                let outputContainer = document.getElementById("outputContainer");
+                let selectedText = window.getSelection().toString();
+                if (!selectedText) {
+                    let content = outputContainer.innerText;
+                    let cursorPosition = window.getSelection().anchorOffset;
 
-        function expandSelection(keepPunctuation) {
-            if (!autoExpandSelection) return;
+                    let regex = /([^,.\n]+)(?=[,.])/g; // Regex to match text till comma or period, excluding them
 
-            let selection = window.getSelection();
-            let range = selection.getRangeAt(0);
-
-            let content = range.startContainer.nodeValue;
-            let startPos = range.startOffset;
-
-            if (content) {
-                // Modify regex to include punctuation based on the "keepPunctuation" flag
-                let nextPunctuationIndex = content.slice(startPos).search(/[,.]/);
-
-                if (nextPunctuationIndex !== -1) {
-                    nextPunctuationIndex += startPos;  // Adjust to absolute position
-
-                    // Include the punctuation in the selection
-                    if (keepPunctuation) {
-                        nextPunctuationIndex++;  // Extend the selection by one to include punctuation
+                    let matches = [];
+                    let match;
+                    while ((match = regex.exec(content)) !== null) {
+                        matches.push(match);
                     }
-                } else {
-                    nextPunctuationIndex = content.length;  // If no punctuation, select till the end
-                }
 
-                range.setEnd(range.startContainer, nextPunctuationIndex);
+                    // Find match based on current cursor position
+                    for (let i = 0; i < matches.length; i++) {
+                        if (matches[i].index >= cursorPosition) {
+                            // Remove the full line till comma or period
+                            content = content.replace(matches[i][0], '');
+                            saveCutText(matches[i][0]);
+                            break;
+                        }
+                    }
+
+                    // Update the output container with the modified content
+                    outputContainer.innerText = content;
+
+                    e.preventDefault();
+                }
+            }
+        }
+
+        // Quick selection of text between commas or periods
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Alt' && e.key === 'Q') {
+                selectNextEmail();
+            }
+        });
+
+        function selectNextEmail() {
+            const outputContainer = document.getElementById("outputContainer");
+            const content = outputContainer.innerText;
+            const emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi;
+
+            const matches = [...content.matchAll(emailRegex)];
+
+            if (matches.length > 0) {
+                const email = matches[0];
+                const range = document.createRange();
+                const selection = window.getSelection();
+
+                range.setStart(outputContainer.firstChild, email.index);
+                range.setEnd(outputContainer.firstChild, email.index + email[0].length);
                 selection.removeAllRanges();
                 selection.addRange(range);
-
-                // Continue expanding the selection every 100ms
-                setTimeout(() => expandSelection(keepPunctuation), 100);
             }
+        }
+
+        // Store cut text in localStorage
+        function saveCutText(text) {
+            localStorage.setItem('cutText', text);
+            document.getElementById('cutTextDisplay').innerText = text;
         }
 
         // Lock button functionality (Locks all buttons and scrolling)
@@ -236,6 +295,16 @@
                 document.body.style.overflow = originalOverflow; // Unlock scrolling
             }
         }
+
+        // Show a message if scrolling is attempted while locked
+        window.addEventListener('scroll', function() {
+            if (lockActive) {
+                document.getElementById('scrollLockNotice').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('scrollLockNotice').style.display = 'none';
+                }, 2000);
+            }
+        });
 
         // Full screen functionality
         function toggleFullScreen() {
