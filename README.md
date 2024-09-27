@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -123,6 +124,9 @@
 
             // Asynchronous text formatting to avoid blocking UI
             await new Promise(resolve => setTimeout(resolve, 0)); 
+
+            // Remove links starting with http, https, www
+            text = text.replace(/https?:\/\/[^\s]+|www\.[^\s]+/g, '');
 
             // Replace email addresses with links and normalize text
             var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
