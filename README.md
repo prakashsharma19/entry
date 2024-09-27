@@ -56,12 +56,13 @@
             word-wrap: break-word;
             font-family: 'Arial', sans-serif;
             font-size: 16px;
+            line-height: 0.6; /* Default line spacing */
         }
         a.email-link {
             text-decoration: underline;
             color: blue;
         }
-        .button-group, .toolbar {
+        .button-group, .toolbar, .find-replace-section {
             text-align: center;
             margin-top: 20px;
         }
@@ -83,6 +84,11 @@
             transform: scale(0.95);
         }
         .toolbar select, .toolbar input {
+            padding: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .find-replace-section input {
             padding: 8px;
             font-size: 16px;
             margin-right: 10px;
@@ -124,7 +130,15 @@
             <input type="number" id="font-size" value="16" min="10" max="36" /> px
 
             <label for="line-spacing">Line Spacing:</label>
-            <input type="number" id="line-spacing" value="1.6" step="0.1" min="1" max="3" />
+            <input type="number" id="line-spacing" value="0.6" step="0.1" min="0.5" max="3" />
+        </div>
+
+        <div class="find-replace-section">
+            <h3>Find and Replace</h3>
+            <input type="text" id="find-text" placeholder="Find..." />
+            <input type="text" id="replace-text" placeholder="Replace with..." />
+            <button class="button" onclick="findAndReplace()">Replace</button>
+            <button class="button" onclick="removeText()">Remove</button>
         </div>
 
         <div class="button-group">
@@ -141,6 +155,19 @@
     </div>
 
     <script>
+        // Load saved formatting settings from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedFontFamily = localStorage.getItem('fontFamily');
+            const savedFontSize = localStorage.getItem('fontSize');
+            const savedLineSpacing = localStorage.getItem('lineSpacing');
+
+            if (savedFontFamily) document.getElementById('font-family').value = savedFontFamily;
+            if (savedFontSize) document.getElementById('font-size').value = savedFontSize;
+            if (savedLineSpacing) document.getElementById('line-spacing').value = savedLineSpacing;
+
+            applyFormatting(); // Apply saved settings on load
+        });
+
         async function formatText() {
             var textarea = document.getElementById('text-area');
             var fixedText = document.getElementById('fixed-text');
@@ -149,10 +176,10 @@
             // Asynchronous text formatting to avoid blocking UI
             await new Promise(resolve => setTimeout(resolve, 0));
 
-            // Replace email addresses with links and normalize text
+            // Replace email addresses with links and remove other hyperlinks
             var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
                 return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
-            }).replace(/\n/g, '<br><br>');
+            }).replace(/https?:\/\/[^\s]+/g, '');  // Remove non-email URLs
 
             // Normalize special characters by removing diacritics
             var tempDiv = document.createElement('div');
@@ -175,6 +202,26 @@
             fixedText.style.fontFamily = fontFamily;
             fixedText.style.fontSize = fontSize;
             fixedText.style.lineHeight = lineSpacing;
+
+            // Save formatting options to localStorage for future use
+            localStorage.setItem('fontFamily', fontFamily);
+            localStorage.setItem('fontSize', document.getElementById('font-size').value);
+            localStorage.setItem('lineSpacing', lineSpacing);
+        }
+
+        function findAndReplace() {
+            var fixedText = document.getElementById('fixed-text');
+            var findText = document.getElementById('find-text').value;
+            var replaceText = document.getElementById('replace-text').value;
+
+            fixedText.innerHTML = fixedText.innerHTML.replace(new RegExp(findText, 'g'), replaceText);
+        }
+
+        function removeText() {
+            var fixedText = document.getElementById('fixed-text');
+            var findText = document.getElementById('find-text').value;
+
+            fixedText.innerHTML = fixedText.innerHTML.replace(new RegExp(findText, 'g'), '');
         }
 
         function copyToClipboard() {
