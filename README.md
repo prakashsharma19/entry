@@ -138,7 +138,7 @@
     </div>
 
     <div class="footer">
-        <p>This page is developed by Prakash.</p>
+        <p>This web-tool is developed by Prakash</p>
     </div>
 
     <script>
