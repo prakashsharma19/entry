@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,6 +32,12 @@
             font-size: 18px;
             text-align: center;
             color: #666;
+        }
+        .instructions {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #555;
         }
         #text-area {
             width: 100%;
@@ -103,6 +110,26 @@
     <div class="container">
         <h1>Fix Entries PPH</h1>
         <p>Paste your text below and click "Fix" to format and normalize special characters:</p>
+
+        <div class="instructions">
+            <h2>How to Use:</h2>
+            <ul>
+                <li><strong>Paste Text:</strong> Enter your text into the provided text area.</li>
+                <li><strong>Click "Fix":</strong> Press the "Fix" button to clean and format the text.</li>
+                <li><strong>View Results:</strong> The processed text will appear below in the output area.</li>
+                <li><strong>Copy Text:</strong> Use the "Copy Result" button to copy the cleaned-up text to your clipboard.</li>
+            </ul>
+
+            <h2>Functionality:</h2>
+            <ul>
+                <li><strong>Remove Links:</strong> Automatically detects and removes URLs starting with <code>http://</code>, <code>https://</code>, or <code>www.</code></li>
+                <li><strong>Email Conversion:</strong> Converts email addresses into clickable "mailto" links.</li>
+                <li><strong>Character Normalization:</strong> Removes special characters and diacritics to standardize the text.</li>
+                <li><strong>Copy to Clipboard:</strong> Allows easy copying of the processed text with a single click.</li>
+            </ul>
+            <p>Developed by <strong>Prakash</strong>, this tool simplifies text cleanup for various purposes.</p>
+        </div>
+
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
         <div class="button-group">
             <button class="button" onclick="formatText()">Fix</button>
@@ -112,18 +139,7 @@
     </div>
 
     <div class="footer">
-        <p>How to Use:
-Paste Text: Enter your text into the provided text area.
-Click "Fix": Press the "Fix" button to clean and format the text.
-View Results: The processed text will appear below in the output area.
-Copy Text: Use the "Copy Result" button to copy the cleaned-up text to your clipboard.
-Functionality:
-Remove Links: Automatically detects and removes URLs starting with http://, https://, or www.
-Email Conversion: Converts email addresses into clickable "mailto" links.
-Character Normalization: Removes special characters and diacritics to standardize the text.
-Copy to Clipboard: Allows easy copying of the processed text with a single click.
-Developed by Prakash, this tool simplifies text cleanup for various purposes like reports, emails, or publishing.
-</p>
+        <p>This page is developed by Prakash.</p>
     </div>
 
     <script>
