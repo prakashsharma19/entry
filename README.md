@@ -74,7 +74,7 @@
         }
         .button {
             padding: 15px 25px;
-            background-color: #5cb85c;
+            background-color: #00308F;
             color: white;
             font-size: 18px;
             cursor: pointer;
