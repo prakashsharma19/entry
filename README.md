@@ -112,7 +112,17 @@
     </div>
 
     <div class="footer">
-        <p>Fix Entries PPH is a web tool developed by Prakash to clean and format text efficiently. It removes unwanted URLs, converts email addresses into clickable links, and normalizes special characters by stripping diacritics. Simply paste your text, click "Fix," and the tool will clean and format the content. A "Copy Result" button allows easy copying of the processed text. Ideal for refining text for reports, emails, or publishing.
+        <p>How to Use:
+Paste Text: Enter your text into the provided text area.
+Click "Fix": Press the "Fix" button to clean and format the text.
+View Results: The processed text will appear below in the output area.
+Copy Text: Use the "Copy Result" button to copy the cleaned-up text to your clipboard.
+Functionality:
+Remove Links: Automatically detects and removes URLs starting with http://, https://, or www.
+Email Conversion: Converts email addresses into clickable "mailto" links.
+Character Normalization: Removes special characters and diacritics to standardize the text.
+Copy to Clipboard: Allows easy copying of the processed text with a single click.
+Developed by Prakash, this tool simplifies text cleanup for various purposes like reports, emails, or publishing.
 </p>
     </div>
 
