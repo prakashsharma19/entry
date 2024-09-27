@@ -34,7 +34,7 @@
         }
         #text-area {
             width: 100%;
-            height: 200px;
+            height: 300px;
             font-family: 'Arial', sans-serif;
             font-size: 16px;
             padding: 15px;
@@ -61,15 +61,15 @@
             text-decoration: underline;
             color: blue;
         }
-        .button-group, .toolbar {
+        .button-group {
             text-align: center;
             margin-top: 20px;
         }
         .button {
-            padding: 10px 20px;
+            padding: 15px 25px;
             background-color: #5cb85c;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
@@ -82,11 +82,6 @@
         .button:active {
             transform: scale(0.95);
         }
-        .toolbar select, .toolbar input {
-            padding: 8px;
-            font-size: 16px;
-            margin-right: 10px;
-        }
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -98,8 +93,8 @@
                 padding: 10px;
             }
             .button {
-                font-size: 14px;
-                padding: 8px 15px;
+                font-size: 16px;
+                padding: 10px 20px;
             }
         }
     </style>
@@ -109,31 +104,11 @@
         <h1>Fix Entries PPH</h1>
         <p>Paste your text below and click "Fix" to format and normalize special characters:</p>
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
-
-        <div class="toolbar">
-            <!-- Formatting Options -->
-            <label for="font-family">Font:</label>
-            <select id="font-family">
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Georgia">Georgia</option>
-            </select>
-
-            <label for="font-size">Size:</label>
-            <input type="number" id="font-size" value="16" min="10" max="36" /> px
-
-            <label for="line-spacing">Line Spacing:</label>
-            <input type="number" id="line-spacing" value="1.6" step="0.1" min="1" max="3" />
-        </div>
-
         <div class="button-group">
             <button class="button" onclick="formatText()">Fix</button>
-            <button class="button" onclick="applyFormatting()">Apply Formatting</button>
             <button class="button" onclick="copyToClipboard()">Copy Result</button>
         </div>
-
-        <div id="fixed-text" contenteditable="true"></div>
+        <div id="fixed-text"></div>
     </div>
 
     <div class="footer">
@@ -147,7 +122,7 @@
             var text = textarea.value.trim();
 
             // Asynchronous text formatting to avoid blocking UI
-            await new Promise(resolve => setTimeout(resolve, 0));
+            await new Promise(resolve => setTimeout(resolve, 0)); 
 
             // Replace email addresses with links and normalize text
             var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
@@ -159,22 +134,8 @@
             tempDiv.innerHTML = formattedText;
             tempDiv.innerHTML = tempDiv.innerHTML.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            // Make the processed text editable and update the content
+            // Update the fixed text area
             fixedText.innerHTML = tempDiv.innerHTML;
-        }
-
-        function applyFormatting() {
-            var fixedText = document.getElementById('fixed-text');
-
-            // Get selected values from the toolbar
-            var fontFamily = document.getElementById('font-family').value;
-            var fontSize = document.getElementById('font-size').value + 'px';
-            var lineSpacing = document.getElementById('line-spacing').value;
-
-            // Apply the formatting to the processed text area
-            fixedText.style.fontFamily = fontFamily;
-            fixedText.style.fontSize = fontSize;
-            fixedText.style.lineHeight = lineSpacing;
         }
 
         function copyToClipboard() {
