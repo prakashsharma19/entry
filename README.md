@@ -127,8 +127,7 @@
                 <li><strong>Character Normalization:</strong> Removes special characters and diacritics to standardize the text.</li>
                 <li><strong>Copy to Clipboard:</strong> Allows easy copying of the processed text with a single click.</li>
             </ul>
-            <p>Developed by <strong>Prakash</strong>, this tool simplifies text cleanup for various purposes.</p>
-        </div>
+                   </div>
 
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
         <div class="button-group">
