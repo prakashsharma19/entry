@@ -32,11 +32,32 @@
             text-align: center;
             color: #666;
         }
-        .instructions {
-            font-size: 16px;
-            line-height: 1.8;
+        .collapsible {
+            cursor: pointer;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 10px;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible:hover {
+            background-color: #4cae4c;
+        }
+        .content {
+            display: none;
+            padding: 0 18px;
+            background-color: #f9f9f9;
             margin-bottom: 20px;
-            color: #555;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        .content ul {
+            padding-left: 20px;
         }
         #text-area {
             width: 100%;
@@ -73,7 +94,7 @@
         }
         .button {
             padding: 15px 25px;
-            background-color: #00308F;
+            background-color: #5cb85c;
             color: white;
             font-size: 18px;
             cursor: pointer;
@@ -110,7 +131,11 @@
         <h1>Fix Entries PPH</h1>
         <p>Paste your text below and click "Fix" to format and normalize special characters:</p>
 
-        <div class="instructions">
+        <!-- Collapsible button -->
+        <button class="collapsible">How to Use</button>
+
+        <!-- Collapsible content -->
+        <div class="content">
             <h2>How to Use:</h2>
             <ul>
                 <li><strong>Paste Text:</strong> Enter your text into the provided text area.</li>
@@ -126,7 +151,8 @@
                 <li><strong>Character Normalization:</strong> Removes special characters and diacritics to standardize the text.</li>
                 <li><strong>Copy to Clipboard:</strong> Allows easy copying of the processed text with a single click.</li>
             </ul>
-                   </div>
+            <p>Developed by <strong>Prakash</strong>, this tool simplifies text cleanup for various purposes.</p>
+        </div>
 
         <textarea id="text-area" placeholder="Paste your text here..."></textarea>
         <div class="button-group">
@@ -137,23 +163,38 @@
     </div>
 
     <div class="footer">
-        <p>This web-tool is developed by Prakash</p>
+        <p>This page is developed by Prakash.</p>
     </div>
 
     <script>
+        // Collapsible functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            var collapsible = document.querySelector(".collapsible");
+            var content = document.querySelector(".content");
+
+            collapsible.addEventListener("click", function () {
+                // Toggle the content visibility
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        });
+
         async function formatText() {
             var textarea = document.getElementById('text-area');
             var fixedText = document.getElementById('fixed-text');
             var text = textarea.value.trim();
 
             // Asynchronous text formatting to avoid blocking UI
-            await new Promise(resolve => setTimeout(resolve, 0)); 
+            await new Promise(resolve => setTimeout(resolve, 0));
 
             // Remove links starting with http, https, www
             text = text.replace(/https?:\/\/[^\s]+|www\.[^\s]+/g, '');
 
             // Replace email addresses with links and normalize text
-            var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function(match) {
+            var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function (match) {
                 return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
             }).replace(/\n/g, '<br><br>');
 
