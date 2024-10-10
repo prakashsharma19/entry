@@ -59,9 +59,9 @@
         .content ul {
             padding-left: 20px;
         }
-        #text-area {
+        #text-area, #delete-text-area {
             width: 100%;
-            height: 300px;
+            height: 100px;
             font-family: 'Arial', sans-serif;
             font-size: 16px;
             padding: 15px;
@@ -142,6 +142,7 @@
                 <li><strong>Click "Fix":</strong> Press the "Fix" button to clean and format the text.</li>
                 <li><strong>View Results:</strong> The processed text will appear below in the output area.</li>
                 <li><strong>Copy Text:</strong> Use the "Copy Result" button to copy the cleaned-up text to your clipboard.</li>
+                <li><strong>Delete Text:</strong> Enter any text to delete from the processed text, then press "Delete Text".</li>
             </ul>
 
             <h2>Functionality:</h2>
@@ -150,6 +151,7 @@
                 <li><strong>Email Conversion:</strong> Converts email addresses into clickable "mailto" links.</li>
                 <li><strong>Character Normalization:</strong> Removes special characters and diacritics to standardize the text.</li>
                 <li><strong>Copy to Clipboard:</strong> Allows easy copying of the processed text with a single click.</li>
+                <li><strong>Delete Specific Text:</strong> Allows the user to remove specific text from the processed output.</li>
             </ul>
             <p>Developed by <strong>Prakash</strong>, this tool simplifies text cleanup for various purposes.</p>
         </div>
@@ -159,6 +161,11 @@
             <button class="button" onclick="formatText()">Fix</button>
             <button class="button" onclick="copyToClipboard()">Copy Result</button>
         </div>
+
+        <h2>Delete Specific Text:</h2>
+        <textarea id="delete-text-area" placeholder="Enter text to delete from processed text..."></textarea>
+        <button class="button" onclick="deleteText()">Delete Text</button>
+
         <div id="fixed-text"></div>
     </div>
 
@@ -181,6 +188,8 @@
                 }
             });
         });
+
+        let processedText = ''; // Variable to hold the processed text
 
         async function formatText() {
             var textarea = document.getElementById('text-area');
@@ -209,28 +218,33 @@
             // Remove unnecessary spaces
             tempDiv.innerHTML = tempDiv.innerHTML.replace(/\s+/g, ' ').trim();
 
+            // Update the processed text variable
+            processedText = tempDiv.innerHTML;
+
             // Update the fixed text area
-            fixedText.innerHTML = tempDiv.innerHTML;
+            fixedText.innerHTML = processedText;
+        }
+
+        function deleteText() {
+            var deleteTextarea = document.getElementById('delete-text-area');
+            var fixedText = document.getElementById('fixed-text');
+            var textToDelete = deleteTextarea.value;
+
+            // Remove the specified text from the processed text
+            processedText = processedText.replace(new RegExp(textToDelete, 'gi'), '').replace(/\s+/g, ' ').trim();
+
+            // Update the fixed text area
+            fixedText.innerHTML = processedText;
+            deleteTextarea.value = ''; // Clear the delete input field
         }
 
         function copyToClipboard() {
             var fixedText = document.getElementById('fixed-text');
-
-            // Create a range and select the fixedText div
-            var range = document.createRange();
-            range.selectNodeContents(fixedText);
-
-            // Remove previous selection and add new range
-            var selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-
-            // Execute the copy command
-            document.execCommand('copy');
-
-            // Remove the range and alert (optional)
-            selection.removeAllRanges();
-            alert('Copied to clipboard!');
+            navigator.clipboard.writeText(fixedText.innerText).then(function () {
+                alert("Copied to clipboard!");
+            }, function (err) {
+                alert("Failed to copy text: ", err);
+            });
         }
     </script>
 </body>
