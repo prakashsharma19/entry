@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -202,6 +203,9 @@
             var tempDiv = document.createElement('div');
             tempDiv.innerHTML = formattedText;
             tempDiv.innerHTML = tempDiv.innerHTML.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            // Remove unnecessary spaces
+            tempDiv.innerHTML = tempDiv.innerHTML.replace(/\s+/g, ' ').trim();
 
             // Update the fixed text area
             fixedText.innerHTML = tempDiv.innerHTML;
