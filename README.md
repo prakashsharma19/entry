@@ -193,10 +193,13 @@
             // Remove links starting with http, https, www
             text = text.replace(/https?:\/\/[^\s]+|www\.[^\s]+/g, '');
 
-            // Replace email addresses with links and normalize text
+            // Replace email addresses with links
             var formattedText = text.replace(/\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g, function (match) {
                 return '<a href="mailto:' + match + '" class="email-link">' + match + '</a>';
-            }).replace(/\n/g, '<br><br>');
+            });
+
+            // Replace newlines with a single <br> to avoid extra spacing
+            formattedText = formattedText.replace(/\n/g, '<br>');
 
             // Normalize special characters by removing diacritics
             var tempDiv = document.createElement('div');
