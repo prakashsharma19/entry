@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -80,7 +79,7 @@
             border-radius: 8px;
             min-height: 300px;
             overflow-y: auto;
-            white-space: pre-wrap;
+            white-space: pre-wrap; /* Preserve formatting */
             word-wrap: break-word;
             font-family: 'Arial', sans-serif;
             font-size: 16px;
@@ -186,7 +185,7 @@
         async function formatText() {
             var textarea = document.getElementById('text-area');
             var fixedText = document.getElementById('fixed-text');
-            var text = textarea.value.trim();
+            var text = textarea.value;
 
             // Asynchronous text formatting to avoid blocking UI
             await new Promise(resolve => setTimeout(resolve, 0));
