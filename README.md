@@ -15,17 +15,19 @@
             padding: 0;
         }
         .container {
-            padding: 50px 20px;
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: auto;
         }
         .title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             margin-bottom: 10px;
         }
         .description {
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 30px;
-            padding: 0 10px;
+            padding: 0 5%;
         }
         .features {
             display: flex;
@@ -37,19 +39,19 @@
             background: rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 10px;
-            width: 90%;
-            max-width: 300px;
+            width: 100%;
+            max-width: 320px;
             transition: transform 0.3s;
         }
         .feature-card:hover {
             transform: scale(1.05);
         }
         .feature-card img {
-            width: 60px;
+            width: 50px;
             margin-bottom: 10px;
         }
         .feature-card h2 {
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 10px;
         }
         .buttons {
@@ -65,7 +67,7 @@
             border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
-            width: 80%;
+            width: 90%;
             max-width: 250px;
             margin-bottom: 10px;
         }
@@ -93,6 +95,7 @@
             }
             .start-button, .upgrade-button {
                 margin: 0 10px;
+                width: auto;
             }
         }
     </style>
