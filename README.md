@@ -18,13 +18,14 @@
             padding: 50px 20px;
         }
         .title {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: bold;
             margin-bottom: 10px;
         }
         .description {
             font-size: 18px;
             margin-bottom: 30px;
+            padding: 0 10px;
         }
         .features {
             display: flex;
@@ -36,14 +37,15 @@
             background: rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 10px;
-            width: 250px;
+            width: 90%;
+            max-width: 300px;
             transition: transform 0.3s;
         }
         .feature-card:hover {
             transform: scale(1.05);
         }
         .feature-card img {
-            width: 80px;
+            width: 60px;
             margin-bottom: 10px;
         }
         .feature-card h2 {
@@ -52,26 +54,46 @@
         }
         .buttons {
             margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .start-button, .upgrade-button {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
+            width: 80%;
+            max-width: 250px;
+            margin-bottom: 10px;
         }
         .start-button {
             background: #ff9800;
             color: white;
-            margin-right: 10px;
         }
         .upgrade-button {
             background: #4caf50;
             color: white;
         }
         .start-button:hover, .upgrade-button:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
+        }
+        @media (min-width: 768px) {
+            .features {
+                flex-wrap: nowrap;
+            }
+            .feature-card {
+                width: 250px;
+            }
+            .buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .start-button, .upgrade-button {
+                margin: 0 10px;
+            }
         }
     </style>
 </head>
