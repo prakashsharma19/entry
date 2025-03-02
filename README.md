@@ -69,11 +69,12 @@
         /* Finger Animation */
         .finger-animation {
             position: absolute;
-            bottom: -40px;
+            bottom: -50px; /* Adjusted for visibility */
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
+            width: 80px; /* Increased size */
+            height: 80px;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -93,18 +94,6 @@
             </div>
             <div class="finger-animation" id="fingerAnimation"></div>
         </div>
-
-        <!-- Interactive Quizzes Box -->
-        <div class="card">
-            <h3>Interactive Quizzes</h3>
-            <p>Test your knowledge and track your progress.</p>
-        </div>
-
-        <!-- Daily Current Affairs Box -->
-        <div class="card">
-            <h3>Daily Current Affairs</h3>
-            <p>Stay updated with the latest UPPSC current affairs.</p>
-        </div>
     </div>
 
     <script>
@@ -122,7 +111,16 @@
             renderer: "svg",
             loop: true,
             autoplay: true,
-            path: "Animation - 1740910253032.json" // Update with your actual JSON file path
+            path: "Animation - 1740910253032.json" // Make sure this file is accessible
+        });
+
+        // Debugging - Check if animation is loading
+        animation.addEventListener("data_ready", function () {
+            console.log("Lottie animation loaded successfully!");
+        });
+
+        animation.addEventListener("error", function () {
+            console.error("Lottie animation failed to load. Check file path.");
         });
 
         // Simulate clicking animation every 2.5 seconds before flipping
