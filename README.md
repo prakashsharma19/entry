@@ -2,135 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UPPSC Hindi & Current Affairs Quiz App</title>
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
             text-align: center;
+            background: linear-gradient(to bottom right, #5a2db2, #2196f3);
+            color: white;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
-        .container {
-            padding: 30px 5%;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .title {
+
+        /* Header Styling */
+        header h1 {
             font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
-        .description {
+
+        header p {
             font-size: 16px;
             margin-bottom: 20px;
         }
-        .features {
+
+        /* Card Container */
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
         }
-        .feature-card {
-            background: rgba(255, 255, 255, 0.2);
+
+        /* Individual Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.15);
             padding: 15px;
             border-radius: 10px;
             width: 90%;
-            max-width: 350px;
+            max-width: 280px;
             text-align: center;
-            transition: transform 0.3s;
         }
-        .feature-card:hover {
-            transform: scale(1.05);
-        }
-        .feature-card img {
-            width: 50px;
+
+        .card img {
+            width: 100px;
             height: auto;
             margin-bottom: 10px;
         }
-        .feature-card h2 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
+
+        /* Buttons */
         .buttons {
-            margin-top: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-        .start-button, .upgrade-button {
-            padding: 12px 18px;
-            font-size: 16px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            width: 90%;
-            max-width: 280px;
-            transition: background 0.3s, transform 0.2s;
-        }
-        .start-button {
-            background: #ff9800;
-            color: white;
-        }
-        .upgrade-button {
-            background: #4caf50;
-            color: white;
-        }
-        .start-button:hover, .upgrade-button:hover {
-            transform: scale(1.05);
+            margin-top: 20px;
         }
 
-        /* Larger screens adjustments */
+        .btn {
+            padding: 12px;
+            width: 200px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .free {
+            background-color: orange;
+            color: white;
+        }
+
+        .paid {
+            background-color: green;
+            color: white;
+        }
+
+        /* Responsive Layout */
         @media (min-width: 768px) {
-            .features {
+            header h1 {
+                font-size: 28px;
+            }
+
+            .container {
                 flex-direction: row;
                 justify-content: center;
-                flex-wrap: wrap;
+                max-width: 900px;
             }
-            .feature-card {
-                width: 30%;
-            }
-            .buttons {
-                flex-direction: row;
-                justify-content: center;
-            }
-            .start-button, .upgrade-button {
-                width: auto;
-                margin: 0 10px;
+
+            .card {
+                max-width: 250px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">UPPSC Hindi & Current Affairs Quiz App</h1>
-        <p class="description">Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using flashcards & quizzes.</p>
-        
-        <div class="features">
-            <div class="feature-card">
-                <img src="flashcard.png" alt="Flashcard">
-                <h2>Flashcard Learning</h2>
-                <p>Memorize concepts easily with interactive flashcards.</p>
-            </div>
-            <div class="feature-card">
-                <img src="quiz.png" alt="Quiz">
-                <h2>Interactive Quizzes</h2>
-                <p>Test your knowledge and track your progress.</p>
-            </div>
-            <div class="feature-card">
-                <img src="current-affairs.png" alt="Current Affairs">
-                <h2>Daily Current Affairs</h2>
-                <p>Stay updated with latest UPPSC current affairs.</p>
-            </div>
+
+    <header>
+        <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
+        <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using flashcards & quizzes.</p>
+    </header>
+
+    <section class="container">
+        <div class="card">
+            <img src="flashcard.png" alt="Flashcard Learning">
+            <h2>Flashcard Learning</h2>
+            <p>Memorize concepts easily with interactive flashcards.</p>
         </div>
 
-        <div class="buttons">
-            <button class="start-button">Start for Free</button>
-            <button class="upgrade-button">Upgrade for ₹99/year</button>
+        <div class="card">
+            <img src="quiz.png" alt="Interactive Quizzes">
+            <h2>Interactive Quizzes</h2>
+            <p>Test your knowledge and track your progress.</p>
         </div>
+
+        <div class="card">
+            <img src="current-affairs.png" alt="Daily Current Affairs">
+            <h2>Daily Current Affairs</h2>
+            <p>Stay updated with the latest UPPSC current affairs.</p>
+        </div>
+    </section>
+
+    <div class="buttons">
+        <button class="btn free">Start for Free</button>
+        <button class="btn paid">Upgrade for ₹99/year</button>
     </div>
+
 </body>
 </html>
