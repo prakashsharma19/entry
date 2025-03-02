@@ -23,7 +23,7 @@
         }
         .card {
             width: 250px;
-            height: 150px;
+            height: 180px;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             border-radius: 10px;
@@ -32,10 +32,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
+        /* Flashcard Flip Container */
         .flashcard-container {
             position: relative;
-            width: 200px;
+            width: 180px;
             height: 100px;
             perspective: 1000px;
         }
@@ -47,20 +49,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             background: #00897b;
             color: white;
             border-radius: 10px;
-            transition: transform 0.6s;
+            transition: transform 0.6s ease-in-out;
         }
         .flashcard.back {
             background: #d32f2f;
             transform: rotateY(180deg);
         }
-        .flip {
+        .flipped .front {
             transform: rotateY(180deg);
         }
+        .flipped .back {
+            transform: rotateY(360deg);
+        }
+        /* Finger Animation */
         .finger-animation {
             position: absolute;
             bottom: -40px;
@@ -81,11 +87,11 @@
         <div class="card">
             <h3>Flashcard Learning</h3>
             <p>Memorize concepts easily with interactive flashcards.</p>
-            <div class="flashcard-container">
+            <div class="flashcard-container" id="flashcardContainer">
                 <div class="flashcard front">अंगीकरण</div>
                 <div class="flashcard back">अनंगीकरण</div>
-                <div class="finger-animation" id="fingerAnimation"></div>
             </div>
+            <div class="finger-animation" id="fingerAnimation"></div>
         </div>
 
         <!-- Interactive Quizzes Box -->
@@ -102,19 +108,12 @@
     </div>
 
     <script>
-        const frontCard = document.querySelector('.flashcard.front');
-        const backCard = document.querySelector('.flashcard.back');
+        const flashcardContainer = document.getElementById("flashcardContainer");
         let flipped = false;
 
         function flipCard() {
-            if (flipped) {
-                frontCard.style.transform = "rotateY(0deg)";
-                backCard.style.transform = "rotateY(180deg)";
-            } else {
-                frontCard.style.transform = "rotateY(180deg)";
-                backCard.style.transform = "rotateY(360deg)";
-            }
             flipped = !flipped;
+            flashcardContainer.classList.toggle("flipped", flipped);
         }
 
         // Load Finger Click Animation
@@ -123,11 +122,13 @@
             renderer: "svg",
             loop: true,
             autoplay: true,
-            path: "Animation - 1740910253032.json" // Your JSON animation file
+            path: "Animation - 1740910253032.json" // Update with your actual JSON file path
         });
 
-        // Flip the card every 2.5 seconds
-        setInterval(flipCard, 2500);
+        // Simulate clicking animation every 2.5 seconds before flipping
+        setInterval(() => {
+            setTimeout(flipCard, 1000); // Flip the card after a short delay
+        }, 2500);
     </script>
 
 </body>
