@@ -3,130 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard Flip with Finger Click Animation</title>
+    <title>Flashcard Flip with Hand Animation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #3a7bd5, #00d2ff);
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-        .container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 50px;
+            height: 100vh;
+            background-color: #3498db;
         }
-        .card {
-            width: 250px;
-            height: 180px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        /* Flashcard Flip Container */
         .flashcard-container {
             position: relative;
-            width: 180px;
-            height: 100px;
+            width: 200px;
+            height: 120px;
             perspective: 1000px;
         }
         .flashcard {
             width: 100%;
             height: 100%;
             position: absolute;
-            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard .front, .flashcard .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            background: #00897b;
-            color: white;
-            border-radius: 10px;
-            transition: transform 0.6s ease-in-out;
+            backface-visibility: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .flashcard.back {
-            background: #d32f2f;
+        .flashcard .back {
+            background: #2ecc71;
             transform: rotateY(180deg);
         }
-        .flipped .front {
-            transform: rotateY(180deg);
-        }
-        .flipped .back {
-            transform: rotateY(360deg);
-        }
-        /* Finger Animation */
-        .finger-animation {
+        #fingerAnimation {
             position: absolute;
-            bottom: -50px; /* Adjusted for visibility */
+            width: 80px;
+            height: 80px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px; /* Increased size */
-            height: 80px;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
-    <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using flashcards & quizzes.</p>
-
-    <div class="container">
-        <!-- Flashcard Learning Box -->
-        <div class="card">
-            <h3>Flashcard Learning</h3>
-            <p>Memorize concepts easily with interactive flashcards.</p>
-            <div class="flashcard-container" id="flashcardContainer">
-                <div class="flashcard front">अंगीकरण</div>
-                <div class="flashcard back">अनंगीकरण</div>
-            </div>
-            <div class="finger-animation" id="fingerAnimation"></div>
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="front">अंगीकरण</div>
+            <div class="back">अनंगीकरण</div>
         </div>
+        <div id="fingerAnimation"></div>
     </div>
 
     <script>
-        const flashcardContainer = document.getElementById("flashcardContainer");
-        let flipped = false;
-
-        function flipCard() {
-            flipped = !flipped;
-            flashcardContainer.classList.toggle("flipped", flipped);
-        }
-
-        // Load Finger Click Animation
+        // Load Lottie Animation (Hand Clicking)
         const animation = lottie.loadAnimation({
             container: document.getElementById("fingerAnimation"),
             renderer: "svg",
             loop: true,
             autoplay: true,
-            path: "Animation - 1740910253032.json" // Make sure this file is accessible
+            path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
         });
 
-        // Debugging - Check if animation is loading
-        animation.addEventListener("data_ready", function () {
-            console.log("Lottie animation loaded successfully!");
-        });
-
-        animation.addEventListener("error", function () {
-            console.error("Lottie animation failed to load. Check file path.");
-        });
-
-        // Simulate clicking animation every 2.5 seconds before flipping
+        // Auto Flip Flashcard Every 2 Seconds
+        let isFlipped = false;
         setInterval(() => {
-            setTimeout(flipCard, 1000); // Flip the card after a short delay
-        }, 2500);
+            const flashcard = document.getElementById("flashcard");
+            isFlipped = !isFlipped;
+            flashcard.classList.toggle("flipped", isFlipped);
+        }, 2000);
     </script>
 
 </body>
