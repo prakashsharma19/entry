@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,29 +26,29 @@
 
         /* Header */
         header {
-            max-width: 600px;
+            max-width: 800px;
             margin-bottom: 20px;
         }
 
         header h1 {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 10px;
         }
 
         header p {
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 20px;
             line-height: 1.4;
         }
 
-        /* Card Container */
+        /* Container for Cards */
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 900px;
+            justify-content: center;
         }
 
         /* Individual Card */
@@ -55,8 +56,6 @@
             background: rgba(255, 255, 255, 0.15);
             padding: 20px;
             border-radius: 12px;
-            width: 100%;
-            max-width: 300px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -70,29 +69,28 @@
         }
 
         .card h2 {
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 8px;
         }
 
         .card p {
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1.4;
         }
 
         /* Buttons */
         .buttons {
-            margin-top: 20px;
+            margin-top: 30px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            width: 100%;
+            gap: 15px;
             align-items: center;
         }
 
         .btn {
-            padding: 12px;
-            width: 220px;
-            font-size: 16px;
+            padding: 14px;
+            width: 240px;
+            font-size: 18px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
@@ -107,20 +105,6 @@
         .paid {
             background-color: green;
             color: white;
-        }
-
-        /* Responsive Layout */
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-                justify-content: center;
-                max-width: 800px;
-                flex-wrap: wrap;
-            }
-
-            .card {
-                max-width: 260px;
-            }
         }
     </style>
 </head>
