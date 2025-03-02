@@ -3,46 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Quiz App</title>
+    <title>UPPSC Hindi & Current Affairs Quiz App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #4a90e2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background: linear-gradient(to bottom, #4a90e2, #000000);
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 20px;
         }
 
         .container {
-            display: flex;
-            gap: 20px;
+            width: 90%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
         .card-box {
-            width: 260px;
-            height: 200px;
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 10px;
-            text-align: center;
-            color: white;
+            margin-bottom: 15px;
             position: relative;
         }
 
-        /* Flashcard Inside "Flashcard Learning" */
+        /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 100px;
-            perspective: 1000px;
+            height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
+            perspective: 1000px;
         }
 
         .flashcard {
-            width: 90%;
-            height: 100%;
+            width: 150px;
+            height: 60px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
@@ -60,12 +68,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .flashcard-back {
@@ -73,19 +81,35 @@
             transform: rotateY(180deg);
         }
 
-        /* Other Card Styles */
-        .other-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
+        /* Button Styles */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
             color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .btn-free {
+            background: #ff9800;
+        }
+
+        .btn-upgrade {
+            background: #28a745;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
+        <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using flashcards & quizzes.</p>
+
         <!-- Flashcard Learning Box -->
         <div class="card-box">
             <h3>Flashcard Learning</h3>
@@ -107,8 +131,12 @@
         <!-- Daily Current Affairs Box -->
         <div class="card-box">
             <h3>Daily Current Affairs</h3>
-            <p>Stay updated with the latest UPPSC current affairs.</p>
+            <p>Stay updated with latest UPPSC current affairs.</p>
         </div>
+
+        <!-- Buttons -->
+        <button class="btn btn-free">Start for Free</button>
+        <button class="btn btn-upgrade">Upgrade for ₹99/year</button>
     </div>
 
     <script>
@@ -123,7 +151,7 @@
         function flipCard() {
             card.classList.toggle("flip");
             isFlipped = !isFlipped;
-            
+
             setTimeout(() => {
                 index = (index + 1) % words.length;
                 if (!isFlipped) {
