@@ -1,133 +1,158 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard Learning Box</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UPPSC Hindi & Current Affairs Quiz App</title>
     <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #4a90e2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .card-box {
-            width: 260px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
+            background: linear-gradient(to bottom right, #5a2db2, #2196f3);
+            color: white;
             text-align: center;
-            color: white;
-            position: relative;
-        }
-
-        .flashcard-container {
-            width: 100%;
-            height: 100px;
-            perspective: 1000px;
+            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
         }
 
-        .flashcard {
-            width: 90%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1s;
+        /* Header */
+        header {
+            max-width: 800px;
+            margin-bottom: 20px;
         }
 
-        .flashcard.flip {
-            transform: rotateY(180deg);
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+        header p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Container for Cards */
+        .container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Individual Card */
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            width: 30%; /* Ensures 3 cards stay in a row */
+            min-width: 250px; /* Prevents collapsing */
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
             font-size: 20px;
-            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        /* Buttons */
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 14px;
+            width: 240px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .free {
+            background-color: orange;
             color: white;
-            background: #ff9800;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .flashcard-back {
-            background: #009688;
-            transform: rotateY(180deg);
+        .paid {
+            background-color: green;
+            color: white;
         }
 
-        /* Animated Finger */
-        .finger {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
-            background-image: url('https://cdn-icons-png.flaticon.com/512/109/109617.png'); /* Finger pointing icon */
-            background-size: cover;
-            animation: tap 2s infinite;
-        }
-
-        @keyframes tap {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0);
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
             }
-            50% {
-                transform: translateX(-50%) translateY(-5px);
+            .card {
+                width: 100%;
+                max-width: 300px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="card-box">
-        <h3>Flashcard Learning</h3>
-        <p>Memorize concepts easily with interactive flashcards.</p>
+    <header>
+        <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
+        <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using flashcards & quizzes.</p>
+    </header>
 
-        <div class="flashcard-container">
-            <div class="flashcard" id="flashcard">
-                <div class="flashcard-face flashcard-front">अंगीकरण</div>
-                <div class="flashcard-face flashcard-back">अनंगीकरण</div>
-            </div>
+    <section class="container">
+        <div class="card">
+            <img src="flashcard.png" alt="Flashcard Learning">
+            <h2>Flashcard Learning</h2>
+            <p>Memorize concepts easily with interactive flashcards.</p>
         </div>
-        <div class="finger"></div>
+
+        <div class="card">
+            <img src="quiz.png" alt="Interactive Quizzes">
+            <h2>Interactive Quizzes</h2>
+            <p>Test your knowledge and track your progress.</p>
+        </div>
+
+        <div class="card">
+            <img src="current-affairs.png" alt="Daily Current Affairs">
+            <h2>Daily Current Affairs</h2>
+            <p>Stay updated with the latest UPPSC current affairs.</p>
+        </div>
+    </section>
+
+    <div class="buttons">
+        <button class="btn free">Start for Free</button>
+        <button class="btn paid">Upgrade for ₹99/year</button>
     </div>
-
-    <script>
-        let card = document.getElementById("flashcard");
-        let words = [
-            { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" }
-        ];
-        let index = 0;
-        let isFlipped = false;
-
-        function flipCard() {
-            card.classList.toggle("flip");
-            isFlipped = !isFlipped;
-            
-            setTimeout(() => {
-                index = (index + 1) % words.length;
-                if (!isFlipped) {
-                    card.querySelector(".flashcard-front").innerText = words[index].front;
-                    card.querySelector(".flashcard-back").innerText = words[index].back;
-                }
-            }, 500);
-        }
-
-        setInterval(flipCard, 2000);
-    </script>
 
 </body>
 </html>
