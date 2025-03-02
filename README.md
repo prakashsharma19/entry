@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPPSC Hindi & Current Affairs Quiz App</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,32 +14,32 @@
             padding: 0;
         }
         .container {
-            padding: 50px 5%;
+            padding: 30px 5%;
             max-width: 1200px;
             margin: auto;
         }
         .title {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: bold;
             margin-bottom: 10px;
         }
         .description {
             font-size: 16px;
-            margin-bottom: 30px;
-            padding: 0 5%;
+            margin-bottom: 20px;
         }
         .features {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
         .feature-card {
             background: rgba(255, 255, 255, 0.2);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            width: 100%;
-            max-width: 320px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
             transition: transform 0.3s;
         }
         .feature-card:hover {
@@ -48,28 +47,29 @@
         }
         .feature-card img {
             width: 50px;
+            height: auto;
             margin-bottom: 10px;
         }
         .feature-card h2 {
             font-size: 18px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .buttons {
-            margin-top: 30px;
+            margin-top: 25px;
             display: flex;
             flex-direction: column;
+            gap: 10px;
             align-items: center;
         }
         .start-button, .upgrade-button {
-            padding: 12px 25px;
+            padding: 12px 18px;
             font-size: 16px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
             width: 90%;
-            max-width: 250px;
-            margin-bottom: 10px;
+            max-width: 280px;
+            transition: background 0.3s, transform 0.2s;
         }
         .start-button {
             background: #ff9800;
@@ -82,20 +82,24 @@
         .start-button:hover, .upgrade-button:hover {
             transform: scale(1.05);
         }
+
+        /* Larger screens adjustments */
         @media (min-width: 768px) {
             .features {
-                flex-wrap: nowrap;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
             }
             .feature-card {
-                width: 250px;
+                width: 30%;
             }
             .buttons {
                 flex-direction: row;
                 justify-content: center;
             }
             .start-button, .upgrade-button {
-                margin: 0 10px;
                 width: auto;
+                margin: 0 10px;
             }
         }
     </style>
