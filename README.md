@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Hindi & Current Affairs Quiz App</title>
+    <title>UPPSC Flashcard Learning</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
     <style>
         body {
@@ -86,46 +86,24 @@
         /* Lottie Hand Animation */
         #fingerAnimation {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            bottom: -50px;
+            width: 50px;
+            height: 50px;
+            bottom: -20px; /* Moved up */
             left: 50%;
             transform: translateX(-50%);
         }
 
-        /* Button Styles */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-
-        .btn-free {
-            background: #ff9800;
-        }
-
-        .btn-upgrade {
-            background: #28a745;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
-        <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using flashcards & quizzes.</p>
+        <h1>Flashcard Learning</h1>
+        <p>Memorize concepts easily with interactive flashcards.</p>
 
         <!-- Flashcard Learning Box -->
         <div class="card-box">
             <h3>Flashcard Learning</h3>
-            <p>Memorize concepts easily with interactive flashcards.</p>
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard">
                     <div class="flashcard-face flashcard-front">अंगीकरण</div>
@@ -134,22 +112,6 @@
                 <div id="fingerAnimation"></div>
             </div>
         </div>
-
-        <!-- Interactive Quizzes Box -->
-        <div class="card-box">
-            <h3>Interactive Quizzes</h3>
-            <p>Test your knowledge and track your progress.</p>
-        </div>
-
-        <!-- Daily Current Affairs Box -->
-        <div class="card-box">
-            <h3>Daily Current Affairs</h3>
-            <p>Stay updated with latest UPPSC current affairs.</p>
-        </div>
-
-        <!-- Buttons -->
-        <button class="btn btn-free">Start for Free</button>
-        <button class="btn btn-upgrade">Upgrade for ₹99/year</button>
     </div>
 
     <script>
@@ -177,14 +139,17 @@
         // Auto flip every 2 seconds
         setInterval(flipCard, 2000);
 
-        // Load Lottie Hand Animation
-        lottie.loadAnimation({
+        // Load Lottie Hand Animation with slower click speed
+        let animation = lottie.loadAnimation({
             container: document.getElementById("fingerAnimation"),
             renderer: "svg",
             loop: true,
             autoplay: true,
             path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
         });
+
+        // Reduce speed of hand clicking animation
+        animation.setSpeed(0.5);
     </script>
 
 </body>
