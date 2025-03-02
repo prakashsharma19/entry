@@ -1,38 +1,51 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Flipping Flashcard</title>
+    <title>Flashcard Learning Box</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #4a90e2;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #4a90e2;
-        }
-        
-        .card-container {
-            position: relative;
-            width: 200px;
-            height: 120px;
-            perspective: 1000px;
         }
 
-        .card {
+        .card-box {
+            width: 260px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .flashcard-container {
             width: 100%;
+            height: 100px;
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flashcard {
+            width: 90%;
             height: 100%;
-            position: absolute;
+            position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
         }
 
-        .card.flip {
+        .flashcard.flip {
             transform: rotateY(180deg);
         }
 
-        .card-face {
+        .flashcard-face {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -40,7 +53,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
             background: #ff9800;
@@ -48,7 +61,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .card-back {
+        .flashcard-back {
             background: #009688;
             transform: rotateY(180deg);
         }
@@ -56,11 +69,11 @@
         /* Animated Finger */
         .finger {
             position: absolute;
-            bottom: -60px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background-image: url('https://cdn-icons-png.flaticon.com/512/109/109617.png'); /* Finger pointing icon */
             background-size: cover;
             animation: tap 2s infinite;
@@ -71,17 +84,22 @@
                 transform: translateX(-50%) translateY(0);
             }
             50% {
-                transform: translateX(-50%) translateY(-10px);
+                transform: translateX(-50%) translateY(-5px);
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="card-container">
-        <div class="card" id="flashcard">
-            <div class="card-face card-front">अंगीकरण</div>
-            <div class="card-face card-back">अनंगीकरण</div>
+    <div class="card-box">
+        <h3>Flashcard Learning</h3>
+        <p>Memorize concepts easily with interactive flashcards.</p>
+
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="flashcard-face flashcard-front">अंगीकरण</div>
+                <div class="flashcard-face flashcard-back">अनंगीकरण</div>
+            </div>
         </div>
         <div class="finger"></div>
     </div>
@@ -102,8 +120,8 @@
             setTimeout(() => {
                 index = (index + 1) % words.length;
                 if (!isFlipped) {
-                    card.querySelector(".card-front").innerText = words[index].front;
-                    card.querySelector(".card-back").innerText = words[index].back;
+                    card.querySelector(".flashcard-front").innerText = words[index].front;
+                    card.querySelector(".flashcard-back").innerText = words[index].back;
                 }
             }, 500);
         }
