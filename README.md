@@ -43,12 +43,12 @@
 
         /* Container for Cards */
         .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
         }
 
         /* Individual Card */
@@ -60,6 +60,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 30%; /* Ensures 3 cards stay in a row */
+            min-width: 250px; /* Prevents collapsing */
         }
 
         .card img {
@@ -105,6 +107,18 @@
         .paid {
             background-color: green;
             color: white;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
