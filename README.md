@@ -1,29 +1,43 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UPPSC Hindi & Current Affairs Quiz App</title>
     <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: linear-gradient(to bottom right, #5a2db2, #2196f3);
-            color: white;
+        /* General Reset */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Header Styling */
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #5a2db2, #2196f3);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header */
+        header {
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
         header h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
         header p {
             font-size: 16px;
             margin-bottom: 20px;
+            line-height: 1.4;
         }
 
         /* Card Container */
@@ -32,38 +46,57 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            width: 100%;
             max-width: 400px;
-            margin: 0 auto;
         }
 
-        /* Individual Cards */
+        /* Individual Card */
         .card {
             background: rgba(255, 255, 255, 0.15);
-            padding: 15px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 280px;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 300px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card img {
-            width: 100px;
-            height: auto;
+            width: 80px;
+            height: 80px;
             margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 14px;
+            line-height: 1.4;
         }
 
         /* Buttons */
         .buttons {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            align-items: center;
         }
 
         .btn {
             padding: 12px;
-            width: 200px;
+            width: 220px;
             font-size: 16px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
+            text-align: center;
         }
 
         .free {
@@ -78,18 +111,15 @@
 
         /* Responsive Layout */
         @media (min-width: 768px) {
-            header h1 {
-                font-size: 28px;
-            }
-
             .container {
                 flex-direction: row;
                 justify-content: center;
-                max-width: 900px;
+                max-width: 800px;
+                flex-wrap: wrap;
             }
 
             .card {
-                max-width: 250px;
+                max-width: 260px;
             }
         }
     </style>
