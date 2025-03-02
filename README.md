@@ -17,17 +17,17 @@
 
         .container {
             width: 90%;
-            max-width: 400px;
+            max-width: 600px;
             margin: auto;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 26px;
             margin-bottom: 10px;
         }
 
         p {
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 20px;
         }
 
@@ -42,7 +42,7 @@
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 80px;
+            height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,7 +51,7 @@
         }
 
         .flashcard {
-            width: 180px;
+            width: 200px;
             height: 80px;
             position: relative;
             transform-style: preserve-3d;
@@ -70,7 +70,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
             background: #ff9800;
@@ -84,11 +84,11 @@
         }
 
         /* Lottie Hand Animation */
-        #fingerAnimation {
+        .hand-animation {
             position: absolute;
             width: 50px;
             height: 50px;
-            bottom: -20px; /* Moved up */
+            bottom: -20px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -105,51 +105,101 @@
         <div class="card-box">
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
-                <div class="flashcard" id="flashcard">
+                <div class="flashcard" id="flashcard1">
                     <div class="flashcard-face flashcard-front">अंगीकरण</div>
                     <div class="flashcard-face flashcard-back">अनंगीकरण</div>
                 </div>
-                <div id="fingerAnimation"></div>
+                <div class="hand-animation" id="hand1"></div>
             </div>
         </div>
+
+        <!-- Synonym Learning Box -->
+        <div class="card-box">
+            <h3>Synonym Learning</h3>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard2">
+                    <div class="flashcard-face flashcard-front">विशाल</div>
+                    <div class="flashcard-face flashcard-back">विराट</div>
+                </div>
+                <div class="hand-animation" id="hand2"></div>
+            </div>
+        </div>
+
+        <!-- Current Affairs Box -->
+        <div class="card-box">
+            <h3>Current Affairs</h3>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard3">
+                    <div class="flashcard-face flashcard-front">G20 2023 का अध्यक्ष कौन था?</div>
+                    <div class="flashcard-face flashcard-back">भारत</div>
+                </div>
+                <div class="hand-animation" id="hand3"></div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        let card = document.getElementById("flashcard");
-        let words = [
-            { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" }
+        let flashcards = [
+            {
+                id: "flashcard1",
+                words: [
+                    { front: "अंगीकरण", back: "अनंगीकरण" },
+                    { front: "न्याय", back: "अन्याय" }
+                ]
+            },
+            {
+                id: "flashcard2",
+                words: [
+                    { front: "विशाल", back: "विराट" },
+                    { front: "तेज", back: "गति" }
+                ]
+            },
+            {
+                id: "flashcard3",
+                words: [
+                    { front: "G20 2023 का अध्यक्ष कौन था?", back: "भारत" },
+                    { front: "यूनेस्को मुख्यालय कहाँ है?", back: "पेरिस" }
+                ]
+            }
         ];
-        let index = 0;
-        let isFlipped = false;
 
-        function flipCard() {
-            card.classList.toggle("flip");
-            isFlipped = !isFlipped;
+        flashcards.forEach((cardData) => {
+            let card = document.getElementById(cardData.id);
+            let index = 0;
+            let isFlipped = false;
 
-            setTimeout(() => {
-                index = (index + 1) % words.length;
-                if (!isFlipped) {
-                    card.querySelector(".flashcard-front").innerText = words[index].front;
-                    card.querySelector(".flashcard-back").innerText = words[index].back;
-                }
-            }, 500);
-        }
+            function flipCard() {
+                card.classList.toggle("flip");
+                isFlipped = !isFlipped;
 
-        // Auto flip every 2 seconds
-        setInterval(flipCard, 2000);
+                setTimeout(() => {
+                    index = (index + 1) % cardData.words.length;
+                    if (!isFlipped) {
+                        card.querySelector(".flashcard-front").innerText = cardData.words[index].front;
+                        card.querySelector(".flashcard-back").innerText = cardData.words[index].back;
+                    }
+                }, 500);
+            }
 
-        // Load Lottie Hand Animation with slower click speed
-        let animation = lottie.loadAnimation({
-            container: document.getElementById("fingerAnimation"),
-            renderer: "svg",
-            loop: true,
-            autoplay: true,
-            path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
+            setInterval(flipCard, 3000);
         });
 
-        // Reduce speed of hand clicking animation
-        animation.setSpeed(0.5);
+        // Load Lottie Hand Animation for each card
+        function loadHandAnimation(id) {
+            return lottie.loadAnimation({
+                container: document.getElementById(id),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
+            });
+        }
+
+        loadHandAnimation("hand1").setSpeed(0.5);
+        loadHandAnimation("hand2").setSpeed(0.5);
+        loadHandAnimation("hand3").setSpeed(0.5);
+
     </script>
 
 </body>
