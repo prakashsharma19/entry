@@ -50,8 +50,8 @@
         }
 
         .flashcard {
-            width: 200px;
-            height: 80px;
+            width: 250px;
+            height: 100px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
@@ -69,12 +69,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: white;
             background: #ff9800;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            padding: 5px;
+            text-align: center;
         }
 
         .flashcard-back {
@@ -102,45 +104,34 @@
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard1">
-                    <div class="flashcard-face flashcard-front">अंगीकरण</div>
-                    <div class="flashcard-face flashcard-back">अनंगीकरण</div>
+                    <div class="flashcard-face flashcard-front"></div>
+                    <div class="flashcard-face flashcard-back"></div>
                 </div>
-                <div class="hand-animation" id="flashcard1-hand"></div>
-            </div>
-        </div>
-
-        <div class="card-box">
-            <h3>Synonym Learning</h3>
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard2">
-                    <div class="flashcard-face flashcard-front">विशाल</div>
-                    <div class="flashcard-face flashcard-back">विराट</div>
-                </div>
-                <div class="hand-animation" id="flashcard2-hand"></div>
-            </div>
-        </div>
-
-        <div class="card-box">
-            <h3>Current Affairs</h3>
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard3">
-                    <div class="flashcard-face flashcard-front">G20 2023 का अध्यक्ष कौन था?</div>
-                    <div class="flashcard-face flashcard-back">भारत</div>
-                </div>
-                <div class="hand-animation" id="flashcard3-hand"></div>
+                <div class="hand-animation" id="hand1"></div>
             </div>
         </div>
     </div>
 
     <script>
         let flashcards = [
-            { id: "flashcard1", words: [ { front: "अंगीकरण", back: "अनंगीकरण" }, { front: "न्याय", back: "अन्याय" } ] },
-            { id: "flashcard2", words: [ { front: "विशाल", back: "विराट" }, { front: "तेज", back: "गति" } ] },
-            { id: "flashcard3", words: [ { front: "G20 2023 का अध्यक्ष कौन था?", back: "भारत" }, { front: "यूनेस्को मुख्यालय कहाँ है?", back: "पेरिस" } ] }
+            {
+                id: "flashcard1",
+                words: [
+                    { front: "अंगीकरण", back: "अनंगीकरण" },
+                    { front: "न्याय", back: "अन्याय" },
+                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
+                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
+                    { front: "वैमनस्य", back: "सौहार्द" },
+                    { front: "ह्रस्व", back: "दीर्घ" },
+                    { front: "व्यष्टि", back: "समष्टि" }
+                ]
+            }
         ];
 
         flashcards.forEach((cardData) => {
             let card = document.getElementById(cardData.id);
+            let front = card.querySelector(".flashcard-front");
+            let back = card.querySelector(".flashcard-back");
             let index = 0;
             let isFlipped = false;
 
@@ -151,33 +142,27 @@
                 setTimeout(() => {
                     index = (index + 1) % cardData.words.length;
                     if (!isFlipped) {
-                        card.querySelector(".flashcard-front").innerText = cardData.words[index].front;
-                        card.querySelector(".flashcard-back").innerText = cardData.words[index].back;
+                        front.innerText = cardData.words[index].front;
+                        back.innerText = cardData.words[index].back;
                     }
                 }, 500);
             }
 
-            function startAnimation() {
-                let hand = loadHandAnimation(`${cardData.id}-hand`);
-                hand.setSpeed(1);
-                setInterval(() => {
-                    hand.goToAndPlay(0, true);
-                    setTimeout(flipCard, 800);
-                }, 3000);
-            }
-
-            startAnimation();
+            setInterval(flipCard, 3000);
         });
 
         function loadHandAnimation(id) {
             return lottie.loadAnimation({
                 container: document.getElementById(id),
                 renderer: "svg",
-                loop: false,
-                autoplay: false,
+                loop: true,
+                autoplay: true,
                 path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
             });
         }
+
+        loadHandAnimation("hand1").setSpeed(0.5);
     </script>
+
 </body>
 </html>
