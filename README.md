@@ -39,7 +39,6 @@
             position: relative;
         }
 
-        /* Flashcard Container */
         .flashcard-container {
             width: 100%;
             height: 100px;
@@ -83,7 +82,6 @@
             transform: rotateY(180deg);
         }
 
-        /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
             width: 50px;
@@ -92,7 +90,6 @@
             left: 50%;
             transform: translateX(-50%);
         }
-
     </style>
 </head>
 <body>
@@ -101,7 +98,6 @@
         <h1>Flashcard Learning</h1>
         <p>Memorize concepts easily with interactive flashcards.</p>
 
-        <!-- Flashcard Learning Box -->
         <div class="card-box">
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
@@ -109,11 +105,10 @@
                     <div class="flashcard-face flashcard-front">अंगीकरण</div>
                     <div class="flashcard-face flashcard-back">अनंगीकरण</div>
                 </div>
-                <div class="hand-animation" id="hand1"></div>
+                <div class="hand-animation" id="flashcard1-hand"></div>
             </div>
         </div>
 
-        <!-- Synonym Learning Box -->
         <div class="card-box">
             <h3>Synonym Learning</h3>
             <div class="flashcard-container">
@@ -121,11 +116,10 @@
                     <div class="flashcard-face flashcard-front">विशाल</div>
                     <div class="flashcard-face flashcard-back">विराट</div>
                 </div>
-                <div class="hand-animation" id="hand2"></div>
+                <div class="hand-animation" id="flashcard2-hand"></div>
             </div>
         </div>
 
-        <!-- Current Affairs Box -->
         <div class="card-box">
             <h3>Current Affairs</h3>
             <div class="flashcard-container">
@@ -133,35 +127,16 @@
                     <div class="flashcard-face flashcard-front">G20 2023 का अध्यक्ष कौन था?</div>
                     <div class="flashcard-face flashcard-back">भारत</div>
                 </div>
-                <div class="hand-animation" id="hand3"></div>
+                <div class="hand-animation" id="flashcard3-hand"></div>
             </div>
         </div>
-
     </div>
 
     <script>
         let flashcards = [
-            {
-                id: "flashcard1",
-                words: [
-                    { front: "अंगीकरण", back: "अनंगीकरण" },
-                    { front: "न्याय", back: "अन्याय" }
-                ]
-            },
-            {
-                id: "flashcard2",
-                words: [
-                    { front: "विशाल", back: "विराट" },
-                    { front: "तेज", back: "गति" }
-                ]
-            },
-            {
-                id: "flashcard3",
-                words: [
-                    { front: "G20 2023 का अध्यक्ष कौन था?", back: "भारत" },
-                    { front: "यूनेस्को मुख्यालय कहाँ है?", back: "पेरिस" }
-                ]
-            }
+            { id: "flashcard1", words: [ { front: "अंगीकरण", back: "अनंगीकरण" }, { front: "न्याय", back: "अन्याय" } ] },
+            { id: "flashcard2", words: [ { front: "विशाल", back: "विराट" }, { front: "तेज", back: "गति" } ] },
+            { id: "flashcard3", words: [ { front: "G20 2023 का अध्यक्ष कौन था?", back: "भारत" }, { front: "यूनेस्को मुख्यालय कहाँ है?", back: "पेरिस" } ] }
         ];
 
         flashcards.forEach((cardData) => {
@@ -182,25 +157,27 @@
                 }, 500);
             }
 
-            setInterval(flipCard, 3000);
+            function startAnimation() {
+                let hand = loadHandAnimation(`${cardData.id}-hand`);
+                hand.setSpeed(1);
+                setInterval(() => {
+                    hand.goToAndPlay(0, true);
+                    setTimeout(flipCard, 800);
+                }, 3000);
+            }
+
+            startAnimation();
         });
 
-        // Load Lottie Hand Animation for each card
         function loadHandAnimation(id) {
             return lottie.loadAnimation({
                 container: document.getElementById(id),
                 renderer: "svg",
-                loop: true,
-                autoplay: true,
+                loop: false,
+                autoplay: false,
                 path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
             });
         }
-
-        loadHandAnimation("hand1").setSpeed(0.5);
-        loadHandAnimation("hand2").setSpeed(0.5);
-        loadHandAnimation("hand3").setSpeed(0.5);
-
     </script>
-
 </body>
 </html>
