@@ -39,9 +39,10 @@
             position: relative;
         }
 
+        /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 100px;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,11 +51,11 @@
         }
 
         .flashcard {
-            width: 250px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s;
+            transition: transform 0.5s;
         }
 
         .flashcard.flip {
@@ -73,9 +74,9 @@
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 5px;
+            border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            padding: 5px;
+            padding: 10px;
             text-align: center;
         }
 
@@ -84,6 +85,7 @@
             transform: rotateY(180deg);
         }
 
+        /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
             width: 50px;
@@ -95,11 +97,9 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Flashcard Learning</h1>
         <p>Memorize concepts easily with interactive flashcards.</p>
-
         <div class="card-box">
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
@@ -117,8 +117,6 @@
             {
                 id: "flashcard1",
                 words: [
-                    { front: "अंगीकरण", back: "अनंगीकरण" },
-                    { front: "न्याय", back: "अन्याय" },
                     { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
                     { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
                     { front: "वैमनस्य", back: "सौहार्द" },
@@ -134,18 +132,17 @@
             let back = card.querySelector(".flashcard-back");
             let index = 0;
             let isFlipped = false;
+            front.innerText = cardData.words[index].front;
+            back.innerText = cardData.words[index].back;
 
             function flipCard() {
-                card.classList.toggle("flip");
                 isFlipped = !isFlipped;
-
-                setTimeout(() => {
+                if (!isFlipped) {
                     index = (index + 1) % cardData.words.length;
-                    if (!isFlipped) {
-                        front.innerText = cardData.words[index].front;
-                        back.innerText = cardData.words[index].back;
-                    }
-                }, 500);
+                    front.innerText = cardData.words[index].front;
+                    back.innerText = cardData.words[index].back;
+                }
+                card.classList.toggle("flip");
             }
 
             setInterval(flipCard, 3000);
@@ -161,8 +158,7 @@
             });
         }
 
-        loadHandAnimation("hand1").setSpeed(0.5);
+        loadHandAnimation("hand1").setSpeed(1);
     </script>
-
 </body>
 </html>
