@@ -138,42 +138,43 @@
             }
 
             function showAnswer() {
-    // Flip to show the answer
-    card.classList.add("flip");
-    isAnswerShowing = true;
+                // Flip to show the answer
+                card.classList.add("flip");
+                isAnswerShowing = true;
 
-    // After 3 seconds, flip back to the question
-    setTimeout(() => {
-        card.classList.remove("flip");
-        isAnswerShowing = false;
+                // After 3 seconds, flip back to the question
+                setTimeout(() => {
+                    card.classList.remove("flip");
+                    isAnswerShowing = false;
 
-        // After flip-back completes, update content for the next question
-        setTimeout(() => {
-            index = (index + 1) % cardData.words.length;
-            updateContent();
-        }, 1000); // Wait for flip-back animation to complete
-    }, 3000); // Time to show the answer
-}
+                    // After flip-back completes, update content for the next question
+                    setTimeout(() => {
+                        index = (index + 1) % cardData.words.length;
+                        updateContent();
+                    }, 1000); // Wait for flip-back animation to complete
+                }, 3000); // Time to show the answer
+            }
 
-function startCycle() {
-    // Initialize the first question
-    updateContent();
+            function startCycle() {
+                // Initialize the first question
+                updateContent();
 
-    // Show the first question for 3 seconds, then flip to answer
-    setTimeout(() => {
-        showAnswer();
+                // Show the first question for 3 seconds, then flip to answer
+                setTimeout(() => {
+                    showAnswer();
 
-        // Start the cycle for subsequent questions
-        setInterval(() => {
-            // Show question for 3 seconds, then flip to answer
-            setTimeout(() => {
-                showAnswer();
-            }, 3000); // Time to show the question
-        }, 6000); // Total cycle time (3s question + 3s answer)
-    }, 3000); // Initial question display time
-}
+                    // Start the cycle for subsequent questions
+                    setInterval(() => {
+                        // Show question for 3 seconds, then flip to answer
+                        setTimeout(() => {
+                            showAnswer();
+                        }, 3000); // Time to show the question
+                    }, 6000); // Total cycle time (3s question + 3s answer)
+                }, 3000); // Initial question display time
+            }
 
-startCycle();
+            startCycle();
+        });
 
         function loadHandAnimation(id) {
             return lottie.loadAnimation({
@@ -190,4 +191,3 @@ startCycle();
     </script>
 </body>
 </html>
-
