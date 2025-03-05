@@ -145,7 +145,7 @@
                 index = (index + 1) % cardData.words.length;
                 updateContent();
 
-                // Show question for 3 seconds
+                // Show question for 4 seconds
                 setTimeout(() => {
                     card.classList.add("flip");
                     isAnimating = false;
