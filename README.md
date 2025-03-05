@@ -3,190 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Flashcard Learning</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
+    <title>UPPSC Quiz & Flashcards</title>
     <style>
+        /* Global Styling */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #4a90e2, #000000);
             text-align: center;
+            background: linear-gradient(to bottom, #3b82f6, #111827);
             color: white;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: auto;
+        /* Header Styling */
+        .header {
+            padding: 20px;
         }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
 
         p {
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
-
-        .card-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
+            font-size: 16px;
             margin-bottom: 20px;
-            position: relative;
         }
 
-        .flashcard-container {
-            width: 100%;
-            height: 350px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-            position: relative;
+        /* Container Styling */
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Flashcard Section */
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
         .flashcard {
-            width: 300px;
-            height: 300px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1s;
-        }
-
-        .flashcard.flip {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
+            background-color: #f59e0b;
             color: white;
-            background: #ff9800;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            padding: 20px;
+            font-size: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            position: relative;
         }
 
-        .flashcard-back {
-            background: #009688;
-            transform: rotateY(180deg);
+        .flashcard:hover {
+            background-color: #d97706;
         }
 
-        .hand-animation {
+        .flashcard:active {
+            transform: scale(0.95);
+        }
+
+        /* Hand Click Animation */
+        .hand {
+            width: 40px;
             position: absolute;
-            width: 100px;
-            height: 100px;
-            bottom: -50px;
             left: 50%;
+            bottom: -50px;
             transform: translateX(-50%);
+            animation: click-animation 1.5s infinite;
+        }
+
+        @keyframes click-animation {
+            0%, 100% { bottom: -50px; opacity: 1; }
+            50% { bottom: -40px; opacity: 0.7; }
+        }
+
+        /* Button Section */
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #059669;
+        }
+
+        .btn-upgrade {
+            background-color: #f59e0b;
+        }
+
+        .btn-upgrade:hover {
+            background-color: #d97706;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Flashcard Learning</h1>
-        <p>Memorize concepts easily with interactive flashcards.</p>
 
-        <div class="card-box">
-            <h3>Flashcard Learning</h3>
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard1">
-                    <div class="flashcard-face flashcard-front"></div>
-                    <div class="flashcard-face flashcard-back"></div>
-                </div>
-                <div class="hand-animation" id="hand1"></div>
-            </div>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
+        <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using Flashcards & Quizzes.</p>
+    </div>
+
+    <!-- Flashcard Container -->
+    <div class="container">
+        <div class="card">
+            <div class="card-title">Flashcard Learning</div>
+            <div class="flashcard" onclick="showAnswer(this)">अंगीकरण</div>
+            <img src="hand-icon.png" class="hand" alt="Click Animation">
+        </div>
+
+        <div class="card">
+            <div class="card-title">Synonym Learning</div>
+            <div class="flashcard" onclick="showAnswer(this)">विशाल</div>
+            <img src="hand-icon.png" class="hand" alt="Click Animation">
+        </div>
+
+        <div class="card">
+            <div class="card-title">Current Affairs</div>
+            <div class="flashcard" onclick="showAnswer(this)">G20 2023 का अध्यक्ष कौन था?</div>
+            <img src="hand-icon.png" class="hand" alt="Click Animation">
         </div>
     </div>
 
+    <!-- Buttons Section -->
+    <div class="buttons">
+        <a href="#" class="btn">Start for Free</a>
+        <a href="#" class="btn btn-upgrade">Upgrade for ₹99/year</a>
+    </div>
+
     <script>
-        let flashcards = [
-            {
-                id: "flashcard1",
-                words: [
-                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
-                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
-                    { front: "वैमनस्य शब्द का विलोम है", back: "सौहार्द" },
-                    { front: "ह्रस्व शब्द का विलोम है", back: "दीर्घ" },
-                    { front: "व्यष्टि शब्द का विलोम है", back: "समष्टि" }
-                ]
+        function showAnswer(element) {
+            if (element.innerText === "अंगीकरण") {
+                element.innerText = "अपनाना या सम्मिलित करना";
+            } else if (element.innerText === "विशाल") {
+                element.innerText = "बड़ा, व्यापक";
+            } else if (element.innerText === "G20 2023 का अध्यक्ष कौन था?") {
+                element.innerText = "भारत";
+            } else {
+                location.reload(); // Reset back to original state
             }
-        ];
-
-        flashcards.forEach((cardData) => {
-            let card = document.getElementById(cardData.id);
-            let frontFace = card.querySelector(".flashcard-front");
-            let backFace = card.querySelector(".flashcard-back");
-            let index = 0;
-            let isAnswerShowing = false;
-
-            function updateContent() {
-                frontFace.textContent = cardData.words[index].front;
-                backFace.textContent = cardData.words[index].back;
-            }
-
-            function showAnswer() {
-                // Flip to show the answer
-                card.classList.add("flip");
-                isAnswerShowing = true;
-
-                // After 3 seconds, flip back to the question
-                setTimeout(() => {
-                    // Update content for the next question BEFORE flipping back
-                    index = (index + 1) % cardData.words.length;
-                    updateContent();
-
-                    // Flip back to the question
-                    card.classList.remove("flip");
-                    isAnswerShowing = false;
-                }, 3000); // Time to show the answer
-            }
-
-            function startCycle() {
-                // Initialize the first question
-                updateContent();
-
-                // Show the first question for 3 seconds, then flip to answer
-                setTimeout(() => {
-                    showAnswer();
-
-                    // Start the cycle for subsequent questions
-                    setInterval(() => {
-                        // Show question for 3 seconds, then flip to answer
-                        setTimeout(() => {
-                            showAnswer();
-                        }, 3000); // Time to show the question
-                    }, 6000); // Total cycle time (3s question + 3s answer)
-                }, 3000); // Initial question display time
-            }
-
-            startCycle();
-        });
-
-        function loadHandAnimation(id) {
-            return lottie.loadAnimation({
-                container: document.getElementById(id),
-                renderer: "svg",
-                loop: true,
-                autoplay: true,
-                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
-            });
         }
-
-        let hand1 = loadHandAnimation("hand1");
-        hand1.setSpeed(0.3);
     </script>
+
 </body>
 </html>
