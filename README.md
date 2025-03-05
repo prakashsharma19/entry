@@ -21,28 +21,16 @@
             margin: auto;
         }
 
-        h1 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
         .card-box {
             background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             position: relative;
         }
 
-        /* Flashcard Container */
+        /* Flashcard Styling */
         .flashcard-container {
-            width: 100%;
-            height: 150px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,11 +39,11 @@
         }
 
         .flashcard {
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1.5s;
+            transition: transform 1.5s ease-in-out;
         }
 
         .flashcard.flip {
@@ -70,14 +58,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
-            text-align: center;
             color: white;
             background: #ff9800;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            padding: 5px;
+            padding: 10px;
         }
 
         .flashcard-back {
@@ -85,25 +72,22 @@
             transform: rotateY(180deg);
         }
 
-        /* Lottie Hand Animation */
+        /* Hand Animation */
         .hand-animation {
             position: absolute;
             width: 70px;
             height: 70px;
-            bottom: -40px;
+            bottom: -30px;
             left: 50%;
             transform: translateX(-50%);
         }
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Flashcard Learning</h1>
         <p>Memorize concepts easily with interactive flashcards.</p>
 
-        <!-- Flashcard Learning Box -->
         <div class="card-box">
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
@@ -114,14 +98,57 @@
                 <div class="hand-animation" id="hand1"></div>
             </div>
         </div>
-
     </div>
 
     <script>
-        let flashcards = [
-            {
-                id: "flashcard1",
-                words: [
-                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
-                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
-                    { front: "वै
+        let flashcardData = [
+            { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
+            { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
+            { front: "वैमनस्य", back: "सौहार्द" },
+            { front: "ह्रस्व", back: "दीर्घ" },
+            { front: "व्यष्टि", back: "समष्टि" }
+        ];
+
+        let card = document.getElementById("flashcard1");
+        let frontFace = card.querySelector(".flashcard-front");
+        let backFace = card.querySelector(".flashcard-back");
+        let index = 0;
+        let isFlipped = false;
+
+        function updateCardText() {
+            frontFace.innerText = flashcardData[index].front;
+            backFace.innerText = flashcardData[index].back;
+        }
+
+        updateCardText(); // Set initial text before flipping
+
+        function flipCard() {
+            if (!isFlipped) {
+                setTimeout(() => {
+                    index = (index + 1) % flashcardData.length;
+                    updateCardText();
+                }, 700); // Ensure text updates before flipping
+            }
+            
+            card.classList.toggle("flip");
+            isFlipped = !isFlipped;
+        }
+
+        setInterval(flipCard, 4000);
+
+        // Hand animation sync
+        function loadHandAnimation(id) {
+            return lottie.loadAnimation({
+                container: document.getElementById(id),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
+            });
+        }
+
+        let handAnimation = loadHandAnimation("hand1");
+        handAnimation.setSpeed(0.3); // Slow hand clicking
+    </script>
+</body>
+</html>
