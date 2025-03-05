@@ -27,19 +27,21 @@
 
         /* Header */
         header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         header h1 {
             margin: 0;
             font-size: 24px;
+            font-weight: bold;
         }
 
         nav ul {
@@ -55,6 +57,7 @@
 
         nav ul li a {
             font-size: 16px;
+            font-weight: 500;
         }
 
         /* Main Content */
@@ -71,13 +74,20 @@
         h2 {
             font-size: 22px;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         .card-box {
             background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
+        }
+
+        .card-box h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         /* Flashcard Container */
@@ -97,6 +107,7 @@
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
+            cursor: pointer;
         }
 
         .flashcard.flip {
@@ -117,6 +128,8 @@
             background: #ff9800;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            text-align: center;
         }
 
         .flashcard-back {
@@ -129,17 +142,19 @@
             position: absolute;
             width: 50px;
             height: 50px;
-            bottom: -20px;
+            bottom: -25px;
             left: 50%;
             transform: translateX(-50%);
+            pointer-events: none;
         }
 
         /* Footer */
         footer {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             text-align: center;
-            padding: 10px 0;
+            padding: 15px 0;
             margin-top: 40px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
         }
 
         footer p {
@@ -152,6 +167,7 @@
             header {
                 flex-direction: column;
                 text-align: center;
+                padding: 10px;
             }
 
             nav ul {
@@ -282,7 +298,7 @@
                 }, 500);
             }
 
-            setInterval(flipCard, 3000);
+            card.addEventListener("click", flipCard);
         });
 
         // Load Lottie Hand Animation for each card
