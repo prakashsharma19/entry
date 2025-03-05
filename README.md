@@ -21,16 +21,28 @@
             margin: auto;
         }
 
+        h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
         .card-box {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
         }
 
-        /* Flashcard Styling */
+        /* Flashcard Container */
         .flashcard-container {
+            width: 100%;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,7 +55,7 @@
             height: 200px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1.5s ease-in-out;
+            transition: transform 0.5s;
         }
 
         .flashcard.flip {
@@ -58,13 +70,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            padding: 10px;
         }
 
         .flashcard-back {
@@ -72,18 +83,20 @@
             transform: rotateY(180deg);
         }
 
-        /* Hand Animation */
+        /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
-            width: 70px;
-            height: 70px;
-            bottom: -30px;
+            width: 100px;
+            height: 100px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
         }
+
     </style>
 </head>
 <body>
+
     <div class="container">
         <h1>Flashcard Learning</h1>
         <p>Memorize concepts easily with interactive flashcards.</p>
@@ -92,8 +105,8 @@
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard1">
-                    <div class="flashcard-face flashcard-front"></div>
-                    <div class="flashcard-face flashcard-back"></div>
+                    <div class="flashcard-face flashcard-front">अंगीकरण</div>
+                    <div class="flashcard-face flashcard-back">अनंगीकरण</div>
                 </div>
                 <div class="hand-animation" id="hand1"></div>
             </div>
@@ -101,42 +114,31 @@
     </div>
 
     <script>
-        let flashcardData = [
-            { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
-            { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
-            { front: "वैमनस्य", back: "सौहार्द" },
-            { front: "ह्रस्व", back: "दीर्घ" },
-            { front: "व्यष्टि", back: "समष्टि" }
+        let flashcard = document.getElementById("flashcard1");
+        let handAnimation = document.getElementById("hand1");
+        let words = [
+            { front: "अंगीकरण", back: "अनंगीकरण" },
+            { front: "न्याय", back: "अन्याय" }
         ];
-
-        let card = document.getElementById("flashcard1");
-        let frontFace = card.querySelector(".flashcard-front");
-        let backFace = card.querySelector(".flashcard-back");
         let index = 0;
         let isFlipped = false;
 
-        function updateCardText() {
-            frontFace.innerText = flashcardData[index].front;
-            backFace.innerText = flashcardData[index].back;
-        }
-
-        updateCardText(); // Set initial text before flipping
-
         function flipCard() {
             if (!isFlipped) {
+                flashcard.classList.add("flip");
+                isFlipped = true;
                 setTimeout(() => {
-                    index = (index + 1) % flashcardData.length;
-                    updateCardText();
-                }, 700); // Ensure text updates before flipping
+                    flashcard.classList.remove("flip");
+                    index = (index + 1) % words.length;
+                    flashcard.querySelector(".flashcard-front").innerText = words[index].front;
+                    flashcard.querySelector(".flashcard-back").innerText = words[index].back;
+                    isFlipped = false;
+                }, 2000);
             }
-            
-            card.classList.toggle("flip");
-            isFlipped = !isFlipped;
         }
 
-        setInterval(flipCard, 4000);
+        handAnimation.addEventListener("click", flipCard);
 
-        // Hand animation sync
         function loadHandAnimation(id) {
             return lottie.loadAnimation({
                 container: document.getElementById(id),
@@ -147,8 +149,9 @@
             });
         }
 
-        let handAnimation = loadHandAnimation("hand1");
-        handAnimation.setSpeed(0.3); // Slow hand clicking
+        let hand = loadHandAnimation("hand1");
+        hand.setSpeed(0.3);
     </script>
+
 </body>
 </html>
