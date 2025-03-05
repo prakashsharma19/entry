@@ -138,29 +138,42 @@
             }
 
             function showAnswer() {
-                card.classList.add("flip");
-                isAnswerShowing = true;
-                
-                setTimeout(() => {
-                    card.classList.remove("flip");
-                    isAnswerShowing = false;
-                    index = (index + 1) % cardData.words.length;
-                    updateContent();
-                }, 4000); // Time to show answer + flip back
-            }
+    // Flip to show the answer
+    card.classList.add("flip");
+    isAnswerShowing = true;
 
-            function startCycle() {
-                updateContent();
-                setTimeout(() => {
-                    showAnswer();
-                    setInterval(() => {
-                        setTimeout(showAnswer, 3000); // Time between question displays
-                    }, 6000); // Total cycle time
-                }, 3000); // Initial question display time
-            }
+    // After 3 seconds, flip back to the question
+    setTimeout(() => {
+        card.classList.remove("flip");
+        isAnswerShowing = false;
 
-            startCycle();
-        });
+        // After flip-back completes, update content for the next question
+        setTimeout(() => {
+            index = (index + 1) % cardData.words.length;
+            updateContent();
+        }, 1000); // Wait for flip-back animation to complete
+    }, 3000); // Time to show the answer
+}
+
+function startCycle() {
+    // Initialize the first question
+    updateContent();
+
+    // Show the first question for 3 seconds, then flip to answer
+    setTimeout(() => {
+        showAnswer();
+
+        // Start the cycle for subsequent questions
+        setInterval(() => {
+            // Show question for 3 seconds, then flip to answer
+            setTimeout(() => {
+                showAnswer();
+            }, 3000); // Time to show the question
+        }, 6000); // Total cycle time (3s question + 3s answer)
+    }, 3000); // Initial question display time
+}
+
+startCycle();
 
         function loadHandAnimation(id) {
             return lottie.loadAnimation({
