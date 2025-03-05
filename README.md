@@ -42,7 +42,7 @@
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 200px;
+            height: 150px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,11 +51,11 @@
         }
 
         .flashcard {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.5s;
+            transition: transform 1.5s;
         }
 
         .flashcard.flip {
@@ -70,14 +70,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
+            text-align: center;
             color: white;
             background: #ff9800;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            text-align: center;
+            padding: 5px;
         }
 
         .flashcard-back {
@@ -88,18 +88,22 @@
         /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            bottom: -20px;
+            width: 70px;
+            height: 70px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
         }
+
     </style>
 </head>
 <body>
+
     <div class="container">
         <h1>Flashcard Learning</h1>
         <p>Memorize concepts easily with interactive flashcards.</p>
+
+        <!-- Flashcard Learning Box -->
         <div class="card-box">
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
@@ -110,6 +114,7 @@
                 <div class="hand-animation" id="hand1"></div>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -119,46 +124,4 @@
                 words: [
                     { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
                     { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
-                    { front: "वैमनस्य", back: "सौहार्द" },
-                    { front: "ह्रस्व", back: "दीर्घ" },
-                    { front: "व्यष्टि", back: "समष्टि" }
-                ]
-            }
-        ];
-
-        flashcards.forEach((cardData) => {
-            let card = document.getElementById(cardData.id);
-            let front = card.querySelector(".flashcard-front");
-            let back = card.querySelector(".flashcard-back");
-            let index = 0;
-            let isFlipped = false;
-            front.innerText = cardData.words[index].front;
-            back.innerText = cardData.words[index].back;
-
-            function flipCard() {
-                isFlipped = !isFlipped;
-                if (!isFlipped) {
-                    index = (index + 1) % cardData.words.length;
-                    front.innerText = cardData.words[index].front;
-                    back.innerText = cardData.words[index].back;
-                }
-                card.classList.toggle("flip");
-            }
-
-            setInterval(flipCard, 3000);
-        });
-
-        function loadHandAnimation(id) {
-            return lottie.loadAnimation({
-                container: document.getElementById(id),
-                renderer: "svg",
-                loop: true,
-                autoplay: true,
-                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
-            });
-        }
-
-        loadHandAnimation("hand1").setSpeed(1);
-    </script>
-</body>
-</html>
+                    { front: "वै
