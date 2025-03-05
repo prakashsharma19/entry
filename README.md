@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPPSC Flashcard Learning</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Hind', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #4a90e2, #000000);
             text-align: center;
             color: white;
@@ -18,31 +17,31 @@
 
         .container {
             width: 90%;
-            max-width: 700px;
+            max-width: 800px;
             margin: auto;
         }
 
         h1 {
             font-size: 32px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         p {
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .card-box {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             position: relative;
         }
 
         .flashcard-container {
             width: 100%;
-            height: 200px;
+            height: 350px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,11 +50,11 @@
         }
 
         .flashcard {
-            width: 250px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            transition: transform 1s;
         }
 
         .flashcard.flip {
@@ -70,15 +69,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
             text-align: center;
             color: white;
-            font-family: 'Hind', Arial, sans-serif;
             background: #ff9800;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
         }
 
         .flashcard-back {
@@ -88,13 +86,12 @@
 
         .hand-animation {
             position: absolute;
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             bottom: -50px;
             left: 50%;
             transform: translateX(-50%);
         }
-
     </style>
 </head>
 <body>
@@ -121,9 +118,9 @@
                 words: [
                     { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
                     { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
-                    { front: "वैमनस्य", back: "सौहार्द" },
-                    { front: "ह्रस्व", back: "दीर्घ" },
-                    { front: "व्यष्टि", back: "समष्टि" }
+                    { front: "वैमनस्य शब्द का विलोम है", back: "सौहार्द" },
+                    { front: "ह्रस्व शब्द का विलोम है", back: "दीर्घ" },
+                    { front: "व्यष्टि शब्द का विलोम है", back: "समष्टि" }
                 ]
             }
         ];
@@ -133,25 +130,36 @@
             let frontFace = card.querySelector(".flashcard-front");
             let backFace = card.querySelector(".flashcard-back");
             let index = 0;
+            let isAnswerShowing = false;
 
-            function updateCardText() {
-                frontFace.innerText = cardData.words[index].front;
-                backFace.innerText = cardData.words[index].back;
+            function updateContent() {
+                frontFace.textContent = cardData.words[index].front;
+                backFace.textContent = cardData.words[index].back;
             }
 
-            updateCardText();
-
-            card.addEventListener("click", function () {
-                card.classList.toggle("flip");
-            });
-
-            setInterval(() => {
-                card.classList.remove("flip");
+            function showAnswer() {
+                card.classList.add("flip");
+                isAnswerShowing = true;
+                
                 setTimeout(() => {
+                    card.classList.remove("flip");
+                    isAnswerShowing = false;
                     index = (index + 1) % cardData.words.length;
-                    updateCardText();
-                }, 300);
-            }, 4000);
+                    updateContent();
+                }, 3000); // Time to show answer + flip back
+            }
+
+            function startCycle() {
+                updateContent();
+                setTimeout(() => {
+                    showAnswer();
+                    setInterval(() => {
+                        setTimeout(showAnswer, 3000); // Time between question displays
+                    }, 6000); // Total cycle time
+                }, 3000); // Initial question display time
+            }
+
+            startCycle();
         });
 
         function loadHandAnimation(id) {
