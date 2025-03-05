@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPPSC Flashcard Learning</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: "Kalam", cursive;
+            font-family: 'Hind', Arial, sans-serif;
             background: linear-gradient(to bottom, #4a90e2, #000000);
             text-align: center;
             color: white;
@@ -24,26 +24,25 @@
 
         h1 {
             font-size: 32px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         p {
             font-size: 18px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .card-box {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
             position: relative;
         }
 
-        /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 300px;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,11 +51,11 @@
         }
 
         .flashcard {
-            width: 300px;
-            height: 300px;
+            width: 250px;
+            height: 200px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s;
+            transition: transform 0.6s;
         }
 
         .flashcard.flip {
@@ -75,13 +74,11 @@
             font-weight: bold;
             text-align: center;
             color: white;
+            font-family: 'Hind', Arial, sans-serif;
             background: #ff9800;
-            border-radius: 15px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-            padding: 20px;
-            white-space: normal;
-            word-wrap: break-word;
-            line-height: 1.5;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 10px;
         }
 
         .flashcard-back {
@@ -89,7 +86,6 @@
             transform: rotateY(180deg);
         }
 
-        /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
             width: 80px;
@@ -102,12 +98,10 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Flashcard Learning</h1>
         <p>Memorize concepts easily with interactive flashcards.</p>
 
-        <!-- Flashcard Learning Box -->
         <div class="card-box">
             <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
@@ -118,7 +112,6 @@
                 <div class="hand-animation" id="hand1"></div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -126,11 +119,11 @@
             {
                 id: "flashcard1",
                 words: [
-                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन,\nमेहमान, गृहागत" },
-                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार,\nविपिन, अटवी, कानन,\nवन, बयाबान" },
-                    { front: "वैमनस्य शब्द का विलोम है", back: "सौहार्द" },
-                    { front: "ह्रस्व शब्द का विलोम है", back: "दीर्घ" },
-                    { front: "व्यष्टि शब्द का विलोम है", back: "समष्टि" }
+                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
+                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
+                    { front: "वैमनस्य", back: "सौहार्द" },
+                    { front: "ह्रस्व", back: "दीर्घ" },
+                    { front: "व्यष्टि", back: "समष्टि" }
                 ]
             }
         ];
@@ -140,7 +133,6 @@
             let frontFace = card.querySelector(".flashcard-front");
             let backFace = card.querySelector(".flashcard-back");
             let index = 0;
-            let isFlipped = false;
 
             function updateCardText() {
                 frontFace.innerText = cardData.words[index].front;
@@ -149,21 +141,17 @@
 
             updateCardText();
 
-            function flipCard() {
-                card.classList.add("flip");
+            card.addEventListener("click", function () {
+                card.classList.toggle("flip");
+            });
 
-                // Wait for flip animation to complete before updating text
+            setInterval(() => {
+                card.classList.remove("flip");
                 setTimeout(() => {
-                    isFlipped = !isFlipped;
-                    if (!isFlipped) {
-                        index = (index + 1) % cardData.words.length;
-                        updateCardText();
-                    }
-                    card.classList.remove("flip");
-                }, 1000);
-            }
-
-            setInterval(flipCard, 4000);
+                    index = (index + 1) % cardData.words.length;
+                    updateCardText();
+                }, 300);
+            }, 4000);
         });
 
         function loadHandAnimation(id) {
@@ -178,8 +166,6 @@
 
         let hand1 = loadHandAnimation("hand1");
         hand1.setSpeed(0.3);
-
     </script>
-
 </body>
 </html>
