@@ -6,28 +6,70 @@
     <title>UPPSC Flashcard Learning</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
     <style>
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #4a90e2, #000000);
-            text-align: center;
-            color: white;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(to bottom, #4a90e2, #000000);
+            color: white;
+            line-height: 1.6;
         }
 
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            font-size: 16px;
+        }
+
+        /* Main Content */
         .container {
             width: 90%;
-            max-width: 600px;
-            margin: auto;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
-        h1 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 16px;
+        h2 {
+            font-size: 22px;
             margin-bottom: 20px;
         }
 
@@ -35,14 +77,13 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 15px;
-            position: relative;
+            margin-bottom: 20px;
         }
 
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 220px; /* Adjusted to accommodate larger square flashcards */
+            height: 220px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,8 +92,8 @@
         }
 
         .flashcard {
-            width: 200px; /* Adjusted to make it square */
-            height: 200px; /* Adjusted to make it square */
+            width: 200px;
+            height: 200px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
@@ -74,8 +115,8 @@
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 10px; /* Slightly rounded corners for a modern look */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .flashcard-back {
@@ -93,13 +134,63 @@
             transform: translateX(-50%);
         }
 
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+
+            .flashcard {
+                width: 150px;
+                height: 150px;
+            }
+
+            .flashcard-face {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <!-- Header -->
+    <header>
         <h1>Flashcard Learning</h1>
-        <p>Memorize concepts easily with interactive flashcards.</p>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2>Memorize Concepts Easily</h2>
 
         <!-- Flashcard Learning Box -->
         <div class="card-box">
@@ -136,8 +227,12 @@
                 <div class="hand-animation" id="hand3"></div>
             </div>
         </div>
-
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 Flashcard Learning. All rights reserved.</p>
+    </footer>
 
     <script>
         let flashcards = [
