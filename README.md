@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPPSC Flashcard Learning</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Kalam", cursive;
             background: linear-gradient(to bottom, #4a90e2, #000000);
             text-align: center;
             color: white;
@@ -17,32 +18,32 @@
 
         .container {
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
         }
 
         h1 {
-            font-size: 26px;
-            margin-bottom: 10px;
+            font-size: 32px;
+            margin-bottom: 15px;
         }
 
         p {
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin-bottom: 25px;
         }
 
         .card-box {
             background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
             position: relative;
         }
 
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 150px;
+            height: 250px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,8 +52,8 @@
         }
 
         .flashcard {
-            width: 150px;
-            height: 150px;
+            width: 250px;
+            height: 250px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1.5s;
@@ -70,14 +71,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
+            font-size: 24px;
             font-weight: bold;
             text-align: center;
             color: white;
             background: #ff9800;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            padding: 5px;
+            border-radius: 15px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            padding: 10px;
         }
 
         .flashcard-back {
@@ -88,9 +89,9 @@
         /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
-            width: 70px;
-            height: 70px;
-            bottom: -40px;
+            width: 80px;
+            height: 80px;
+            bottom: -50px;
             left: 50%;
             transform: translateX(-50%);
         }
