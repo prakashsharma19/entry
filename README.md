@@ -56,7 +56,7 @@
             height: 300px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1.5s;
+            transition: transform 1s;
         }
 
         .flashcard.flip {
@@ -140,6 +140,7 @@
             let frontFace = card.querySelector(".flashcard-front");
             let backFace = card.querySelector(".flashcard-back");
             let index = 0;
+            let isFlipped = false;
 
             function updateCardText() {
                 frontFace.innerText = cardData.words[index].front;
@@ -149,12 +150,17 @@
             updateCardText();
 
             function flipCard() {
-                setTimeout(() => {
-                    index = (index + 1) % cardData.words.length;
-                    updateCardText();
-                }, 500);
+                card.classList.add("flip");
 
-                card.classList.toggle("flip");
+                // Wait for flip animation to complete before updating text
+                setTimeout(() => {
+                    isFlipped = !isFlipped;
+                    if (!isFlipped) {
+                        index = (index + 1) % cardData.words.length;
+                        updateCardText();
+                    }
+                    card.classList.remove("flip");
+                }, 1000);
             }
 
             setInterval(flipCard, 4000);
