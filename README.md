@@ -154,9 +154,9 @@
                 setTimeout(() => {
                     showAnswer();
                     setInterval(() => {
-                        setTimeout(showAnswer, 3000); // Time between question displays
+                        setTimeout(showAnswer, 4000); // Time between question displays
                     }, 6000); // Total cycle time
-                }, 3000); // Initial question display time
+                }, 4000); // Initial question display time
             }
 
             startCycle();
