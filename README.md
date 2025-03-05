@@ -33,13 +33,13 @@
 
         .card-box {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             margin-bottom: 15px;
             position: relative;
         }
 
-        /* Flashcard Styling */
+        /* Flashcard Container */
         .flashcard-container {
             width: 100%;
             height: 150px;
@@ -55,7 +55,7 @@
             height: 150px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.3s ease-in-out;
+            transition: transform 1.5s;
         }
 
         .flashcard.flip {
@@ -70,14 +70,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
+            text-align: center;
             color: white;
             background: #ff9800;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            text-align: center;
+            padding: 5px;
         }
 
         .flashcard-back {
@@ -88,9 +88,9 @@
         /* Lottie Hand Animation */
         .hand-animation {
             position: absolute;
-            width: 80px;
-            height: 80px;
-            bottom: -30px;
+            width: 70px;
+            height: 70px;
+            bottom: -40px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -133,49 +133,40 @@
 
         flashcards.forEach((cardData) => {
             let card = document.getElementById(cardData.id);
-            let front = card.querySelector(".flashcard-front");
-            let back = card.querySelector(".flashcard-back");
+            let frontFace = card.querySelector(".flashcard-front");
+            let backFace = card.querySelector(".flashcard-back");
             let index = 0;
             let isFlipped = false;
 
-            function updateCard() {
-                front.innerText = cardData.words[index].front;
-                back.innerText = cardData.words[index].back;
-            }
-
-            updateCard();
+            frontFace.innerText = cardData.words[index].front;
+            backFace.innerText = cardData.words[index].back;
 
             function flipCard() {
-                card.classList.add("flip");
-                isFlipped = true;
-
                 setTimeout(() => {
-                    card.classList.remove("flip");
-                    isFlipped = false;
                     index = (index + 1) % cardData.words.length;
-                    updateCard();
-                }, 2000); // Card stays flipped for 2 seconds
+                    frontFace.innerText = cardData.words[index].front;
+                    backFace.innerText = cardData.words[index].back;
+                }, 500);
+
+                card.classList.toggle("flip");
+                isFlipped = !isFlipped;
             }
 
-            // Load Lottie Hand Animation and sync with flip
-            function loadHandAnimation(id) {
-                let animation = lottie.loadAnimation({
-                    container: document.getElementById(id),
-                    renderer: "svg",
-                    loop: true,
-                    autoplay: true,
-                    path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
-                });
-
-                animation.setSpeed(0.4); // Slowing down hand animation
-
-                setInterval(() => {
-                    flipCard();
-                }, 3000); // Flip every 3 seconds in sync with the hand click
-            }
-
-            loadHandAnimation("hand1");
+            setInterval(flipCard, 4000);
         });
+
+        function loadHandAnimation(id) {
+            return lottie.loadAnimation({
+                container: document.getElementById(id),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
+            });
+        }
+
+        let hand1 = loadHandAnimation("hand1");
+        hand1.setSpeed(0.3);
 
     </script>
 
