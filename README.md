@@ -146,7 +146,7 @@
                     isAnswerShowing = false;
                     index = (index + 1) % cardData.words.length;
                     updateContent();
-                }, 3000); // Time to show answer + flip back
+                }, 4000); // Time to show answer + flip back
             }
 
             function startCycle() {
@@ -154,9 +154,9 @@
                 setTimeout(() => {
                     showAnswer();
                     setInterval(() => {
-                        setTimeout(showAnswer, 4000); // Time between question displays
+                        setTimeout(showAnswer, 3000); // Time between question displays
                     }, 6000); // Total cycle time
-                }, 4000); // Initial question display time
+                }, 3000); // Initial question display time
             }
 
             startCycle();
