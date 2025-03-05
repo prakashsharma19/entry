@@ -42,7 +42,7 @@
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 100px;
+            height: 220px; /* Adjusted to accommodate larger square flashcards */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -51,8 +51,8 @@
         }
 
         .flashcard {
-            width: 200px;
-            height: 80px;
+            width: 200px; /* Adjusted to make it square */
+            height: 200px; /* Adjusted to make it square */
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
@@ -74,8 +74,8 @@
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border-radius: 10px; /* Slightly rounded corners for a modern look */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
         }
 
         .flashcard-back {
