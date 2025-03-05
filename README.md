@@ -138,33 +138,33 @@
             }
 
             function showQuestion() {
-                if(isAnimating) return;
+                if (isAnimating) return;
                 isAnimating = true;
-                
-                // Update to next question
+
+                // Update content after flip-back completes
                 index = (index + 1) % cardData.words.length;
                 updateContent();
-                
-                // Show question for 3s
+
+                // Show question for 3 seconds
                 setTimeout(() => {
                     card.classList.add("flip");
-                    setTimeout(() => {
-                        isAnimating = false;
-                    }, 1000);
+                    isAnimating = false;
                 }, 3000);
             }
 
             function showAnswer() {
-                if(isAnimating) return;
+                if (isAnimating) return;
                 isAnimating = true;
-                
-                // Show answer for 3s
+
+                // Show answer for 3 seconds
                 setTimeout(() => {
                     card.classList.remove("flip");
+
+                    // Wait for flip-back animation to complete
                     setTimeout(() => {
                         isAnimating = false;
                         showQuestion();
-                    }, 1000);
+                    }, 1000); // Matches flip animation duration
                 }, 3000);
             }
 
