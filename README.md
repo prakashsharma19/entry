@@ -43,7 +43,7 @@
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 250px;
+            height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,8 +52,8 @@
         }
 
         .flashcard {
-            width: 250px;
-            height: 250px;
+            width: 300px;
+            height: 300px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1.5s;
@@ -71,14 +71,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             text-align: center;
             color: white;
             background: #ff9800;
             border-radius: 15px;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-            padding: 10px;
+            padding: 20px;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.5;
         }
 
         .flashcard-back {
@@ -123,11 +126,11 @@
             {
                 id: "flashcard1",
                 words: [
-                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
-                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
-                    { front: "वैमनस्य", back: "सौहार्द" },
-                    { front: "ह्रस्व", back: "दीर्घ" },
-                    { front: "व्यष्टि", back: "समष्टि" }
+                    { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन,\nमेहमान, गृहागत" },
+                    { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार,\nविपिन, अटवी, कानन,\nवन, बयाबान" },
+                    { front: "वैमनस्य शब्द का विलोम है", back: "सौहार्द" },
+                    { front: "ह्रस्व शब्द का विलोम है", back: "दीर्घ" },
+                    { front: "व्यष्टि शब्द का विलोम है", back: "समष्टि" }
                 ]
             }
         ];
@@ -137,20 +140,21 @@
             let frontFace = card.querySelector(".flashcard-front");
             let backFace = card.querySelector(".flashcard-back");
             let index = 0;
-            let isFlipped = false;
 
-            frontFace.innerText = cardData.words[index].front;
-            backFace.innerText = cardData.words[index].back;
+            function updateCardText() {
+                frontFace.innerText = cardData.words[index].front;
+                backFace.innerText = cardData.words[index].back;
+            }
+
+            updateCardText();
 
             function flipCard() {
                 setTimeout(() => {
                     index = (index + 1) % cardData.words.length;
-                    frontFace.innerText = cardData.words[index].front;
-                    backFace.innerText = cardData.words[index].back;
+                    updateCardText();
                 }, 500);
 
                 card.classList.toggle("flip");
-                isFlipped = !isFlipped;
             }
 
             setInterval(flipCard, 4000);
