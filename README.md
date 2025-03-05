@@ -130,36 +130,50 @@
             let frontFace = card.querySelector(".flashcard-front");
             let backFace = card.querySelector(".flashcard-back");
             let index = 0;
-            let isAnswerShowing = false;
+            let isAnimating = false;
 
             function updateContent() {
                 frontFace.textContent = cardData.words[index].front;
                 backFace.textContent = cardData.words[index].back;
             }
 
-            function showAnswer() {
-                card.classList.add("flip");
-                isAnswerShowing = true;
+            function showQuestion() {
+                if(isAnimating) return;
+                isAnimating = true;
                 
+                // Update to next question
+                index = (index + 1) % cardData.words.length;
+                updateContent();
+                
+                // Show question for 3s
+                setTimeout(() => {
+                    card.classList.add("flip");
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 1000);
+                }, 3000);
+            }
+
+            function showAnswer() {
+                if(isAnimating) return;
+                isAnimating = true;
+                
+                // Show answer for 3s
                 setTimeout(() => {
                     card.classList.remove("flip");
-                    isAnswerShowing = false;
-                    index = (index + 1) % cardData.words.length;
-                    updateContent();
-                }, 3000); // Time to show answer + flip back
+                    setTimeout(() => {
+                        isAnimating = false;
+                        showQuestion();
+                    }, 1000);
+                }, 3000);
             }
 
-            function startCycle() {
-                updateContent();
-                setTimeout(() => {
-                    showAnswer();
-                    setInterval(() => {
-                        setTimeout(showAnswer, 3000); // Time between question displays
-                    }, 6000); // Total cycle time
-                }, 3000); // Initial question display time
-            }
-
-            startCycle();
+            // Initial setup
+            updateContent();
+            setTimeout(() => {
+                card.classList.add("flip");
+                setTimeout(showAnswer, 1000);
+            }, 3000);
         });
 
         function loadHandAnimation(id) {
