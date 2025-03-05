@@ -144,14 +144,13 @@
 
                 // After 3 seconds, flip back to the question
                 setTimeout(() => {
+                    // Update content for the next question BEFORE flipping back
+                    index = (index + 1) % cardData.words.length;
+                    updateContent();
+
+                    // Flip back to the question
                     card.classList.remove("flip");
                     isAnswerShowing = false;
-
-                    // After flip-back completes, update content for the next question
-                    setTimeout(() => {
-                        index = (index + 1) % cardData.words.length;
-                        updateContent();
-                    }, 1000); // Wait for flip-back animation to complete
                 }, 3000); // Time to show the answer
             }
 
