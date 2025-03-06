@@ -1,111 +1,196 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Flashcard App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>UPPSC Flashcard Learning</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
     <style>
-        .flashcard {
-            transform-style: preserve-3d;
-            transition: transform 0.7s;
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #4a90e2, #000000);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        p {
+            font-size: 18px;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .card-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .card-box h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        /* Flashcard Container */
+        .flashcard-container {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .flashcard {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            cursor: pointer;
+        }
+
         .flashcard.flip {
             transform: rotateY(180deg);
         }
+
         .flashcard-face {
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            background: #ff9800;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
         }
+
         .flashcard-back {
+            background: #009688;
             transform: rotateY(180deg);
+        }
+
+        /* Hand Animation */
+        .hand-animation {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Button Styles */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            background: #ff9800;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: #e68900;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .flashcard {
+                width: 250px;
+                height: 250px;
+            }
+
+            .flashcard-face {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-blue-500 to-black text-white text-center p-5">
-    <!-- Header -->
-    <header class="fixed top-0 left-0 w-full bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg z-10">
-        <h1 class="text-xl font-bold">UPPSC Flashcard App</h1>
-        <button id="menuButton" class="text-white text-xl">☰</button>
-    </header>
-    
-    <!-- Sidebar Menu -->
-    <div id="sidebar" class="fixed top-0 right-0 h-full bg-gray-800 text-white w-48 p-4 hidden">
-        <button id="closeButton" class="text-white text-xl mb-4">✖</button>
-        <ul class="space-y-2">
-            <li><a href="#" class="block p-2 hover:bg-gray-700">लॉगिन</a></li>
-            <li><a href="#" class="block p-2 hover:bg-gray-700">हमारे बारे में</a></li>
-        </ul>
-    </div>
-    
-    <div class="mt-16 max-w-sm mx-auto">
-        <h2 class="text-2xl font-bold mb-2">फ्लैशकार्ड द्वारा सीखें</h2>
-        <p class="text-sm mb-4">अब सीखना और भी आसान और प्रभावी हो गया है!</p>
+<body>
+    <div class="container">
+        <h1>Flashcard Learning</h1>
+        <p>Memorize concepts easily with interactive flashcards.</p>
 
-        <!-- Flashcard Learning Box -->
-        <div class="bg-white bg-opacity-10 p-4 rounded-lg shadow-lg relative">
-            <h3 class="text-lg font-semibold mb-2">फ्लैशकार्ड अभ्यास</h3>
-            <div class="w-full h-20 flex justify-center items-center perspective-1000 relative">
-                <div id="flashcard" class="flashcard w-44 h-20 relative">
-                    <div class="flashcard-face flex justify-center items-center text-lg font-bold bg-orange-500 rounded-lg shadow-lg" id="front">अंगीकरण</div>
-                    <div class="flashcard-face flashcard-back flex justify-center items-center text-lg font-bold bg-teal-500 rounded-lg shadow-lg" id="back">अनंगीकरण</div>
+        <div class="card-box">
+            <h3>Flashcard Learning</h3>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard1">
+                    <div class="flashcard-face flashcard-front"></div>
+                    <div class="flashcard-face flashcard-back"></div>
                 </div>
-                <div id="fingerAnimation" class="absolute w-12 h-12 bottom-0 left-1/2 transform -translate-x-1/2"></div>
+                <div class="hand-animation" id="hand1"></div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn">Previous</button>
+                <button id="nextBtn">Next</button>
             </div>
         </div>
-        
-        <!-- Start Practice Button -->
-        <button class="mt-4 bg-yellow-500 text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-600 transition">अभ्यास शुरू करें</button>
     </div>
 
-    <!-- Footer -->
-    <footer class="mt-8 py-4 bg-gray-900 text-white text-center">
-        © 2025 UPPSC Flashcard App. सभी अधिकार सुरक्षित।
-    </footer>
-
     <script>
-        let card = document.getElementById("flashcard");
-        let frontText = document.getElementById("front");
-        let backText = document.getElementById("back");
-        let words = [
-            { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" }
-        ];
-        let index = 0;
-        let isFlipped = false;
-
-        function flipCard() {
-            card.classList.toggle("flip");
-            isFlipped = !isFlipped;
-            setTimeout(() => {
-                index = (index + 1) % words.length;
-                if (!isFlipped) {
-                    frontText.innerText = words[index].front;
-                    backText.innerText = words[index].back;
-                }
-            }, 500);
+        // Hand Animation
+        function loadHandAnimation(id) {
+            return lottie.loadAnimation({
+                container: document.getElementById(id),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
+            });
         }
-        setInterval(flipCard, 2000);
-        
-        let animation = lottie.loadAnimation({
-            container: document.getElementById("fingerAnimation"),
-            renderer: "svg",
-            loop: true,
-            autoplay: true,
-            path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
-        });
-        animation.setSpeed(0.5);
 
-        // Sidebar Menu Functionality
-        document.getElementById("menuButton").addEventListener("click", function() {
-            document.getElementById("sidebar").classList.toggle("hidden");
-        });
-        document.getElementById("closeButton").addEventListener("click", function() {
-            document.getElementById("sidebar").classList.add("hidden");
-        });
+        let hand1 = loadHandAnimation("hand1");
+        hand1.setSpeed(0.3);
     </script>
 </body>
 </html>
