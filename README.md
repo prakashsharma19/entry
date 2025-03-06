@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #283048, #859398); /* Professional gradient */
+            background: linear-gradient(to bottom, #4a90e2, #000000);
             text-align: center;
             color: white;
             margin: 0;
@@ -22,28 +22,27 @@
         }
 
         h1 {
-            font-size: 24px;
-            margin-bottom: 15px;
+            font-size: 22px;
+            margin-bottom: 10px;
         }
 
         p {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 20px;
         }
 
         .card-box {
-            background: rgba(255, 255, 255, 0.15); /* Glass effect */
-            padding: 20px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 15px;
             position: relative;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 120px;
+            height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,11 +51,11 @@
         }
 
         .flashcard {
-            width: 220px;
-            height: 100px;
+            width: 180px;
+            height: 80px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.8s ease-in-out;
+            transition: transform 1s;
         }
 
         .flashcard.flip {
@@ -71,12 +70,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .flashcard-back {
@@ -87,9 +86,9 @@
         /* Lottie Hand Animation */
         #fingerAnimation {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            bottom: -35px;
+            width: 50px;
+            height: 50px;
+            bottom: -20px; /* Moved up */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -104,7 +103,7 @@
 
         <!-- Flashcard Learning Box -->
         <div class="card-box">
-            <h3>Interactive Flashcard</h3>
+            <h3>Flashcard Learning</h3>
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard">
                     <div class="flashcard-face flashcard-front">अंगीकरण</div>
@@ -119,8 +118,7 @@
         let card = document.getElementById("flashcard");
         let words = [
             { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" },
-            { front: "ज्ञान", back: "अज्ञान" }
+            { front: "अत्यधिक", back: "अत्यल्प" }
         ];
         let index = 0;
         let isFlipped = false;
@@ -130,18 +128,18 @@
             isFlipped = !isFlipped;
 
             setTimeout(() => {
+                index = (index + 1) % words.length;
                 if (!isFlipped) {
-                    index = (index + 1) % words.length;
                     card.querySelector(".flashcard-front").innerText = words[index].front;
                     card.querySelector(".flashcard-back").innerText = words[index].back;
                 }
             }, 500);
         }
 
-        // Auto flip every 2.5 seconds
-        setInterval(flipCard, 2500);
+        // Auto flip every 2 seconds
+        setInterval(flipCard, 2000);
 
-        // Load Lottie Hand Animation
+        // Load Lottie Hand Animation with slower click speed
         let animation = lottie.loadAnimation({
             container: document.getElementById("fingerAnimation"),
             renderer: "svg",
@@ -150,7 +148,8 @@
             path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
         });
 
-        animation.setSpeed(0.7); // Slower animation speed
+        // Reduce speed of hand clicking animation
+        animation.setSpeed(0.5);
     </script>
 
 </body>
