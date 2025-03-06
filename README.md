@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #1e3c72, #2a5298); /* New gradient background */
+            background: linear-gradient(to bottom, #283048, #859398); /* Professional gradient */
             text-align: center;
             color: white;
             margin: 0;
@@ -32,9 +32,9 @@
         }
 
         .card-box {
-            background: rgba(255, 255, 255, 0.15); /* Light glass effect */
+            background: rgba(255, 255, 255, 0.15); /* Glass effect */
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 15px;
             position: relative;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -43,7 +43,7 @@
         /* Flashcard Container */
         .flashcard-container {
             width: 100%;
-            height: 100px;
+            height: 120px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,11 +52,11 @@
         }
 
         .flashcard {
-            width: 200px;
+            width: 220px;
             height: 100px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s;
+            transition: transform 0.8s ease-in-out;
         }
 
         .flashcard.flip {
@@ -75,7 +75,7 @@
             font-weight: bold;
             color: white;
             background: #ff9800;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
@@ -89,7 +89,7 @@
             position: absolute;
             width: 60px;
             height: 60px;
-            bottom: -25px;
+            bottom: -35px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -104,7 +104,7 @@
 
         <!-- Flashcard Learning Box -->
         <div class="card-box">
-            <h3>Flashcard Learning</h3>
+            <h3>Interactive Flashcard</h3>
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard">
                     <div class="flashcard-face flashcard-front">अंगीकरण</div>
@@ -119,7 +119,8 @@
         let card = document.getElementById("flashcard");
         let words = [
             { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" }
+            { front: "अत्यधिक", back: "अत्यल्प" },
+            { front: "ज्ञान", back: "अज्ञान" }
         ];
         let index = 0;
         let isFlipped = false;
@@ -129,16 +130,16 @@
             isFlipped = !isFlipped;
 
             setTimeout(() => {
-                index = (index + 1) % words.length;
                 if (!isFlipped) {
+                    index = (index + 1) % words.length;
                     card.querySelector(".flashcard-front").innerText = words[index].front;
                     card.querySelector(".flashcard-back").innerText = words[index].back;
                 }
             }, 500);
         }
 
-        // Auto flip every 2 seconds
-        setInterval(flipCard, 2000);
+        // Auto flip every 2.5 seconds
+        setInterval(flipCard, 2500);
 
         // Load Lottie Hand Animation
         let animation = lottie.loadAnimation({
@@ -149,7 +150,7 @@
             path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
         });
 
-        animation.setSpeed(0.5); // Slower animation speed
+        animation.setSpeed(0.7); // Slower animation speed
     </script>
 
 </body>
