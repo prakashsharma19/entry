@@ -1,196 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Flashcard Learning</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #4a90e2, #000000);
-            color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPPSC Flashcards & Quiz</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            text-align: center;
-            padding: 20px;
-        }
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #2c3e50;
+      color: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
 
-        h1 {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        p {
-            font-size: 18px;
-            color: #e0e0e0;
-            margin-bottom: 30px;
-        }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
 
-        .card-box {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            margin-bottom: 30px;
-        }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
 
-        .card-box h3 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background-color: #fff;
+      margin: 4px 0;
+    }
 
-        /* Flashcard Container */
-        .flashcard-container {
-            width: 100%;
-            height: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-            position: relative;
-        }
+    .nav-menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
 
-        .flashcard {
-            width: 300px;
-            height: 300px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1s;
-            cursor: pointer;
-        }
+    .nav-menu ul li {
+      margin-left: 20px;
+    }
 
-        .flashcard.flip {
-            transform: rotateY(180deg);
-        }
+    .nav-menu ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+    }
 
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            color: white;
-            background: #ff9800;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-        }
+    /* Hero Banner */
+    .hero-banner {
+      margin-top: 70px;
+      padding: 50px 20px;
+      background-color: #3498db;
+      color: #fff;
+      text-align: center;
+    }
 
-        .flashcard-back {
-            background: #009688;
-            transform: rotateY(180deg);
-        }
+    .hero-content p {
+      font-size: 18px;
+      margin: 0;
+    }
 
-        /* Hand Animation */
-        .hand-animation {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+    /* Flashcard Section */
+    .flashcard-section {
+      padding: 50px 20px;
+      background-color: #fff;
+      text-align: center;
+    }
 
-        /* Button Styles */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
+    /* Footer */
+    .footer {
+      background-color: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
 
-        .controls button {
-            background: #ff9800;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
 
-        .controls button:hover {
-            background: #e68900;
-        }
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #2c3e50;
+        padding: 10px;
+        border-radius: 5px;
+      }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
+      .nav-menu.active {
+        display: block;
+      }
 
-            p {
-                font-size: 16px;
-            }
+      .nav-menu ul {
+        flex-direction: column;
+      }
 
-            .flashcard {
-                width: 250px;
-                height: 250px;
-            }
-
-            .flashcard-face {
-                font-size: 20px;
-            }
-        }
-    </style>
+      .nav-menu ul li {
+        margin: 10px 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Flashcard Learning</h1>
-        <p>Memorize concepts easily with interactive flashcards.</p>
-
-        <div class="card-box">
-            <h3>Flashcard Learning</h3>
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard1">
-                    <div class="flashcard-face flashcard-front"></div>
-                    <div class="flashcard-face flashcard-back"></div>
-                </div>
-                <div class="hand-animation" id="hand1"></div>
-            </div>
-            <div class="controls">
-                <button id="prevBtn">Previous</button>
-                <button id="nextBtn">Next</button>
-            </div>
-        </div>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>UPPSC Flashcards & Quiz</h1>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav class="nav-menu" id="nav-menu">
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Login</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <script>
-        // Hand Animation
-        function loadHandAnimation(id) {
-            return lottie.loadAnimation({
-                container: document.getElementById(id),
-                renderer: "svg",
-                loop: true,
-                autoplay: true,
-                path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
-            });
-        }
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <p>यह ऐप यूपीपीएससी आरओ/एआरओ उम्मीदवारों के लिए है जो तेजी से हिंदी सीखना चाहते हैं और शब्दों को लंबे समय तक याद रखना चाहते हैं।</p>
+    </div>
+  </section>
 
-        let hand1 = loadHandAnimation("hand1");
-        hand1.setSpeed(0.3);
-    </script>
+  <!-- Flashcard Section (Placeholder) -->
+  <section class="flashcard-section">
+    <!-- Content will be added later -->
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2023 UPPSC Flashcards & Quiz. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+  </script>
 </body>
 </html>
