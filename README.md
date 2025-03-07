@@ -3,31 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard Animation</title>
+    <title>UPPSC Flashcard & Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #4a90e2, #000000);
-            text-align: center;
-            color: white;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(to bottom, #1E3C72, #2A5298);
+            color: white;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #16213E;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+            color: #fff;
+            padding-left: 10px;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding-right: 10px;
+        }
+
+        .hero {
+            background: #1E3C72;
+            color: white;
+            text-align: left;
+            padding: 30px 20px;
+        }
+
+        .hero h2 {
+            font-size: 26px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
         .flashcard-container {
-            width: 100%;
-            height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 20px;
             perspective: 1000px;
             position: relative;
         }
 
         .flashcard {
             width: 180px;
-            height: 80px;
+            height: 100px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
@@ -58,7 +110,6 @@
             transform: rotateY(180deg);
         }
 
-        /* Lottie Hand Animation */
         #fingerAnimation {
             position: absolute;
             width: 50px;
@@ -70,7 +121,18 @@
     </style>
 </head>
 <body>
-    <h1>फ्लैशकार्ड एनिमेशन</h1>
+
+    <div class="header">
+        <h1>UPPSC Flashcard & Quiz</h1>
+        <i class="fa fa-bars menu-icon"></i>
+    </div>
+
+    <div class="hero">
+        <h2>UPPSC Flashcard & Quiz</h2>
+        <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।</p>
+        <button class="start-btn">शुरू करें</button>
+    </div>
+
     <div class="flashcard-container">
         <div class="flashcard" id="flashcard">
             <div class="flashcard-face flashcard-front">अंगीकरण</div>
@@ -110,7 +172,9 @@
             autoplay: true,
             path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
         });
+
         animation.setSpeed(0.5);
     </script>
+
 </body>
 </html>
