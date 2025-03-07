@@ -40,18 +40,16 @@
 
         /* Hero Banner */
         .hero {
-            background: #f8f9fa;
-            color: #333;
+            background: #1E3C72; /* Dark Blue */
+            color: white;
             text-align: left;
-            padding: 30px;
-            margin: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 30px 20px;
+            margin: 0; /* Edge-to-Edge */
         }
 
         .hero h2 {
             font-size: 26px;
-            color: #e74c3c;
+            color: #ffcc00;
             margin-bottom: 15px;
         }
 
@@ -60,58 +58,45 @@
             line-height: 1.6;
         }
 
-        /* Flashcard Section */
-        .flashcard-container {
-            perspective: 1000px;
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .flashcard {
-            width: 200px;
-            height: 120px;
-            text-align: center;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-
-        .flashcard:hover {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-front, .flashcard-back {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .flashcard-front {
-            background: #1abc9c;
+        /* Benefits Section */
+        .benefits {
+            background: #3e4a61;
             color: white;
+            padding: 20px;
+            margin: 0; /* Edge-to-Edge */
+            text-align: left;
         }
 
-        .flashcard-back {
-            background: #f39c12;
-            color: white;
-            transform: rotateY(180deg);
+        .benefits h3 {
+            font-size: 22px;
+            color: #ffcc00;
+            padding-left: 20px;
+        }
+
+        .benefits ul {
+            list-style: square;
+            padding-left: 40px;
+        }
+
+        .benefits ul li {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
 
         /* Marquee Section */
+        .marquee-heading {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-top: 20px;
+        }
+
         .marquee-container {
             overflow: hidden;
             white-space: nowrap;
             width: 100%;
-            margin: 30px 0;
+            margin: 10px 0;
         }
 
         .marquee {
@@ -129,32 +114,6 @@
         @keyframes marquee {
             from { transform: translateX(100%); }
             to { transform: translateX(-100%); }
-        }
-
-        /* Benefits Section */
-        .benefits {
-            background: #3e4a61;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px;
-            text-align: left;
-        }
-
-        .benefits h3 {
-            font-size: 22px;
-            color: #ffcc00;
-        }
-
-        .benefits ul {
-            list-style: square;
-            padding-left: 20px;
-        }
-
-        .benefits ul li {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 8px;
         }
 
         /* Footer */
@@ -186,22 +145,6 @@
         नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
     </div>
 
-    <!-- Flashcard Section -->
-    <div class="flashcard-container">
-        <div class="flashcard">
-            <div class="flashcard-front">अनुकरण</div>
-            <div class="flashcard-back">Imitation</div>
-        </div>
-    </div>
-
-    <!-- Marquee Book Covers -->
-    <div class="marquee-container">
-        <div class="marquee">
-            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1">
-            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/hardev.png" alt="Book 2">
-        </div>
-    </div>
-
     <!-- Benefits Section -->
     <div class="benefits">
         <h3>📌 फ्लैशकार्ड के फायदे</h3>
@@ -215,6 +158,18 @@
             <li>🎯 <b>मनोरंजक और प्रभावी तरीका</b> – पारंपरिक रटने से ज्यादा दिलचस्प और व्यावहारिक।</li>
             <li>🏆 <b>परीक्षा की तैयारी में सहायक</b> – UPPSC, UPSC, SSC, बैंकिंग परीक्षाओं के लिए उपयोगी।</li>
         </ul>
+    </div>
+
+    <!-- Marquee Heading -->
+    <div class="marquee-heading">सभी प्रमुख पुस्तक का संकलन</div>
+
+    <!-- Marquee Book Covers -->
+    <div class="marquee-container">
+        <div class="marquee">
+            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1">
+            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/hardev.png" alt="Book 2">
+            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1"> <!-- Added again -->
+        </div>
     </div>
 
     <!-- Footer -->
