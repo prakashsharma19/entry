@@ -58,6 +58,61 @@
             line-height: 1.6;
         }
 
+        /* Flashcard Section */
+        .flashcard-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .flashcard {
+            width: 150px;
+            height: 200px;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flashcard.flip {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard::before {
+            content: 'शब्द';
+            position: absolute;
+            backface-visibility: hidden;
+        }
+
+        .flashcard::after {
+            content: 'अर्थ';
+            position: absolute;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+        }
+
+        /* Start Button */
+        .start-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
         /* Benefits Section */
         .benefits {
             background: #3e4a61;
@@ -143,20 +198,22 @@
         <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।  
         यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।  
         नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
+        <button class="start-btn">शुरू करें</button>
+    </div>
+
+    <!-- Flashcard Animation -->
+    <div class="flashcard-container">
+        <div class="flashcard" onclick="this.classList.toggle('flip')"></div>
     </div>
 
     <!-- Benefits Section -->
     <div class="benefits">
         <h3>📌 फ्लैशकार्ड के फायदे</h3>
         <ul>
-            <li>📖 <b>याद करने में आसानी</b> – फ्लैशकार्ड तकनीक से शब्दों और जानकारी को जल्दी और लंबे समय तक याद रखा जा सकता है।</li>
-            <li>🧠 <b>दृश्य और मानसिक जुड़ाव</b> – चित्र और टेक्स्ट के संयोजन से स्मरण शक्ति बढ़ती है।</li>
-            <li>⏳ <b>तेज़ पुनरावृत्ति (Spaced Repetition)</b> – कठिन शब्द और करंट अफेयर्स की जानकारी पक्की होती है।</li>
-            <li>📱 <b>कहीं भी, कभी भी अभ्यास</b> – मोबाइल या डिजिटल फ्लैशकार्ड से कहीं भी पढ़ सकते हैं।</li>
-            <li>📊 <b>स्वयं आकलन की सुविधा</b> – खुद की प्रगति को ट्रैक कर सकते हैं।</li>
-            <li>⏱ <b>समय की बचत</b> – लंबी नोट्स पढ़ने से बेहतर, कम समय में ज्यादा सीख सकते हैं।</li>
-            <li>🎯 <b>मनोरंजक और प्रभावी तरीका</b> – पारंपरिक रटने से ज्यादा दिलचस्प और व्यावहारिक।</li>
-            <li>🏆 <b>परीक्षा की तैयारी में सहायक</b> – UPPSC, UPSC, SSC, बैंकिंग परीक्षाओं के लिए उपयोगी।</li>
+            <li>📖 याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
+            <li>🧠 दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
+            <li>⏳ तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
+            <li>📱 कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
         </ul>
     </div>
 
@@ -168,7 +225,7 @@
         <div class="marquee">
             <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1">
             <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/hardev.png" alt="Book 2">
-            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1"> <!-- Added again -->
+            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1"> <!-- Repeat -->
         </div>
     </div>
 
