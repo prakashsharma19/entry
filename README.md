@@ -3,159 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Flashcard Learning</title>
+    <title>UPPSC Flashcard & Quiz</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #1e3c72, #2a5298);
-            text-align: center;
             color: white;
             margin: 0;
             padding: 0;
+            text-align: center;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
         }
-
-        .menu-icon {
-            font-size: 24px;
-            cursor: pointer;
-        }
-
         .menu {
-            position: fixed;
-            top: 0;
-            right: -200px;
-            width: 200px;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            padding-top: 60px;
-            transition: 0.3s;
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
         }
-
         .menu a {
             display: block;
-            color: white;
-            padding: 10px;
+            padding: 8px;
+            color: black;
             text-decoration: none;
         }
-
         .hero {
-            padding: 50px 20px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
         }
-
         .flashcard-container {
             margin: 20px auto;
-        }
-
-        .flashcard {
             width: 200px;
             height: 100px;
+            perspective: 1000px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
-            margin: auto;
         }
-
         .flashcard.flip {
             transform: rotateY(180deg);
         }
-
-        .book-marquee {
-            overflow: hidden;
-            white-space: nowrap;
-            padding: 20px 0;
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: #ff9800;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-
-        .book-marquee img {
+        .flashcard-back {
+            background: #009688;
+            transform: rotateY(180deg);
+        }
+        .marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            margin: 20px 0;
+        }
+        .marquee img {
             width: 100px;
-            height: auto;
             margin: 0 10px;
             display: inline-block;
             animation: marquee 10s linear infinite;
         }
-
         @keyframes marquee {
             from { transform: translateX(100%); }
             to { transform: translateX(-100%); }
         }
-
         .benefits {
             padding: 20px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 20px;
         }
-
         .footer {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <h1>ऐप का नाम</h1>
-        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+        <h2>UPPSC Flashcard & Quiz</h2>
+        <div>
+            <button onclick="toggleMenu()">☰</button>
+            <div class="menu" id="menu">
+                <a href="#">About</a>
+                <a href="#">Login</a>
+            </div>
+        </div>
     </div>
-
-    <div class="menu" id="menu">
-        <a href="#">About</a>
-        <a href="#">Login</a>
-    </div>
-
     <div class="hero">
-        <h2>ऐप का विवरण</h2>
-        <p>यहाँ पर ऐप की खासियतों का वर्णन करें।</p>
+        <h1>UPPSC Flashcard & Quiz</h1>
+        <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।...</p>
     </div>
-
     <div class="flashcard-container">
         <div class="flashcard" id="flashcard">
             <div class="flashcard-face flashcard-front">अंगीकरण</div>
             <div class="flashcard-face flashcard-back">अनंगीकरण</div>
         </div>
     </div>
-
-    <div class="book-marquee">
-        <img src="https://github.com/prakashsharma19/entry/blob/main/image.png" alt="Book Cover">
-        <img src="https://github.com/prakashsharma19/entry/blob/main/image.png" alt="Book Cover">
-        <img src="https://github.com/prakashsharma19/entry/blob/main/image.png" alt="Book Cover">
+    <div class="marquee">
+        <img src="https://github.com/prakashsharma19/entry/blob/main/image.png">
+        <img src="https://github.com/prakashsharma19/entry/blob/main/hardev.png">
     </div>
-
-    <button onclick="startApp()">शुरू करें</button>
-
+    <button>शुरू करें</button>
     <div class="benefits">
-        <h2>फ्लैशकार्ड के फायदे</h2>
-        <p>फ्लैशकार्ड्स के माध्यम से शब्द याद रखना अधिक प्रभावी होता है...</p>
+        <h3>फ्लैशकार्ड के फायदे</h3>
+        <p>याद करने में आसानी – फ्लैशकार्ड तकनीक से शब्दों और जानकारी को जल्दी और लंबे समय तक याद रखा जा सकता है।...</p>
     </div>
-
     <div class="footer">
-        <p>&copy; 2025 UPPSC Flashcard Learning | संपर्क करें</p>
+        <p>&copy; 2025 UPPSC Flashcard & Quiz | Contact Us</p>
     </div>
-
     <script>
         function toggleMenu() {
             let menu = document.getElementById("menu");
-            if (menu.style.right === "0px") {
-                menu.style.right = "-200px";
-            } else {
-                menu.style.right = "0px";
-            }
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
-
         let card = document.getElementById("flashcard");
-        card.addEventListener("click", function() {
+        let words = [
+            { front: "अंगीकरण", back: "अनंगीकरण" },
+            { front: "अत्यधिक", back: "अत्यल्प" }
+        ];
+        let index = 0;
+        let isFlipped = false;
+        function flipCard() {
             card.classList.toggle("flip");
-        });
-
-        function startApp() {
-            alert("ऐप शुरू हो रहा है...");
+            isFlipped = !isFlipped;
+            setTimeout(() => {
+                index = (index + 1) % words.length;
+                if (!isFlipped) {
+                    card.querySelector(".flashcard-front").innerText = words[index].front;
+                    card.querySelector(".flashcard-back").innerText = words[index].back;
+                }
+            }, 500);
         }
+        setInterval(flipCard, 2000);
     </script>
 </body>
 </html>
