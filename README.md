@@ -40,11 +40,11 @@
 
         /* Hero Banner */
         .hero {
-            background: #1E3C72;
+            background: #1E3C72; /* Dark Blue */
             color: white;
             text-align: left;
             padding: 30px 20px;
-            margin: 0;
+            margin: 0; /* Edge-to-Edge */
         }
 
         .hero h2 {
@@ -63,50 +63,51 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             margin-top: 20px;
         }
 
         .flashcard {
-            width: 200px;
-            height: 250px;
+            width: 250px;
+            height: 150px;
             background: white;
             color: black;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             position: relative;
+            cursor: pointer;
             transform-style: preserve-3d;
             transition: transform 0.6s;
-            cursor: pointer;
+            text-align: center;
+            padding: 10px;
         }
 
         .flashcard.flip {
             transform: rotateY(180deg);
         }
 
-        .flashcard .front,
-        .flashcard .back {
+        .flashcard .front, .flashcard .back {
             position: absolute;
             width: 100%;
             height: 100%;
+            backface-visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            backface-visibility: hidden;
         }
 
         .flashcard .back {
             transform: rotateY(180deg);
-            background: #ffcc00;
-            color: black;
+            background: #FFD700;
         }
 
-        .next-btn {
-            margin-top: 15px;
+        /* Start Button */
+        .start-btn {
+            display: block;
+            margin: 20px auto;
             padding: 10px 20px;
             background: #ffcc00;
             color: black;
@@ -115,6 +116,32 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: #3e4a61;
+            color: white;
+            padding: 20px;
+            margin: 0; /* Edge-to-Edge */
+            text-align: left;
+        }
+
+        .benefits h3 {
+            font-size: 22px;
+            color: #ffcc00;
+            padding-left: 20px;
+        }
+
+        .benefits ul {
+            list-style: square;
+            padding-left: 40px;
+        }
+
+        .benefits ul li {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
 
         /* Footer */
@@ -128,6 +155,7 @@
             margin: 0;
             font-size: 14px;
         }
+
     </style>
 </head>
 <body>
@@ -141,19 +169,31 @@
     <!-- Hero Banner -->
     <div class="hero">
         <h2>UPPSC Flashcard & Quiz</h2>
-        <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।
-        यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।
+        <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।  
+        यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।  
         नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
-        <button class="start-btn">शुरू करें</button>
+        <button class="start-btn" onclick="startFlashcards()">शुरू करें</button>
     </div>
 
     <!-- Flashcard Section -->
     <div class="flashcard-container">
         <div class="flashcard" onclick="flipCard()">
-            <div class="front" id="front-text">शब्द</div>
-            <div class="back" id="back-text">अर्थ</div>
+            <div class="front"></div>
+            <div class="back"></div>
         </div>
-        <button class="next-btn" onclick="nextCard()">अगला</button>
+    </div>
+
+    <button class="start-btn" onclick="nextFlashcard()">अगला</button>
+
+    <!-- Benefits Section -->
+    <div class="benefits">
+        <h3>📌 फ्लैशकार्ड के फायदे</h3>
+        <ul>
+            <li>📖 याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
+            <li>🧠 दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
+            <li>⏳ तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
+            <li>📱 कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
+        </ul>
     </div>
 
     <!-- Footer -->
@@ -163,27 +203,42 @@
 
     <script>
         const flashcards = [
-            { front: "सफलता", back: "Achievement" },
-            { front: "ज्ञान", back: "Knowledge" },
-            { front: "शिक्षा", back: "Education" },
-            { front: "अनुभव", back: "Experience" }
+            { word: "न्याय", meaning: "सही और गलत का निर्णय" },
+            { word: "संविधान", meaning: "देश के नियमों का संकलन" },
+            { word: "प्रशासन", meaning: "शासन व्यवस्था" },
+            { word: "आर्थिक", meaning: "वित्तीय स्थिति से संबंधित" },
+            { word: "पर्यावरण", meaning: "प्राकृतिक परिवेश" }
         ];
 
         let currentIndex = 0;
-        const frontText = document.getElementById("front-text");
-        const backText = document.getElementById("back-text");
-        const flashcard = document.querySelector(".flashcard");
+
+        function startFlashcards() {
+            currentIndex = 0;
+            showFlashcard();
+        }
+
+        function showFlashcard() {
+            const flashcard = document.querySelector(".flashcard");
+            const front = flashcard.querySelector(".front");
+            const back = flashcard.querySelector(".back");
+
+            front.textContent = flashcards[currentIndex].word;
+            back.textContent = flashcards[currentIndex].meaning;
+        }
 
         function flipCard() {
-            flashcard.classList.toggle("flip");
+            document.querySelector(".flashcard").classList.toggle("flip");
         }
 
-        function nextCard() {
-            flashcard.classList.remove("flip");
+        function nextFlashcard() {
             currentIndex = (currentIndex + 1) % flashcards.length;
-            frontText.textContent = flashcards[currentIndex].front;
-            backText.textContent = flashcards[currentIndex].back;
+            showFlashcard();
+            document.querySelector(".flashcard").classList.remove("flip");
         }
+
+        // Initialize the first flashcard
+        showFlashcard();
     </script>
+
 </body>
 </html>
