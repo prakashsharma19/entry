@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +8,7 @@
     <style>
         /* General Styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom, #1E3C72, #2A5298);
@@ -22,60 +21,91 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 15px 20px;
             background: #16213E;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
-            font-size: 22px;
+            font-size: 24px;
             margin: 0;
-            color: #fff;
-            padding-left: 10px;
+            color: #ffcc00;
+            font-weight: bold;
         }
 
         .menu-icon {
             font-size: 24px;
             cursor: pointer;
-            padding-right: 10px;
+            color: #ffcc00;
         }
 
         /* Hero Banner */
         .hero {
-            background: #1E3C72; /* Dark Blue */
+            background: #1E3C72;
             color: white;
-            text-align: left;
-            padding: 30px 20px;
-            margin: 0; /* Edge-to-Edge */
+            text-align: center;
+            padding: 40px 20px;
+            margin: 0;
         }
 
         .hero h2 {
-            font-size: 26px;
+            font-size: 28px;
             color: #ffcc00;
             margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .hero p {
             font-size: 18px;
             line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .start-btn {
+            padding: 12px 30px;
+            background: #ffcc00;
+            color: #1E3C72;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .start-btn:hover {
+            background: #e6b800;
         }
 
         /* Flashcard Section */
+        .flashcard-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
+            margin: 20px auto;
+            border-radius: 15px;
+            max-width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
         .flashcard-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
             perspective: 1000px;
             position: relative;
         }
 
         .flashcard {
-            width: 180px;
-            height: 80px;
+            width: 200px;
+            height: 120px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s;
+            transition: transform 0.6s;
             cursor: pointer;
+            background: #ff9800;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .flashcard.flip {
@@ -90,12 +120,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
-            background: #ff9800;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
         }
 
         .flashcard-back {
@@ -106,59 +134,57 @@
         /* Lottie Hand Animation */
         #fingerAnimation {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            bottom: -20px; /* Moved up */
+            width: 60px;
+            height: 60px;
+            bottom: -30px;
             left: 50%;
             transform: translateX(-50%);
-        }
-
-        /* Start Button */
-        .start-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: #ffcc00;
-            color: black;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
         }
 
         /* Benefits Section */
         .benefits {
             background: #3e4a61;
             color: white;
-            padding: 20px;
-            margin: 0; /* Edge-to-Edge */
+            padding: 30px 20px;
+            margin: 20px 0;
             text-align: left;
         }
 
         .benefits h3 {
-            font-size: 22px;
+            font-size: 24px;
             color: #ffcc00;
-            padding-left: 20px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .benefits ul {
-            list-style: square;
-            padding-left: 40px;
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .benefits ul li {
             font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 8px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .benefits ul li::before {
+            content: "✔️";
+            position: absolute;
+            left: 0;
+            color: #ffcc00;
         }
 
         /* Marquee Section */
         .marquee-heading {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
             color: #ffcc00;
-            margin-top: 20px;
+            margin: 30px 0 10px;
         }
 
         .marquee-container {
@@ -170,14 +196,15 @@
 
         .marquee {
             display: inline-block;
-            animation: marquee 10s linear infinite;
+            animation: marquee 15s linear infinite;
         }
 
         .marquee img {
-            width: 120px;
+            width: 150px;
             height: auto;
-            margin: 0 30px; /* Adjusted gap */
+            margin: 0 20px;
             border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes marquee {
@@ -188,13 +215,15 @@
         /* Footer */
         .footer {
             background: #0b2135;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
         }
 
         .footer p {
             margin: 0;
             font-size: 14px;
+            color: #ccc;
         }
     </style>
 </head>
@@ -215,23 +244,25 @@
         <button class="start-btn">शुरू करें</button>
     </div>
 
-    <!-- Flashcard Animation -->
-    <div class="flashcard-container">
-        <div class="flashcard" id="flashcard">
-            <div class="flashcard-face flashcard-front">अंगीकरण</div>
-            <div class="flashcard-face flashcard-back">अनंगीकरण</div>
+    <!-- Flashcard Section -->
+    <div class="flashcard-section">
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="flashcard-face flashcard-front">अंगीकरण</div>
+                <div class="flashcard-face flashcard-back">अनंगीकरण</div>
+            </div>
+            <div id="fingerAnimation"></div>
         </div>
-        <div id="fingerAnimation"></div>
     </div>
 
     <!-- Benefits Section -->
     <div class="benefits">
         <h3>📌 फ्लैशकार्ड के फायदे</h3>
         <ul>
-            <li>📖 याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
-            <li>🧠 दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
-            <li>⏳ तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
-            <li>📱 कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
+            <li>याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
+            <li>दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
+            <li>तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
+            <li>कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
         </ul>
     </div>
 
@@ -243,7 +274,7 @@
         <div class="marquee">
             <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1">
             <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/hardev.png" alt="Book 2">
-            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1"> <!-- Repeat -->
+            <img src="https://raw.githubusercontent.com/prakashsharma19/entry/main/image.png" alt="Book 1">
         </div>
     </div>
 
