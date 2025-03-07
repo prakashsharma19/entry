@@ -1,243 +1,188 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Flashcard & Quiz</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>UPPSC Quiz & Flashcards</title>
     <style>
-        /* General Styles */
+        /* Global Styling */
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #3b82f6, #111827);
+            color: white;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to bottom, #1E3C72, #2A5298);
-            color: white;
-            text-align: center;
         }
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: #16213E;
-        }
-
-        .header h1 {
-            font-size: 22px;
-            margin: 0;
-            color: #fff;
-            padding-left: 10px;
-        }
-
-        .menu-icon {
-            font-size: 24px;
-            cursor: pointer;
-            padding-right: 10px;
-        }
-
-        /* Hero Banner */
-        .hero {
-            background: #1E3C72; /* Dark Blue */
-            color: white;
-            text-align: left;
-            padding: 30px 20px;
-            margin: 0; /* Edge-to-Edge */
-        }
-
-        .hero h2 {
-            font-size: 26px;
-            color: #ffcc00;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
+        /* Marquee Scrolling Text */
+        .marquee-container {
+            background: #f59e0b;
+            color: black;
+            padding: 10px;
             font-size: 18px;
-            line-height: 1.6;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* Header Styling */
+        .header {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
         }
 
         /* Flashcard Section */
-        .flashcard-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
         .flashcard {
-            width: 250px;
-            height: 150px;
-            background: white;
-            color: black;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            position: relative;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .flashcard.flip {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard .front, .flashcard .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .flashcard .back {
-            transform: rotateY(180deg);
-            background: #FFD700;
-        }
-
-        /* Start Button */
-        .start-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: #ffcc00;
-            color: black;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        /* Benefits Section */
-        .benefits {
-            background: #3e4a61;
+            background-color: #f59e0b;
             color: white;
-            padding: 20px;
-            margin: 0; /* Edge-to-Edge */
-            text-align: left;
-        }
-
-        .benefits h3 {
-            font-size: 22px;
-            color: #ffcc00;
-            padding-left: 20px;
-        }
-
-        .benefits ul {
-            list-style: square;
-            padding-left: 40px;
-        }
-
-        .benefits ul li {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 8px;
-        }
-
-        /* Footer */
-        .footer {
-            background: #0b2135;
+            font-size: 20px;
             padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            position: relative;
+        }
+
+        .flashcard:hover {
+            background-color: #d97706;
+        }
+
+        .flashcard:active {
+            transform: scale(0.95);
+        }
+
+        /* Hand Click Animation */
+        .hand {
+            width: 40px;
+            position: absolute;
+            left: 50%;
+            bottom: -50px;
+            transform: translateX(-50%);
+            animation: click-animation 1.5s infinite;
+        }
+
+        @keyframes click-animation {
+            0%, 100% { bottom: -50px; opacity: 1; }
+            50% { bottom: -40px; opacity: 0.7; }
+        }
+
+        /* Button Section */
+        .buttons {
             margin-top: 20px;
         }
 
-        .footer p {
-            margin: 0;
-            font-size: 14px;
+        .btn {
+            display: inline-block;
+            background-color: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 5px;
+            transition: background-color 0.3s;
         }
 
+        .btn:hover {
+            background-color: #059669;
+        }
+
+        .btn-upgrade {
+            background-color: #f59e0b;
+        }
+
+        .btn-upgrade:hover {
+            background-color: #d97706;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Marquee Text -->
+    <div class="marquee-container">
+        <marquee behavior="scroll" direction="left">📢 Upgrade Now for ₹99/year & Get Access to 3000+ Words & Daily Current Affairs! 🚀</marquee>
+    </div>
+
+    <!-- Header Section -->
     <div class="header">
-        <h1>UPPSC Flashcard & Quiz</h1>
-        <i class="fa fa-bars menu-icon" onclick="toggleMenu()"></i>
+        <h1>UPPSC Hindi & Current Affairs Quiz App</h1>
+        <p>Master UPPSC Hindi with 3000+ words and stay updated with daily Current Affairs using Flashcards & Quizzes.</p>
     </div>
 
-    <!-- Hero Banner -->
-    <div class="hero">
-        <h2>UPPSC Flashcard & Quiz</h2>
-        <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।  
-        यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।  
-        नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
-        <button class="start-btn" onclick="startFlashcards()">शुरू करें</button>
-    </div>
+    <!-- Flashcard Container -->
+    <div class="container">
+        <div class="card">
+            <div class="card-title">Flashcard Learning</div>
+            <div class="flashcard" onclick="showAnswer(this)">अंगीकरण</div>
+            <img src="hand-icon.png" class="hand" alt="Click Animation">
+        </div>
 
-    <!-- Flashcard Section -->
-    <div class="flashcard-container">
-        <div class="flashcard" onclick="flipCard()">
-            <div class="front"></div>
-            <div class="back"></div>
+        <div class="card">
+            <div class="card-title">Synonym Learning</div>
+            <div class="flashcard" onclick="showAnswer(this)">विशाल</div>
+            <img src="hand-icon.png" class="hand" alt="Click Animation">
+        </div>
+
+        <div class="card">
+            <div class="card-title">Current Affairs</div>
+            <div class="flashcard" onclick="showAnswer(this)">G20 2023 का अध्यक्ष कौन था?</div>
+            <img src="hand-icon.png" class="hand" alt="Click Animation">
         </div>
     </div>
 
-    <button class="start-btn" onclick="nextFlashcard()">अगला</button>
-
-    <!-- Benefits Section -->
-    <div class="benefits">
-        <h3>📌 फ्लैशकार्ड के फायदे</h3>
-        <ul>
-            <li>📖 याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
-            <li>🧠 दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
-            <li>⏳ तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
-            <li>📱 कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
-        </ul>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>© 2025 UPPSC Flashcard & Quiz | Contact Us</p>
+    <!-- Buttons Section -->
+    <div class="buttons">
+        <a href="#" class="btn">Start for Free</a>
+        <a href="#" class="btn btn-upgrade">Upgrade for ₹99/year</a>
     </div>
 
     <script>
-        const flashcards = [
-            { word: "न्याय", meaning: "सही और गलत का निर्णय" },
-            { word: "संविधान", meaning: "देश के नियमों का संकलन" },
-            { word: "प्रशासन", meaning: "शासन व्यवस्था" },
-            { word: "आर्थिक", meaning: "वित्तीय स्थिति से संबंधित" },
-            { word: "पर्यावरण", meaning: "प्राकृतिक परिवेश" }
-        ];
-
-        let currentIndex = 0;
-
-        function startFlashcards() {
-            currentIndex = 0;
-            showFlashcard();
+        function showAnswer(element) {
+            if (element.innerText === "अंगीकरण") {
+                element.innerText = "अपनाना या सम्मिलित करना";
+            } else if (element.innerText === "विशाल") {
+                element.innerText = "बड़ा, व्यापक";
+            } else if (element.innerText === "G20 2023 का अध्यक्ष कौन था?") {
+                element.innerText = "भारत";
+            } else {
+                location.reload(); // Reset back to original state
+            }
         }
-
-        function showFlashcard() {
-            const flashcard = document.querySelector(".flashcard");
-            const front = flashcard.querySelector(".front");
-            const back = flashcard.querySelector(".back");
-
-            front.textContent = flashcards[currentIndex].word;
-            back.textContent = flashcards[currentIndex].meaning;
-        }
-
-        function flipCard() {
-            document.querySelector(".flashcard").classList.toggle("flip");
-        }
-
-        function nextFlashcard() {
-            currentIndex = (currentIndex + 1) % flashcards.length;
-            showFlashcard();
-            document.querySelector(".flashcard").classList.remove("flip");
-        }
-
-        // Initialize the first flashcard
-        showFlashcard();
     </script>
 
 </body>
