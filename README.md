@@ -1,168 +1,189 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPPSC Flashcard Learning</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script>
+    <title>UPPSC Flashcard & Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #4a90e2, #000000);
-            text-align: center;
-            color: white;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(to bottom, #1E3C72, #2A5298);
+            color: white;
+            text-align: center;
         }
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            margin: auto;
-        }
-
-        h1 {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .card-box {
-            background: rgba(255, 255, 255, 0.1);
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            position: relative;
+            background: #16213E;
         }
 
-        /* Flashcard Container */
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+            color: #fff;
+            padding-left: 10px;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding-right: 10px;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: #1E3C72;
+            color: white;
+            text-align: left;
+            padding: 30px 20px;
+            margin: 0;
+        }
+
+        .hero h2 {
+            font-size: 26px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Flashcard Section */
         .flashcard-container {
-            width: 100%;
-            height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1000px;
-            position: relative;
+            flex-direction: column;
+            margin-top: 20px;
         }
 
         .flashcard {
-            width: 180px;
-            height: 80px;
+            width: 200px;
+            height: 250px;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s;
+            transition: transform 0.6s;
+            cursor: pointer;
         }
 
         .flashcard.flip {
             transform: rotateY(180deg);
         }
 
-        .flashcard-face {
+        .flashcard .front,
+        .flashcard .back {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+        }
+
+        .flashcard .back {
+            transform: rotateY(180deg);
+            background: #ffcc00;
+            color: black;
+        }
+
+        .next-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: black;
             font-size: 18px;
             font-weight: bold;
-            color: white;
-            background: #ff9800;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .flashcard-back {
-            background: #009688;
-            transform: rotateY(180deg);
-        }
-
-        /* Lottie Hand Animation */
-        #fingerAnimation {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .start-button {
-            background: #ff9800;
-            color: white;
-            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0b2135;
+            padding: 15px;
             margin-top: 20px;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Flashcard Learning</h1>
-        <p>Memorize concepts easily with interactive flashcards.</p>
+    <!-- Header -->
+    <div class="header">
+        <h1>UPPSC Flashcard & Quiz</h1>
+        <i class="fa fa-bars menu-icon" onclick="toggleMenu()"></i>
+    </div>
 
-        <!-- Flashcard Learning Box -->
-        <div class="card-box">
-            <h3>Flashcard Learning</h3>
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard">
-                    <div class="flashcard-face flashcard-front">अंगीकरण</div>
-                    <div class="flashcard-face flashcard-back">अनंगीकरण</div>
-                </div>
-                <div id="fingerAnimation"></div>
-            </div>
+    <!-- Hero Banner -->
+    <div class="hero">
+        <h2>UPPSC Flashcard & Quiz</h2>
+        <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।
+        यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।
+        नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
+        <button class="start-btn">शुरू करें</button>
+    </div>
+
+    <!-- Flashcard Section -->
+    <div class="flashcard-container">
+        <div class="flashcard" onclick="flipCard()">
+            <div class="front" id="front-text">शब्द</div>
+            <div class="back" id="back-text">अर्थ</div>
         </div>
+        <button class="next-btn" onclick="nextCard()">अगला</button>
+    </div>
 
-        <!-- Start Button -->
-        <button class="start-button">शुरू करें</button>
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 UPPSC Flashcard & Quiz | Contact Us</p>
     </div>
 
     <script>
-        let card = document.getElementById("flashcard");
-        let words = [
-            { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" }
+        const flashcards = [
+            { front: "सफलता", back: "Achievement" },
+            { front: "ज्ञान", back: "Knowledge" },
+            { front: "शिक्षा", back: "Education" },
+            { front: "अनुभव", back: "Experience" }
         ];
-        let index = 0;
-        let isFlipped = false;
+
+        let currentIndex = 0;
+        const frontText = document.getElementById("front-text");
+        const backText = document.getElementById("back-text");
+        const flashcard = document.querySelector(".flashcard");
 
         function flipCard() {
-            card.classList.toggle("flip");
-            isFlipped = !isFlipped;
-
-            setTimeout(() => {
-                index = (index + 1) % words.length;
-                if (!isFlipped) {
-                    card.querySelector(".flashcard-front").innerText = words[index].front;
-                    card.querySelector(".flashcard-back").innerText = words[index].back;
-                }
-            }, 500);
+            flashcard.classList.toggle("flip");
         }
 
-        // Auto flip every 2 seconds
-        setInterval(flipCard, 2000);
-
-        // Load Lottie Hand Animation with slower click speed
-        let animation = lottie.loadAnimation({
-            container: document.getElementById("fingerAnimation"),
-            renderer: "svg",
-            loop: true,
-            autoplay: true,
-            path: "https://raw.githubusercontent.com/prakashsharma19/entry/main/Animation%20-%201740910253032.json"
-        });
-
-        // Reduce speed of hand clicking animation
-        animation.setSpeed(0.5);
+        function nextCard() {
+            flashcard.classList.remove("flip");
+            currentIndex = (currentIndex + 1) % flashcards.length;
+            frontText.textContent = flashcards[currentIndex].front;
+            backText.textContent = flashcards[currentIndex].back;
+        }
     </script>
-
 </body>
 </html>
