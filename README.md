@@ -84,7 +84,7 @@
             padding: 30px 20px;
             margin: 20px auto;
             border-radius: 15px;
-            max-width: 400px;
+            max-width: 500px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
@@ -97,14 +97,14 @@
         }
 
         .flashcard {
-            width: 200px;
-            height: 120px;
+            width: 250px; /* Larger square */
+            height: 250px; /* Larger square */
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.6s;
             cursor: pointer;
             background: #ff9800;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
@@ -120,14 +120,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 22px; /* Adjusted font size */
             font-weight: bold;
             color: white;
-            border-radius: 10px;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box; /* Ensure padding is included in width/height */
+        }
+
+        .flashcard-front {
+            background: #ff9800; /* Front background color */
         }
 
         .flashcard-back {
-            background: #009688;
+            background: #009688; /* Back background color */
             transform: rotateY(180deg);
         }
 
@@ -248,21 +255,21 @@
     <div class="flashcard-section">
         <div class="flashcard-container">
             <div class="flashcard" id="flashcard">
-                <div class="flashcard-face flashcard-front">अंगीकरण</div>
-                <div class="flashcard-face flashcard-back">अनंगीकरण</div>
+                <div class="flashcard-face flashcard-front">अतिथि शब्द का पर्यायवाची है</div>
+                <div class="flashcard-face flashcard-back">अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत</div>
             </div>
             <div id="fingerAnimation"></div>
         </div>
     </div>
 
-    <!-- Benefits Section -->
+    <!-- विशेषता Section -->
     <div class="benefits">
-        <h3>📌 फ्लैशकार्ड के फायदे</h3>
+        <h3>📌 विशेषता</h3>
         <ul>
-            <li>याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
-            <li>दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
-            <li>तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
-            <li>कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
+            <li>विगत वर्षों में पूछे गए प्रश्नों तथा अति संभावित प्रश्नों का संकलन।</li>
+            <li>प्रत्येक विषय से 600+ शब्दों के अति संभावित प्रश्नों की व्यापक प्रैक्टिस (विलोम, तद्भव-तत्सम, अनेकार्थी, पर्यायवाची, विशेषण एवं विदेशी शब्द)।</li>
+            <li>नियमित अभ्यास से 60/60 अंक पक्के करें।</li>
+            <li>मासिक करंट अफेयर्स की प्रभावी प्रैक्टिस।</li>
         </ul>
     </div>
 
@@ -278,6 +285,17 @@
         </div>
     </div>
 
+    <!-- फ्लैशकार्ड के फायदे Section -->
+    <div class="benefits">
+        <h3>📌 फ्लैशकार्ड के फायदे</h3>
+        <ul>
+            <li>याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
+            <li>दृश्य और मानसिक जुड़ाव – स्मरण शक्ति बढ़ती है।</li>
+            <li>तेज़ पुनरावृत्ति – कठिन शब्द और करंट अफेयर्स याद रहें।</li>
+            <li>कहीं भी, कभी भी अभ्यास – मोबाइल या डिजिटल पर पढ़ें।</li>
+        </ul>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
         <p>© 2025 UPPSC Flashcard & Quiz | Contact Us</p>
@@ -286,8 +304,10 @@
     <script>
         let card = document.getElementById("flashcard");
         let words = [
-            { front: "अंगीकरण", back: "अनंगीकरण" },
-            { front: "अत्यधिक", back: "अत्यल्प" }
+            { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
+            { front: "जंगल शब्द का पर्यायवाची है", back: "दाव, अरण्य, कांतार, विपिन, अटवी, कानन, वन, बयाबान" },
+            { front: "वैमनस्य", back: "सौहार्द" },
+            { front: "ह्रस्व", back: "दीर्घ" }
         ];
         let index = 0;
         let isFlipped = false;
@@ -302,7 +322,7 @@
                     card.querySelector(".flashcard-front").innerText = words[index].front;
                     card.querySelector(".flashcard-back").innerText = words[index].back;
                 }
-            }, 500);
+            }, 300); // Adjusted flip speed
         }
 
         // Auto flip every 2 seconds
