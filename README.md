@@ -148,30 +148,32 @@
             transform: translateX(-50%);
         }
 
-        /* Benefits Section */
-        .benefits {
-            background: #3e4a61;
+        /* विशेषता Section */
+        .special-features {
+            background: linear-gradient(to right, #4A90E2, #2A5298); /* Gradient background */
             color: white;
             padding: 30px 20px;
             margin: 20px 0;
             text-align: left;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
-        .benefits h3 {
+        .special-features h3 {
             font-size: 24px;
             color: #ffcc00;
             margin-bottom: 20px;
             text-align: center;
         }
 
-        .benefits ul {
+        .special-features ul {
             list-style: none;
             padding: 0;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .benefits ul li {
+        .special-features ul li {
             font-size: 16px;
             line-height: 1.6;
             margin-bottom: 10px;
@@ -179,7 +181,47 @@
             position: relative;
         }
 
-        .benefits ul li::before {
+        .special-features ul li::before {
+            content: "✔️";
+            position: absolute;
+            left: 0;
+            color: #ffcc00;
+        }
+
+        /* फ्लैशकार्ड के फायदे Section */
+        .flashcard-benefits {
+            background: linear-gradient(to right, #009688, #004D40); /* Gradient background */
+            color: white;
+            padding: 30px 20px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .flashcard-benefits h3 {
+            font-size: 24px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flashcard-benefits ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .flashcard-benefits ul li {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .flashcard-benefits ul li::before {
             content: "✔️";
             position: absolute;
             left: 0;
@@ -219,6 +261,80 @@
             to { transform: translateX(-100%); }
         }
 
+        /* Floating Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ffcc00;
+            color: #1E3C72;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+        }
+
+        .floating-btn:hover {
+            background: #e6b800;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1E3C72;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h3 {
+            font-size: 22px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: #1E3C72;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background: #e6b800;
+        }
+
         /* Footer */
         .footer {
             background: #0b2135;
@@ -248,7 +364,7 @@
         <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।  
         यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।  
         नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
-        <button class="start-btn">शुरू करें</button>
+        <button id="startBtn" class="start-btn">शुरू करें</button>
     </div>
 
     <!-- Flashcard Section -->
@@ -263,7 +379,7 @@
     </div>
 
     <!-- विशेषता Section -->
-    <div class="benefits">
+    <div class="special-features">
         <h3>📌 विशेषता</h3>
         <ul>
             <li>विगत वर्षों में पूछे गए प्रश्नों तथा अति संभावित प्रश्नों का संकलन।</li>
@@ -286,7 +402,7 @@
     </div>
 
     <!-- फ्लैशकार्ड के फायदे Section -->
-    <div class="benefits">
+    <div class="flashcard-benefits">
         <h3>📌 फ्लैशकार्ड के फायदे</h3>
         <ul>
             <li>याद करने में आसानी – जल्दी और लंबे समय तक याद रखें।</li>
@@ -296,12 +412,29 @@
         </ul>
     </div>
 
+    <!-- Floating Button -->
+    <div class="floating-btn" onclick="openModal()">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3>होमस्क्रीन शॉर्टकट जोड़ें</h3>
+            <p>इस ऐप को अपने होमस्क्रीन पर जोड़ने के लिए:</p>
+            <p><strong>Android:</strong> ब्राउज़र मेनू में "Add to Home screen" विकल्प चुनें।</p>
+            <p><strong>iOS:</strong> शेयर बटन पर क्लिक करें और "Add to Home Screen" चुनें।</p>
+            <button onclick="closeModal()">ठीक है</button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
         <p>© 2025 UPPSC Flashcard & Quiz | Contact Us</p>
     </div>
 
     <script>
+        // Flashcard Functionality
         let card = document.getElementById("flashcard");
         let words = [
             { front: "अतिथि शब्द का पर्यायवाची है", back: "अभ्यागत, आगुन्तक, पाहुन, मेहमान, गृहागत" },
@@ -328,7 +461,7 @@
         // Auto flip every 2 seconds
         setInterval(flipCard, 2000);
 
-        // Load Lottie Hand Animation with slower click speed
+        // Lottie Hand Animation
         let animation = lottie.loadAnimation({
             container: document.getElementById("fingerAnimation"),
             renderer: "svg",
@@ -339,6 +472,22 @@
 
         // Reduce speed of hand clicking animation
         animation.setSpeed(0.5);
+
+        // Modal Functionality
+        let modal = document.getElementById("modal");
+
+        function openModal() {
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Navigate to the second page when "शुरू करें" button is clicked
+        document.getElementById("startBtn").addEventListener("click", function() {
+            window.location.href = "https://prakashsharma19.github.io/flashcard/";
+        });
     </script>
 
 </body>
