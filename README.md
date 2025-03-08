@@ -348,6 +348,37 @@
             font-size: 14px;
             color: #ccc;
         }
+
+        /* New Page Styles */
+        .options-page {
+            padding: 20px;
+        }
+
+        .options-page h2 {
+            font-size: 28px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+
+        .options-page .option-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+            padding: 15px;
+            background: #ffcc00;
+            color: #1E3C72;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .options-page .option-btn:hover {
+            background: #e6b800;
+        }
     </style>
 </head>
 <body>
@@ -364,7 +395,7 @@
         <p>इस ऐप के माध्यम से आप हर दिन 50-60 नए शब्द और महत्वपूर्ण करंट अफेयर्स आसानी से सीख सकते हैं।  
         यह विशेष रूप से UPPSC RO/ARO सहित अन्य प्रतियोगी परीक्षाओं की तैयारी करने वाले छात्रों के लिए उपयोगी है।  
         नियमित अभ्यास से आपकी शब्दावली मजबूत होगी, करंट अफेयर्स पर पकड़ बनेगी, और परीक्षा में बेहतर अंक प्राप्त करने में सहायता मिलेगी।</p>
-        <button id="startBtn" class="start-btn">शुरू करें</button>
+        <button class="start-btn" onclick="openOptionsPage()">शुरू करें</button>
     </div>
 
     <!-- Flashcard Section -->
@@ -433,6 +464,42 @@
         <p>© 2025 UPPSC Flashcard & Quiz | Contact Us</p>
     </div>
 
+    <!-- Options Page -->
+    <div class="options-page" id="optionsPage" style="display: none;">
+        <h2>विषय चुनें</h2>
+        <button class="option-btn" onclick="openHindiPage()">Hindi</button>
+        <button class="option-btn" onclick="openCurrentAffairsPage()">Current Affairs</button>
+        <button class="option-btn" onclick="openGeneralStudiesPage()">General Studies</button>
+    </div>
+
+    <!-- Hindi Page -->
+    <div class="options-page" id="hindiPage" style="display: none;">
+        <h2>Hindi</h2>
+        <button class="option-btn" onclick="openSection('पर्यायवाची शब्द')">पर्यायवाची शब्द</button>
+        <button class="option-btn" onclick="openSection('विलोम शब्द')">विलोम शब्द</button>
+        <button class="option-btn" onclick="openSection('तत्सम तद्भव शब्द')">तत्सम तद्भव शब्द</button>
+        <button class="option-btn" onclick="openSection('अनेक शब्दों के लिए एक शब्द')">अनेक शब्दों के लिए एक शब्द</button>
+        <button class="option-btn" onclick="openSection('विशेष्य और विशेषण')">विशेष्य और विशेषण</button>
+        <button class="option-btn" onclick="openSection('वाक्य एवं वर्तनी शुद्धि')">वाक्य एवं वर्तनी शुद्धि</button>
+    </div>
+
+    <!-- Current Affairs Page -->
+    <div class="options-page" id="currentAffairsPage" style="display: none;">
+        <h2>Current Affairs</h2>
+        <button class="option-btn" onclick="openSection('January 2025')">January 2025</button>
+        <button class="option-btn" onclick="openSection('February 2025')">February 2025</button>
+        <button class="option-btn" onclick="openSection('December 2024')">December 2024</button>
+    </div>
+
+    <!-- General Studies Page -->
+    <div class="options-page" id="generalStudiesPage" style="display: none;">
+        <h2>General Studies</h2>
+        <button class="option-btn" onclick="openSection('Polity')">Polity</button>
+        <button class="option-btn" onclick="openSection('Geography')">Geography</button>
+        <button class="option-btn" onclick="openSection('Environmental Science')">Environmental Science</button>
+        <button class="option-btn" onclick="openSection('History')">History</button>
+    </div>
+
     <script>
         // Flashcard Functionality
         let card = document.getElementById("flashcard");
@@ -484,10 +551,37 @@
             modal.style.display = "none";
         }
 
-        // Navigate to the second page when "शुरू करें" button is clicked
-        document.getElementById("startBtn").addEventListener("click", function() {
-            window.location.href = "https://prakashsharma19.github.io/flashcard/";
-        });
+        // Options Page Functionality
+        function openOptionsPage() {
+            document.getElementById("optionsPage").style.display = "block";
+            document.querySelector(".hero").style.display = "none";
+            document.querySelector(".flashcard-section").style.display = "none";
+            document.querySelector(".special-features").style.display = "none";
+            document.querySelector(".marquee-heading").style.display = "none";
+            document.querySelector(".marquee-container").style.display = "none";
+            document.querySelector(".flashcard-benefits").style.display = "none";
+            document.querySelector(".footer").style.display = "none";
+        }
+
+        function openHindiPage() {
+            document.getElementById("hindiPage").style.display = "block";
+            document.getElementById("optionsPage").style.display = "none";
+        }
+
+        function openCurrentAffairsPage() {
+            document.getElementById("currentAffairsPage").style.display = "block";
+            document.getElementById("optionsPage").style.display = "none";
+        }
+
+        function openGeneralStudiesPage() {
+            document.getElementById("generalStudiesPage").style.display = "block";
+            document.getElementById("optionsPage").style.display = "none";
+        }
+
+        function openSection(sectionName) {
+            alert(`Opening section: ${sectionName}`);
+            // You can add further logic to load content for the selected section
+        }
     </script>
 
 </body>
