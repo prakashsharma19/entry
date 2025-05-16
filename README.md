@@ -626,7 +626,7 @@ input:checked + .slider:before {
 <body>
     <h1>
         <img src="https://raw.githubusercontent.com/prakashsharma19/hosted-images/main/pphlogo.png" alt="PPH Logo">
-        Advertisements-PPH
+        Advertisements-PPH - CHINA
     </h1>
 
     <!-- Clear memory button -->
