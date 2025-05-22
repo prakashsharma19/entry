@@ -1635,7 +1635,7 @@ function processText() {
             // Apply country filter after processing
             filterOutputByCountries();
 
-            // Automatically delete unsubscribed entries
+                        // Automatically delete unsubscribed entries
             const deletedCount = deleteUnsubscribedEntries();
 
             // Show a popup notification if unsubscribed entries were deleted
@@ -1648,10 +1648,6 @@ function processText() {
     }
     requestAnimationFrame(processChunk);
 }
-
-
-
-
 
         function cutParagraph(paragraph) {
     if (cutCooldown) return;
@@ -1685,13 +1681,11 @@ function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
   const tempTextarea = document.createElement('textarea');
   tempTextarea.style.position = 'fixed';
   tempTextarea.style.opacity = '0';
-  tempTextarea.value   
- = textToCopy;
+  tempTextarea.value = textToCopy;
   document.body.appendChild(tempTextarea);
   tempTextarea.select();
   document.execCommand('copy');
-  document.body.removeChild(tempTextarea);   
-
+  document.body.removeChild(tempTextarea);
 
   paragraph.remove();
   cleanupSpaces();
@@ -1847,6 +1841,7 @@ function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
                 document.getElementById('countryCount').style.display = 'block';
                 document.getElementById('output').style.display = 'block';
                 document.getElementById('userControls').style.display = 'flex';
+                document.getElementById('countryToggleContainer').style.display = 'block';
                 document.getElementById('loggedInUser').innerText = username;
                 loadText();
             } else {
@@ -1866,6 +1861,7 @@ function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
             document.getElementById('countryCount').style.display = 'none';
             document.getElementById('output').style.display = 'none';
             document.getElementById('userControls').style.display = 'none';
+            document.getElementById('countryToggleContainer').style.display = 'none';
         }
 
         document.getElementById('output').addEventListener('click', function(event) {
@@ -2087,58 +2083,59 @@ function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
             if (savedOperationMode) {
                 document.querySelector(`input[name="cutOption"][value="${savedOperationMode}"]`).checked = true;
             }
-        // Function to export unsubscribed emails from localStorage as a JSON file
-function exportUnsubscribedEmails() {
-    console.log("Export button clicked");  // Debugging: Check if function is called
-
-    const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(emails));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "unsubscribed_emails.json");
-
-    // Get the export button and temporarily change its color and text
-    const exportButton = document.getElementById('exportButton');
-    if (exportButton) {
-        console.log("Export button found");  // Debugging: Verify the button element was found
-        exportButton.style.backgroundColor = 'green';
-        exportButton.innerText = 'Saved';
-
-        // Revert button color and text after 1 second
-        setTimeout(() => {
-            exportButton.style.backgroundColor = '#1171BA'; // Original color
-            exportButton.innerText = 'Export Unsubscribed Emails'; // Original text
-        }, 1000);
-    } else {
-        console.error("Export button not found");  // Error if the button ID is incorrect
-    }
-
-    // Trigger download
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    document.body.removeChild(downloadAnchor);
-}
-// Function to sync email with Google Sheets using the Google Apps Script web app
-function syncEmailWithGoogleSheets(email) {
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbz3yehn7Fc6bDqqcEVptxwrUtl9XzFeAYM1iEte_4MBxZMPFI2D0vPfSYuMjkVb2iJg/exec'; // Replace with the URL from the deployment step
-
-    fetch(webAppUrl, {
-        method: 'POST',
-        body: JSON.stringify({ email: email }),
-        headers: {
-            'Content-Type': 'application/json'
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Email synced with Google Sheets:", data);
-    })
-    .catch(error => {
-        console.error("Error syncing email:", error);
-    });
-}
 
-		}
+        // Function to export unsubscribed emails from localStorage as a JSON file
+        function exportUnsubscribedEmails() {
+            console.log("Export button clicked");  // Debugging: Check if function is called
+
+            const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(emails));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "unsubscribed_emails.json");
+
+            // Get the export button and temporarily change its color and text
+            const exportButton = document.getElementById('exportButton');
+            if (exportButton) {
+                console.log("Export button found");  // Debugging: Verify the button element was found
+                exportButton.style.backgroundColor = 'green';
+                exportButton.innerText = 'Saved';
+
+                // Revert button color and text after 1 second
+                setTimeout(() => {
+                    exportButton.style.backgroundColor = '#1171BA'; // Original color
+                    exportButton.innerText = 'Export Unsubscribed Emails'; // Original text
+                }, 1000);
+            } else {
+                console.error("Export button not found");  // Error if the button ID is incorrect
+            }
+
+            // Trigger download
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+        }
+
+        // Function to sync email with Google Sheets using the Google Apps Script web app
+        function syncEmailWithGoogleSheets(email) {
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbz3yehn7Fc6bDqqcEVptxwrUtl9XzFeAYM1iEte_4MBxZMPFI2D0vPfSYuMjkVb2iJg/exec'; // Replace with the URL from the deployment step
+
+            fetch(webAppUrl, {
+                method: 'POST',
+                body: JSON.stringify({ email: email }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Email synced with Google Sheets:", data);
+            })
+            .catch(error => {
+                console.error("Error syncing email:", error);
+            });
+        }
  </script>
 </body>
 
