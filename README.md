@@ -929,14 +929,7 @@
             </div>
         </div>
         
-        <!-- Professor signature -->
-        <div class="professor-signature">
-            <p>Professor A. Chaoui</p>
-            <p>Laboratory of Applied Mathematics and Modelling</p>
-            <p>University 8 May 1945</p>
-            <p>Algeria</p>
-        </div>
-
+        
         <!-- Button Container -->
         <div id="rightSidebar" style="display:none;">
             <button class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
