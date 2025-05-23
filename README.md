@@ -280,8 +280,7 @@ input:checked + .slider:before {
 
         #adCount,
         #dailyAdCount,
-        #remainingTime,
-        #countryCount {
+        #remainingTime {
             margin-top: 15px;
             font-size: 18px;
             font-weight: bold;
@@ -300,7 +299,7 @@ input:checked + .slider:before {
             vertical-align: middle;
         }
 
-        #countryCount {
+        #countryFilters {
             position: absolute;
             left: 20px;
             top: 250px;
@@ -308,6 +307,12 @@ input:checked + .slider:before {
             font-weight: bold;
             line-height: 1.5;
             color: #34495e;
+            width: 300px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1;
         }
 
         #cursorStart {
@@ -634,7 +639,7 @@ input:checked + .slider:before {
         }
 
         .country-toggle-container {
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
             padding: 10px;
             background-color: #f8f9fa;
@@ -657,7 +662,7 @@ input:checked + .slider:before {
         }
 
         .country-toggle-actions button {
-            padding: 2px 8px;
+            padding: 5px 10px;
             font-size: 12px;
             border-radius: 3px;
             border: 1px solid #ddd;
@@ -667,6 +672,77 @@ input:checked + .slider:before {
 
         .country-toggle-actions button:hover {
             background-color: #e9ecef;
+        }
+
+        .count-badge {
+            background-color: #1171ba;
+            color: white;
+            border-radius: 10px;
+            padding: 0 5px;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        #countrySearch {
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .country-group {
+            margin-top: 15px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .country-group-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .country-group-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .country-group-actions button {
+            padding: 2px 5px;
+            font-size: 11px;
+        }
+
+        .add-group-btn {
+            margin-top: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .add-group-btn:hover {
+            background-color: #218838;
+        }
+
+        .group-input-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .group-input-container input {
+            flex-grow: 1;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+
+        .group-input-container button {
+            padding: 5px 10px;
         }
     </style>
 </head>
@@ -774,8 +850,8 @@ input:checked + .slider:before {
     <span id="dearProfessorLabel">Include "Dear Professor"</span>
 </div>
 
-<!-- Country Toggle Container -->
-<div id="countryToggleContainer" class="country-toggle-container" style="display:none;">
+<!-- Country Filters Panel -->
+<div id="countryFilters" style="display:none;">
     <div class="country-toggle-header">
         <span>Filter Countries</span>
         <div class="country-toggle-actions">
@@ -783,92 +859,25 @@ input:checked + .slider:before {
             <button onclick="toggleAllCountries(false)">None</button>
         </div>
     </div>
-    <!-- Country toggles will be added here dynamically -->
+    
+    <input type="text" id="countrySearch" placeholder="Search countries...">
+    
+    <div id="countryGroupsContainer"></div>
+    
+    <button class="add-group-btn" onclick="showAddGroupForm()">+ Add Country Group</button>
+    <div id="addGroupForm" class="group-input-container" style="display:none;">
+        <input type="text" id="newGroupName" placeholder="Group name">
+        <button onclick="addCountryGroup()">Add</button>
+        <button onclick="hideAddGroupForm()">Cancel</button>
+    </div>
+    
+    <div id="countryToggleContainer" class="country-toggle-container">
+        <!-- Country toggles will be added here dynamically -->
+    </div>
 </div>
 
 <div id="successMessage" class="success-message" style="display: none;">Email saved successfully!</div>
-<!-- CSS Section -->
-<style>
-/* Container styling */
-.button-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Adds space between the elements */
-    margin-bottom: 15px;
-}
 
-/* Input box styling */
-.input-box {
-    padding: 10px 15px;
-    font-size: 14px;
-    width: 300px; /* Adjust width to make it professional */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-}
-
-.input-box:focus {
-    border-color: #1171BA;
-    box-shadow: 0 0 5px rgba(17, 113, 186, 0.5);
-}
-
-/* Button styling */
-.btn {
-    padding: 10px 20px;
-    font-size: 14px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* Save button */
-.btn.save {
-    background-color: #1171BA; /* Blue color */
-}
-
-.btn.save:hover {
-    background-color: #0B4F87; /* Darker blue on hover */
-}
-
-/* Delete button */
-.btn.delete {
-    background-color: #DC3545; /* Red color */
-}
-
-.btn.delete:hover {
-    background-color: #A71D2A; /* Darker red on hover */
-}
-
-/* Email list button */
-.btn.email-list {
-    background-color: #0B6623; /* Green color */
-}
-
-.btn.email-list:hover {
-    background-color: #064417; /* Darker green on hover */
-}
-
-/* Google button */
-.btn.google {
-    background-color: #FF6F00; /* Orange color */
-}
-
-.btn.google:hover {
-    background-color: #C55200; /* Darker orange on hover */
-}
-
-/* Success message styling */
-.success-message {
-    color: green;
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: 16px;
-}
-</style>
     <div class="input-container" style="display:none;">
         <div class="container-header" onclick="toggleBox('pasteBox')">
             Paste your text here
@@ -916,7 +925,6 @@ input:checked + .slider:before {
     <div class="progress-bar-container">
         <div class="progress-bar" id="progressBar"></div>
     </div>
-    <div id="countryCount" style="display:none;"></div>
 
     <div id="output" class="text-container" style="display:none;" contenteditable="true">
         <p id="cursorStart">Place your cursor here</p>
@@ -961,16 +969,19 @@ input:checked + .slider:before {
     <script>
     const countryList = [
         "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
-        "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "China", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
+        "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
     ];
 
     // Country filter state
     let countryFilterState = {};
+    let countryGroups = {};
+    let countryCounts = {};
 
-    // Initialize country filter state
+    // Initialize country filter state and groups
     function initializeCountryFilter() {
         countryList.forEach(country => {
             countryFilterState[country] = true; // Default to true (enabled)
+            countryCounts[country] = 0;
         });
         
         // Load saved state from localStorage
@@ -984,21 +995,119 @@ input:checked + .slider:before {
             });
         }
         
+        // Load saved groups
+        const savedGroups = localStorage.getItem('countryGroups');
+        if (savedGroups) {
+            countryGroups = JSON.parse(savedGroups);
+        } else {
+            // Create some default groups
+            countryGroups = {
+                "Asia": ["India", "China", "Japan", "South Korea", "Singapore", "Thailand", "Vietnam", "Malaysia"],
+                "Europe": ["France", "Germany", "Italy", "Spain", "United Kingdom", "Poland", "Sweden"],
+                "Americas": ["United States", "Canada", "Brazil", "Mexico", "Argentina"]
+            };
+            saveCountryGroups();
+        }
+        
+        renderCountryGroups();
         renderCountryToggles();
+    }
+
+    // Save country groups to localStorage
+    function saveCountryGroups() {
+        localStorage.setItem('countryGroups', JSON.stringify(countryGroups));
+    }
+
+    // Render country groups in the UI
+    function renderCountryGroups() {
+        const container = document.getElementById('countryGroupsContainer');
+        container.innerHTML = '';
+        
+        Object.keys(countryGroups).forEach(groupName => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'country-group';
+            groupDiv.innerHTML = `
+                <div class="country-group-header">
+                    <span>${groupName}</span>
+                    <div class="country-group-actions">
+                        <button onclick="toggleGroup('${groupName}', true)">On</button>
+                        <button onclick="toggleGroup('${groupName}', false)">Off</button>
+                        <button onclick="removeGroup('${groupName}')">×</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(groupDiv);
+        });
+    }
+
+    // Toggle all countries in a group
+    function toggleGroup(groupName, enable) {
+        if (countryGroups[groupName]) {
+            countryGroups[groupName].forEach(country => {
+                if (countryFilterState.hasOwnProperty(country)) {
+                    countryFilterState[country] = enable;
+                    const checkbox = document.getElementById(`toggle-${country.replace(/\s+/g, '-')}`);
+                    if (checkbox) checkbox.checked = enable;
+                }
+            });
+            saveCountryFilterState();
+            filterOutputByCountries();
+        }
+    }
+
+    // Remove a country group
+    function removeGroup(groupName) {
+        if (confirm(`Are you sure you want to remove the group "${groupName}"?`)) {
+            delete countryGroups[groupName];
+            saveCountryGroups();
+            renderCountryGroups();
+        }
+    }
+
+    // Show add group form
+    function showAddGroupForm() {
+        document.getElementById('addGroupForm').style.display = 'flex';
+        document.getElementById('newGroupName').focus();
+    }
+
+    // Hide add group form
+    function hideAddGroupForm() {
+        document.getElementById('addGroupForm').style.display = 'none';
+        document.getElementById('newGroupName').value = '';
+    }
+
+    // Add a new country group
+    function addCountryGroup() {
+        const groupName = document.getElementById('newGroupName').value.trim();
+        if (groupName && !countryGroups[groupName]) {
+            // Get selected countries
+            const selectedCountries = [];
+            document.querySelectorAll('.country-toggle input[type="checkbox"]:checked').forEach(checkbox => {
+                const country = checkbox.id.replace('toggle-', '').replace(/-/g, ' ');
+                if (countryList.includes(country)) {
+                    selectedCountries.push(country);
+                }
+            });
+            
+            if (selectedCountries.length > 0) {
+                countryGroups[groupName] = selectedCountries;
+                saveCountryGroups();
+                renderCountryGroups();
+                hideAddGroupForm();
+            } else {
+                alert('Please select at least one country for the group');
+            }
+        } else if (countryGroups[groupName]) {
+            alert('A group with this name already exists');
+        } else {
+            alert('Please enter a valid group name');
+        }
     }
 
     // Render country toggles in the UI
     function renderCountryToggles() {
         const container = document.getElementById('countryToggleContainer');
-        container.innerHTML = `
-            <div class="country-toggle-header">
-                <span>Filter Countries</span>
-                <div class="country-toggle-actions">
-                    <button onclick="toggleAllCountries(true)">All</button>
-                    <button onclick="toggleAllCountries(false)">None</button>
-                </div>
-            </div>
-        `;
+        container.innerHTML = '';
         
         // Sort countries alphabetically
         const sortedCountries = Object.keys(countryFilterState).sort();
@@ -1013,7 +1122,9 @@ input:checked + .slider:before {
                            onchange="toggleCountry('${country}', this.checked)">
                     <span class="slider round"></span>
                 </label>
-                <span class="country-toggle-label">${country}</span>
+                <span class="country-toggle-label">
+                    ${country} <span class="count-badge">${countryCounts[country] || 0}</span>
+                </span>
             `;
             container.appendChild(toggle);
         });
@@ -1030,9 +1141,10 @@ input:checked + .slider:before {
     function toggleAllCountries(enable) {
         Object.keys(countryFilterState).forEach(country => {
             countryFilterState[country] = enable;
+            const checkbox = document.getElementById(`toggle-${country.replace(/\s+/g, '-')}`);
+            if (checkbox) checkbox.checked = enable;
         });
         saveCountryFilterState();
-        renderCountryToggles();
         filterOutputByCountries();
     }
 
@@ -1065,37 +1177,40 @@ input:checked + .slider:before {
         updateCounts();
     }
 
-    // Update counts to reflect only visible entries
-    function updateCounts() {
+    // Update country counts based on current output
+    function updateCountryCounts() {
+        // Reset counts
+        Object.keys(countryCounts).forEach(country => {
+            countryCounts[country] = 0;
+        });
+        
         const outputContainer = document.getElementById('output');
         const paragraphs = outputContainer.querySelectorAll('p');
-        let adCount = 0;
-
-        // Increment count based on the start of each paragraph ("To" or "Professor")
+        
         paragraphs.forEach(paragraph => {
-            if (paragraph.style.display !== 'none') {
-                const firstLine = paragraph.innerText.split('\n')[0];
-                if (firstLine.startsWith('To') || firstLine.startsWith('Professor')) {
-                    adCount += 1;
+            const text = paragraph.innerText;
+            for (const country in countryCounts) {
+                if (text.includes(country)) {
+                    countryCounts[country]++;
                 }
             }
         });
-
-        document.getElementById('totalAds').innerText = adCount;
-        document.getElementById('dailyAdCount').innerText = `Total Ads Today: ${dailyAdCount}`;
-
-        const text = outputContainer.innerText;
-        const countryCounts = countCountryOccurrences(text);
-        const sortedCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
-        let countryCountText = 'Country Counts:<br>';
-        sortedCountries.forEach(([country, count]) => {
-            countryCountText += `<b>${country}</b>: ${count}<br>`;
+        
+        // Update count badges
+        document.querySelectorAll('.count-badge').forEach(badge => {
+            const country = badge.parentElement.textContent.replace(/\s+\d+$/, '').trim();
+            badge.textContent = countryCounts[country] || 0;
         });
-        document.getElementById('countryCount').innerHTML = countryCountText.trim();
-
-        updateProgressBar(dailyAdCount);
-        updateRemainingTime(dailyAdCount);
     }
+
+    // Add search functionality
+    document.getElementById('countrySearch').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        document.querySelectorAll('.country-toggle').forEach(toggle => {
+            const countryName = toggle.querySelector('.country-toggle-label').textContent.toLowerCase();
+            toggle.style.display = countryName.includes(searchTerm) ? '' : 'none';
+        });
+    });
 
 	function showSuccessMessage(message) {
     const successMessage = document.getElementById('successMessage');
@@ -1437,7 +1552,7 @@ function displayDeletedAddressesPopup(deletedEmails) {
 
         function countCountryOccurrences(text) {
             const lines = text.split('\n');
-            const countryCounts = {};
+            const counts = {};
 
             for (let i = 0; i < lines.length - 1; i++) {
                 const line = lines[i].trim();
@@ -1446,12 +1561,12 @@ function displayDeletedAddressesPopup(deletedEmails) {
                 if (nextLine.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
                     countryList.forEach(country => {
                         if (line.includes(country)) {
-                            countryCounts[country] = (countryCounts[country] || 0) + 1;
+                            counts[country] = (counts[country] || 0) + 1;
                         }
                     });
                 }
             }
-            return countryCounts;
+            return counts;
         }
 
         function highlightErrors(text) {
@@ -1466,31 +1581,29 @@ function displayDeletedAddressesPopup(deletedEmails) {
         }
 
         function updateCounts() {
-    const outputContainer = document.getElementById('output');
-    const paragraphs = outputContainer.querySelectorAll('p');
-    let adCount = 0;
+            const outputContainer = document.getElementById('output');
+            const paragraphs = outputContainer.querySelectorAll('p');
+            let adCount = 0;
 
-    // Increment count based on the start of each paragraph ("To" or "Professor")
-    paragraphs.forEach(paragraph => {
-        if (paragraph.style.display !== 'none') {
-            const firstLine = paragraph.innerText.split('\n')[0];
-            if (firstLine.startsWith('To') || firstLine.startsWith('Professor')) {
-                adCount += 1;
-            }
-        }
-    });
-
-    document.getElementById('totalAds').innerText = adCount;
-    document.getElementById('dailyAdCount').innerText = `Total Ads Today: ${dailyAdCount}`;
-
-            const text = outputContainer.innerText;
-            const countryCounts = countCountryOccurrences(text);
-            const sortedCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
-            let countryCountText = 'Country Counts:<br>';
-            sortedCountries.forEach(([country, count]) => {
-                countryCountText += `<b>${country}</b>: ${count}<br>`;
+            // Increment count based on the start of each paragraph ("To" or "Professor")
+            paragraphs.forEach(paragraph => {
+                if (paragraph.style.display !== 'none') {
+                    const firstLine = paragraph.innerText.split('\n')[0];
+                    if (firstLine.startsWith('To') || firstLine.startsWith('Professor')) {
+                        adCount += 1;
+                    }
+                }
             });
-            document.getElementById('countryCount').innerHTML = countryCountText.trim();
+
+            document.getElementById('totalAds').innerText = adCount;
+            document.getElementById('dailyAdCount').innerText = `Total Ads Today: ${dailyAdCount}`;
+
+            // Update country counts
+            const counts = countCountryOccurrences(outputContainer.innerText);
+            Object.keys(countryCounts).forEach(country => {
+                countryCounts[country] = counts[country] || 0;
+            });
+            updateCountryCounts();
 
             updateProgressBar(dailyAdCount);
             updateRemainingTime(dailyAdCount);
@@ -1543,13 +1656,6 @@ function toggleDearProfessor() {
 function updateToggleLabel() {
     const label = document.getElementById('dearProfessorLabel');
     label.innerText = includeDearProfessor ? '✔ "Dear Professor"' : '✘ "Dear Professor"';
-}
-
-
-// Update the toggle button text
-function updateToggleUI() {
-    const toggleButton = document.querySelector('.btn.toggle-dear-professor');
-    toggleButton.innerText = includeDearProfessor ? 'Exclude "Dear Professor"' : 'Include "Dear Professor"';
 }
 
 // Update processText function to include/exclude "Dear Professor"
@@ -1635,7 +1741,7 @@ function processText() {
             // Apply country filter after processing
             filterOutputByCountries();
 
-                        // Automatically delete unsubscribed entries
+            // Automatically delete unsubscribed entries
             const deletedCount = deleteUnsubscribedEntries();
 
             // Show a popup notification if unsubscribed entries were deleted
@@ -1675,7 +1781,6 @@ function processText() {
         cutCooldown = false;
     }, 500);
 }
-
 
 function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
   const tempTextarea = document.createElement('textarea');
@@ -1838,10 +1943,9 @@ function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
                 document.getElementById('adCount').style.display = 'block';
                 document.getElementById('dailyAdCount').style.display = 'block';
                 document.getElementById('remainingTime').style.display = 'block';
-                document.getElementById('countryCount').style.display = 'block';
+                document.getElementById('countryFilters').style.display = 'block';
                 document.getElementById('output').style.display = 'block';
                 document.getElementById('userControls').style.display = 'flex';
-                document.getElementById('countryToggleContainer').style.display = 'block';
                 document.getElementById('loggedInUser').innerText = username;
                 loadText();
             } else {
@@ -1858,10 +1962,9 @@ function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
             document.getElementById('adCount').style.display = 'none';
             document.getElementById('dailyAdCount').style.display = 'none';
             document.getElementById('remainingTime').style.display = 'none';
-            document.getElementById('countryCount').style.display = 'none';
+            document.getElementById('countryFilters').style.display = 'none';
             document.getElementById('output').style.display = 'none';
             document.getElementById('userControls').style.display = 'none';
-            document.getElementById('countryToggleContainer').style.display = 'none';
         }
 
         document.getElementById('output').addEventListener('click', function(event) {
