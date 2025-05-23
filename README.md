@@ -279,15 +279,6 @@
             background-color: #218838;
         }
 
-        #adCount,
-        #dailyAdCount,
-        #remainingTime {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
         #loadingIndicator {
             color: red;
             margin-left: 10px;
@@ -401,14 +392,6 @@
 
         #currentTime {
             font-size: 16px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            text-align: right;
-        }
-
-        #remainingTimeText {
-            font-size: 18px;
             font-weight: bold;
             color: #2c3e50;
             margin-bottom: 10px;
@@ -716,6 +699,76 @@
             text-align: center;
             color: #666;
         }
+        
+        /* Button container styles */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn.save {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn.save:hover {
+            background-color: #218838;
+        }
+        
+        .btn.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn.delete:hover {
+            background-color: #c82333;
+        }
+        
+        .btn.email-list {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .btn.email-list:hover {
+            background-color: #138496;
+        }
+        
+        .btn.google {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .btn.google:hover {
+            background-color: #e0a800;
+        }
+        
+        .input-box {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            flex-grow: 1;
+            min-width: 200px;
+        }
+        
+        /* Hide duplicate stats elements */
+        #remainingTime, #adCount, #dailyAdCount {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -888,25 +941,6 @@
         </div>
     </div>
 
-    <div class="top-controls" style="display:none;">
-        <div id="remainingTime">File completed by: <span id="remainingTimeText"></span> (<span id="completionPercentage">0%</span>)
-            <div class="hourglass"></div>
-        </div>
-    </div>
-
-    <div id="adCount" style="display:none;">
-        Total Advertisements: <span id="totalAds">0</span>
-        <span id="loadingIndicator">Processing, please wait...</span>
-    </div>
-    <div id="dailyAdCount" style="display:none;">Total Ads Sent Today: 0</div>
-    <div class="progress-bar-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <div id="output" class="text-container" style="display:none;" contenteditable="true">
-        <p id="cursorStart">Place your cursor here</p>
-    </div>
-
     <div class="right-content">
         <div id="currentTime"></div>
         
@@ -929,7 +963,14 @@
             </div>
         </div>
         
-        
+        <!-- Professor signature -->
+        <div class="professor-signature">
+            <p>Professor A. Chaoui</p>
+            <p>Laboratory of Applied Mathematics and Modelling</p>
+            <p>University 8 May 1945</p>
+            <p>Algeria</p>
+        </div>
+
         <!-- Button Container -->
         <div id="rightSidebar" style="display:none;">
             <button class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
@@ -1424,8 +1465,9 @@
                 }
             });
 
-            document.getElementById('totalAds').innerText = adCount;
-            document.getElementById('dailyAdCount').innerText = `Total Ads Today: ${dailyAdCount}`;
+            // Update stats panel
+            document.getElementById('statsTotalAds').textContent = adCount;
+            document.getElementById('statsDailyAds').textContent = dailyAdCount;
 
             // Update country counts
             const counts = countCountryOccurrences(outputContainer.innerText);
@@ -1436,20 +1478,10 @@
 
             updateProgressBar(dailyAdCount);
             updateRemainingTime(dailyAdCount);
-            
-            // Update stats panel
-            document.getElementById('statsTotalAds').textContent = adCount;
-            document.getElementById('statsDailyAds').textContent = dailyAdCount;
-            
-            // Update stats progress bar
-            const statsProgressBar = document.getElementById('statsProgressBar');
-            const progressBar = document.getElementById('progressBar');
-            statsProgressBar.style.width = progressBar.style.width;
-            statsProgressBar.style.backgroundColor = progressBar.style.backgroundColor;
         }
 
         function updateProgressBar(dailyAdCount) {
-            const progressBar = document.getElementById('progressBar');
+            const progressBar = document.getElementById('statsProgressBar');
             const maxCount = 5000;
 
             const percentage = Math.min(dailyAdCount / maxCount, 1) * 100;
@@ -1469,10 +1501,6 @@
 
             const percentageCompleted = Math.min((dailyAdCount / totalParagraphs) * 100, 100).toFixed(2);
 
-            document.getElementById('remainingTimeText').innerText = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-            document.getElementById('completionPercentage').innerText = `${percentageCompleted}%`;
-            
-            // Update stats panel
             document.getElementById('statsRemainingTime').textContent = 
                 hours > 0 ? `${hours}h ${minutes}m (${percentageCompleted}%)` : `${minutes}m (${percentageCompleted}%)`;
         }
@@ -1782,11 +1810,6 @@
                 document.querySelector('.login-container').style.display = 'none';
                 document.querySelector('.font-controls').style.display = 'block';
                 document.querySelectorAll('.input-container').forEach(container => container.style.display = 'block');
-                document.querySelector('.top-controls').style.display = 'flex';
-                document.getElementById('adCount').style.display = 'block';
-                document.getElementById('dailyAdCount').style.display = 'block';
-                document.getElementById('remainingTime').style.display = 'block';
-                document.getElementById('countryFilters').style.display = 'block';
                 document.getElementById('output').style.display = 'block';
                 document.getElementById('userControls').style.display = 'flex';
                 document.getElementById('loggedInUser').innerText = username;
@@ -1801,11 +1824,6 @@
             document.querySelector('.login-container').style.display = 'block';
             document.querySelector('.font-controls').style.display = 'none';
             document.querySelectorAll('.input-container').forEach(container => container.style.display = 'none');
-            document.querySelector('.top-controls').style.display = 'none';
-            document.getElementById('adCount').style.display = 'none';
-            document.getElementById('dailyAdCount').style.display = 'none';
-            document.getElementById('remainingTime').style.display = 'none';
-            document.getElementById('countryFilters').style.display = 'none';
             document.getElementById('output').style.display = 'none';
             document.getElementById('userControls').style.display = 'none';
         }
@@ -1847,152 +1865,6 @@
 
         // Update time every second
         setInterval(updateTime, 1000);
-
-        // Function to check if the selected time slot matches the current time
-        function checkReminders() {
-            const now = new Date();
-            const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-            document.querySelectorAll('.reminder-slots li.selected').forEach(slot => {
-                if (slot.dataset.time === currentTime) {
-                    showPopup();
-                    showNotification('Ad Reminder', `It's time to send ads for ${slot.dataset.time}`);
-                    blinkBrowserIcon();
-                }
-            });
-        }
-
-        // Show the reminder popup
-        function showPopup() {
-            document.getElementById('reminderPopup').style.display = 'block';
-            blinkTab();
-        }
-
-        // Dismiss the reminder popup
-        function dismissPopup() {
-            document.getElementById('reminderPopup').style.display = 'none';
-            document.title = originalTitle;
-            clearInterval(blinkInterval);
-        }
-
-        // Handle slot selection and saving
-        document.querySelectorAll('.reminder-slots li').forEach(slot => {
-            slot.addEventListener('click', () => {
-                slot.classList.toggle('selected');
-                saveSelectedReminders();
-            });
-        });
-
-        function saveSelectedReminders() {
-            const selectedSlots = [];
-            document.querySelectorAll('.reminder-slots li.selected').forEach(slot => {
-                selectedSlots.push(slot.dataset.time);
-            });
-            localStorage.setItem(`selectedReminders_${currentUser}`, JSON.stringify(selectedSlots));
-        }
-
-        function loadSelectedReminders() {
-            const savedSlots = localStorage.getItem(`selectedReminders_${currentUser}`);
-            if (savedSlots) {
-                const selectedSlots = JSON.parse(savedSlots);
-                document.querySelectorAll('.reminder-slots li').forEach(slot => {
-                    if (selectedSlots.includes(slot.dataset.time)) {
-                        slot.classList.add('selected');
-                    }
-                });
-            }
-        }
-
-        // Blink tab title when minimized
-        let originalTitle = document.title;
-        let blinkInterval;
-
-        function blinkTab() {
-            let isOriginalTitle = true;
-            blinkInterval = setInterval(() => {
-                document.title = isOriginalTitle ? '?? Reminder: Send Ads!' : originalTitle;
-                isOriginalTitle = !isOriginalTitle;
-            }, 1000);
-        }
-
-        // Toggle Fullscreen Mode
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-                document.querySelector('.fullscreen-button').textContent = 'Normal Screen';
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-                document.querySelector('.fullscreen-button').textContent = 'Full Screen';
-            }
-        }
-
-        // Show Desktop Notification
-        function showNotification(title, body) {
-            if (Notification.permission === 'granted') {
-                new Notification(title, { body });
-            } else if (Notification.permission !== 'denied') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        new Notification(title, { body });
-                    }
-                });
-            }
-        }
-
-        // Blink browser icon
-        function blinkBrowserIcon() {
-            if (document.hidden) {
-                const favicon = document.querySelector('link[rel="icon"]');
-                const originalIcon = favicon.href;
-                let isOriginalIcon = true;
-                const attentionIcon = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Alarm_bell.png/600px-Alarm_bell.png';
-
-                const blinkFavicon = setInterval(() => {
-                    favicon.href = isOriginalIcon ? attentionIcon : originalIcon;
-                    isOriginalIcon = !isOriginalIcon;
-                }, 500);
-
-                document.addEventListener('visibilitychange', () => {
-                    if (!document.hidden) {
-                        clearInterval(blinkFavicon);
-                        favicon.href = originalIcon;
-                    }
-                });
-            }
-        }
-
-        // Request Notification permission on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission();
-            }
-        });
-
-        // Copy incomplete entries to clipboard
-        function copyIncompleteEntries() {
-            const incompleteText = document.getElementById('incompleteText').value;
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.style.position = 'fixed';
-            tempTextarea.style.opacity = '0';
-            tempTextarea.value = incompleteText;
-            document.body.appendChild(tempTextarea);
-            tempTextarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextarea);
-            alert('Incomplete entries copied to clipboard!');
-        }
-
-        // Handle scrolling lock and display notice
-        document.addEventListener('wheel', function(event) {
-            if (isLocked) {
-                event.preventDefault();
-                const scrollLockNotice = document.getElementById('scrollLockNotice');
-                scrollLockNotice.style.display = 'block';
-                setTimeout(() => {
-                    scrollLockNotice.style.display = 'none';
-                }, 2000);
-            }
-        }, { passive: false });
 
         function saveEffectPreferences() {
             const effectsEnabled = document.getElementById('effectsToggle').checked;
@@ -2168,6 +2040,21 @@
             popup.appendChild(navigation);
             popup.appendChild(okButton);
             document.body.appendChild(popup);
+        }
+
+        function saveUnsubscribedEmail() {
+            const email = document.getElementById('unsubscribedEmail').value.trim();
+            if (email) {
+                const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+                if (!emails.includes(email)) {
+                    emails.push(email);
+                    localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(emails));
+                    showSuccessMessage('Email saved successfully!');
+                    document.getElementById('unsubscribedEmail').value = '';
+                } else {
+                    showSuccessMessage('Email already exists in the list!');
+                }
+            }
         }
     </script>
 </body>
