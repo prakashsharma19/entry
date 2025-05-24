@@ -979,6 +979,9 @@
         </div>
     </div>
 
+    <!-- Output Container -->
+    <div id="output" class="text-container" style="display:none;"></div>
+
     <div id="reminderPopup" class="popup">
         <span style="font-size: 50px;">⏰</span>
         <p>Send Ads</p>
@@ -1248,6 +1251,8 @@
         // Filter the output based on enabled countries
         function filterOutputByCountries() {
             const outputContainer = document.getElementById('output');
+            if (!outputContainer) return;
+            
             const paragraphs = outputContainer.querySelectorAll('p');
             
             paragraphs.forEach(paragraph => {
@@ -1277,6 +1282,8 @@
             });
             
             const outputContainer = document.getElementById('output');
+            if (!outputContainer) return;
+            
             const paragraphs = outputContainer.querySelectorAll('p');
             
             paragraphs.forEach(paragraph => {
@@ -1345,7 +1352,6 @@
                 localStorage.setItem(`dailyAdCount_${currentUser}`, dailyAdCount);
                 localStorage.setItem(`lastCutTime_${currentUser}`, Date.now());
                 localStorage.setItem(`totalParagraphs_${currentUser}`, totalParagraphs);
-                saveSelectedReminders();
                 saveEffectPreferences();
                 saveOperationPreferences();
                 saveFontPreferences();
@@ -1398,11 +1404,11 @@
                 }
                 loadEffectPreferences();
                 loadOperationPreferences();
-                loadSelectedReminders();
                 updateCounts();
                 updateFont();
                 document.getElementById('rightSidebar').style.display = 'block';
                 document.getElementById('lockButton').style.display = 'inline-block';
+                document.getElementById('output').style.display = 'block';
             }
         }
 
@@ -1452,6 +1458,8 @@
 
         function updateCounts() {
             const outputContainer = document.getElementById('output');
+            if (!outputContainer) return;
+            
             const paragraphs = outputContainer.querySelectorAll('p');
             let adCount = 0;
 
@@ -1470,10 +1478,6 @@
             document.getElementById('statsDailyAds').textContent = dailyAdCount;
 
             // Update country counts
-            const counts = countCountryOccurrences(outputContainer.innerText);
-            Object.keys(countryCounts).forEach(country => {
-                countryCounts[country] = counts[country] || 0;
-            });
             updateCountryCounts();
 
             updateProgressBar(dailyAdCount);
@@ -1598,14 +1602,16 @@
                     }
                 }
                 if (index < paragraphs.length) {
-                    requestAnimationFrame(processChunk);
+                    setTimeout(processChunk, 0); // Use setTimeout to prevent UI freeze
                 } else {
+                    // Append all non-Russia entries first
                     nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
+                    
+                    // Then append all Russia entries
                     russiaEntries.forEach(entry => outputContainer.appendChild(entry));
 
                     updateCounts();
                     saveText();
-                    document.getElementById('lockButton').style.display = 'inline-block';
                     document.getElementById('loadingIndicator').style.display = 'none';
 
                     // Apply country filter after processing
@@ -1622,11 +1628,11 @@
                     isProcessing = false;
                 }
             }
-            requestAnimationFrame(processChunk);
+            processChunk();
         }
 
         function cutParagraph(paragraph) {
-            if (cutCooldown) return;
+            if (cutCooldown || !paragraph) return;
             cutCooldown = true;
 
             const textToCopy = paragraph.innerText;
@@ -1649,33 +1655,46 @@
 
             setTimeout(() => {
                 cutCooldown = false;
-            }, 500);
+            }, 100); // Reduced cooldown time
         }
 
-        function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
+        function copyAndRemoveParagraph(paragraph, textToCopy) {
+            // Create a temporary textarea for copying
             const tempTextarea = document.createElement('textarea');
             tempTextarea.style.position = 'fixed';
             tempTextarea.style.opacity = '0';
             tempTextarea.value = textToCopy;
             document.body.appendChild(tempTextarea);
             tempTextarea.select();
-            document.execCommand('copy');
+            
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            
             document.body.removeChild(tempTextarea);
 
-            paragraph.remove();
-            cleanupSpaces();
+            // Remove the paragraph from the DOM
+            if (paragraph && paragraph.parentNode) {
+                paragraph.parentNode.removeChild(paragraph);
+            }
 
-            const inputText = document.getElementById('inputText').value;
-            const remainingText = inputText.replace(textToCopy.split('\nDear Professor')[0], '').trim();
-            document.getElementById('inputText').value = remainingText;
+            // Update the input text by removing the processed content
+            const inputText = document.getElementById('inputText');
+            const currentInput = inputText.value;
+            const updatedInput = currentInput.replace(textToCopy.split('\nDear Professor')[0], '').trim();
+            inputText.value = updatedInput;
 
+            // Update counters and save
             dailyAdCount++;
-
             updateCounts();
             saveText();
 
+            // Show undo button
             document.getElementById('undoButton').style.display = 'block';
 
+            // Focus on output container
             document.getElementById('output').focus();
         }
 
@@ -1725,7 +1744,6 @@
 
                 if (paragraph && paragraph.textContent.includes('Professor')) {
                     cutParagraph(paragraph);
-
                     document.getElementById('output').focus();
                 }
             }
@@ -1734,7 +1752,10 @@
         function handleMouseClick(event) {
             const cutOption = document.querySelector('input[name="cutOption"]:checked').value;
             if (cutOption === 'mouse') {
-                handleCursorMovement(event);
+                const target = event.target;
+                if (target.tagName === 'P' && target.textContent.includes('Professor')) {
+                    cutParagraph(target);
+                }
             }
         }
 
@@ -1941,6 +1962,8 @@
 
         function deleteUnsubscribedEntries() {
             const outputContainer = document.getElementById('output');
+            if (!outputContainer) return 0;
+            
             const paragraphs = outputContainer.querySelectorAll('p');
             const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
             const deletedEmails = [];
@@ -2056,6 +2079,22 @@
                 }
             }
         }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure the output container exists
+            if (!document.getElementById('output')) {
+                const outputDiv = document.createElement('div');
+                outputDiv.id = 'output';
+                outputDiv.className = 'text-container';
+                outputDiv.style.display = 'none';
+                document.body.appendChild(outputDiv);
+            }
+            
+            // Initialize other components
+            initializeCountryFilter();
+            updateTime();
+        });
     </script>
 </body>
 
