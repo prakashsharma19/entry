@@ -769,6 +769,19 @@
         #remainingTime, #adCount, #dailyAdCount {
             display: none !important;
         }
+        
+        /* Output container styling */
+        #output {
+            background-color: #ffffff;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            position: relative;
+            margin-top: 20px;
+            z-index: 2;
+            min-height: 100px;
+        }
     </style>
 </head>
 
@@ -941,6 +954,9 @@
         </div>
     </div>
 
+    <!-- Output container -->
+    <div id="output"></div>
+
     <div class="right-content">
         <div id="currentTime"></div>
         
@@ -972,7 +988,7 @@
         </div>
 
         <!-- Button Container -->
-        <div id="rightSidebar" style="display:none;">
+        <div id="rightSidebar">
             <button class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
             <button id="undoButton" style="display:none;" onclick="undoLastCut()">Undo Last Cut</button>
             <button id="lockButton" onclick="toggleLock()">Lock</button>
@@ -994,6 +1010,16 @@
     </div>
     
     <script>
+        // Initialize variables
+        let currentUser = null;
+        let dailyAdCount = 0;
+        let cutHistory = [];
+        let isLocked = false;
+        let isProcessing = false;
+        let totalParagraphs = 0;
+        let cutCooldown = false;
+        let includeDearProfessor = true;
+        
         const countryList = [
             "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
             "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
@@ -1004,6 +1030,38 @@
         let countryGroups = {};
         let countryCounts = {};
         let isCountryPanelVisible = true;
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize country filter
+            initializeCountryFilter();
+            
+            // Initialize time display
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Check for saved login
+            checkSavedLogin();
+            
+            // Load dear professor preference
+            const savedState = localStorage.getItem('includeDearProfessor');
+            if (savedState !== null) {
+                includeDearProfessor = savedState === 'true';
+                document.getElementById('dearProfessorToggle').checked = includeDearProfessor;
+                updateToggleLabel();
+            }
+        });
+
+        // Check if there's a saved login
+        function checkSavedLogin() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                const [username, password] = savedUser.split('_');
+                document.getElementById('username').value = username;
+                document.getElementById('password').value = password;
+                login();
+            }
+        }
 
         // Toggle country panel visibility
         function toggleCountryPanel() {
@@ -1314,19 +1372,12 @@
             }, 3000);
         }
 
-        let currentUser = null;
-        let dailyAdCount = 0;
-        let cutHistory = [];
-        let isLocked = false;
-        let isProcessing = false;
-        let totalParagraphs = 0;
-        let cutCooldown = false;
-
         function clearMemory() {
             const password = prompt('Please enter the password to clear memory, unsubscribed email data will also be deleted:');
             if (password === 'cleanall0') {
                 localStorage.clear();
                 alert('Memory cleared!');
+                location.reload();
             } else {
                 alert('Incorrect password. Memory not cleared.');
             }
@@ -1345,7 +1396,6 @@
                 localStorage.setItem(`dailyAdCount_${currentUser}`, dailyAdCount);
                 localStorage.setItem(`lastCutTime_${currentUser}`, Date.now());
                 localStorage.setItem(`totalParagraphs_${currentUser}`, totalParagraphs);
-                saveSelectedReminders();
                 saveEffectPreferences();
                 saveOperationPreferences();
                 saveFontPreferences();
@@ -1365,6 +1415,7 @@
                 const savedFontStyle = localStorage.getItem(`fontStyle_${currentUser}`);
                 const savedFontSize = localStorage.getItem(`fontSize_${currentUser}`);
                 const savedGapOption = localStorage.getItem(`gapOption_${currentUser}`);
+                
                 if (savedInput) {
                     document.getElementById('inputText').value = savedInput;
                 }
@@ -1396,13 +1447,16 @@
                 if (savedGapOption) {
                     document.getElementById('gapOption').value = savedGapOption;
                 }
+                
                 loadEffectPreferences();
                 loadOperationPreferences();
-                loadSelectedReminders();
                 updateCounts();
                 updateFont();
-                document.getElementById('rightSidebar').style.display = 'block';
+                document.getElementById('rightSidebar').style.display = 'flex';
                 document.getElementById('lockButton').style.display = 'inline-block';
+                
+                // Apply country filter after loading
+                filterOutputByCountries();
             }
         }
 
@@ -1470,10 +1524,6 @@
             document.getElementById('statsDailyAds').textContent = dailyAdCount;
 
             // Update country counts
-            const counts = countCountryOccurrences(outputContainer.innerText);
-            Object.keys(countryCounts).forEach(country => {
-                countryCounts[country] = counts[country] || 0;
-            });
             updateCountryCounts();
 
             updateProgressBar(dailyAdCount);
@@ -1504,19 +1554,6 @@
             document.getElementById('statsRemainingTime').textContent = 
                 hours > 0 ? `${hours}h ${minutes}m (${percentageCompleted}%)` : `${minutes}m (${percentageCompleted}%)`;
         }
-
-        let includeDearProfessor = true;
-
-        // Initialize the toggle state from localStorage
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedState = localStorage.getItem('includeDearProfessor');
-            if (savedState !== null) {
-                includeDearProfessor = savedState === 'true';
-                document.getElementById('dearProfessorToggle').checked = includeDearProfessor;
-                updateToggleLabel();
-            }
-            initializeCountryFilter();
-        });
 
         function toggleDearProfessor() {
             includeDearProfessor = document.getElementById('dearProfessorToggle').checked;
@@ -1552,6 +1589,7 @@
             function processChunk() {
                 const chunkSize = 10;
                 const end = Math.min(index + chunkSize, paragraphs.length);
+                
                 for (; index < end; index++) {
                     let paragraph = paragraphs[index].trim();
                     if (paragraph !== '') {
@@ -1584,7 +1622,7 @@
                         const hasError = highlightedText.includes('error');
 
                         if (hasError) {
-                            incompleteContainer.value += `${highlightedText.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '')}\n\n`;
+                            incompleteContainer.value += `${processedParagraph}\n\n`;
                         } else {
                             const p = document.createElement('p');
                             p.innerHTML = highlightedText;
@@ -1597,16 +1635,20 @@
                         }
                     }
                 }
+                
                 if (index < paragraphs.length) {
-                    requestAnimationFrame(processChunk);
+                    setTimeout(processChunk, 0);
                 } else {
+                    // Add all non-Russia entries first
                     nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
+                    
+                    // Then add Russia entries
                     russiaEntries.forEach(entry => outputContainer.appendChild(entry));
 
                     updateCounts();
                     saveText();
-                    document.getElementById('lockButton').style.display = 'inline-block';
                     document.getElementById('loadingIndicator').style.display = 'none';
+                    document.getElementById('lockButton').style.display = 'inline-block';
 
                     // Apply country filter after processing
                     filterOutputByCountries();
@@ -1622,7 +1664,8 @@
                     isProcessing = false;
                 }
             }
-            requestAnimationFrame(processChunk);
+            
+            processChunk();
         }
 
         function cutParagraph(paragraph) {
@@ -1642,7 +1685,7 @@
                 paragraph.classList.add(effectType);
                 paragraph.addEventListener('animationend', () => {
                     copyAndRemoveParagraph(paragraph, textToProcess);
-                });
+                }, { once: true });
             } else {
                 copyAndRemoveParagraph(paragraph, textToProcess);
             }
@@ -1652,7 +1695,7 @@
             }, 500);
         }
 
-        function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
+        function copyAndRemoveParagraph(paragraph, textToCopy) {
             const tempTextarea = document.createElement('textarea');
             tempTextarea.style.position = 'fixed';
             tempTextarea.style.opacity = '0';
@@ -1725,7 +1768,6 @@
 
                 if (paragraph && paragraph.textContent.includes('Professor')) {
                     cutParagraph(paragraph);
-
                     document.getElementById('output').focus();
                 }
             }
@@ -1776,6 +1818,7 @@
                     }
                 });
                 document.body.classList.add('scroll-locked');
+                document.getElementById('scrollLockNotice').style.display = 'block';
             } else {
                 lockButton.innerHTML = 'Lock';
                 lockButton.classList.remove('locked');
@@ -1785,6 +1828,7 @@
                     }
                 });
                 document.body.classList.remove('scroll-locked');
+                document.getElementById('scrollLockNotice').style.display = 'none';
             }
         }
 
@@ -1807,12 +1851,15 @@
 
             if (username && password) {
                 currentUser = `${username}_${password}`;
+                localStorage.setItem('currentUser', currentUser);
+                
                 document.querySelector('.login-container').style.display = 'none';
                 document.querySelector('.font-controls').style.display = 'block';
                 document.querySelectorAll('.input-container').forEach(container => container.style.display = 'block');
                 document.getElementById('output').style.display = 'block';
                 document.getElementById('userControls').style.display = 'flex';
                 document.getElementById('loggedInUser').innerText = username;
+                
                 loadText();
             } else {
                 alert('Please enter both username and password.');
@@ -1821,11 +1868,30 @@
 
         function logout() {
             currentUser = null;
+            localStorage.removeItem('currentUser');
+            
             document.querySelector('.login-container').style.display = 'block';
             document.querySelector('.font-controls').style.display = 'none';
             document.querySelectorAll('.input-container').forEach(container => container.style.display = 'none');
             document.getElementById('output').style.display = 'none';
             document.getElementById('userControls').style.display = 'none';
+            document.getElementById('rightSidebar').style.display = 'none';
+            
+            // Clear input fields
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
         }
 
         document.getElementById('output').addEventListener('click', function(event) {
@@ -1863,9 +1929,6 @@
             document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
         }
 
-        // Update time every second
-        setInterval(updateTime, 1000);
-
         function saveEffectPreferences() {
             const effectsEnabled = document.getElementById('effectsToggle').checked;
             const effectType = document.getElementById('effectType').value;
@@ -1876,13 +1939,15 @@
         }
 
         function loadEffectPreferences() {
-            const savedEffectsEnabled = localStorage.getItem(`effectsEnabled_${currentUser}`);
-            const savedEffectType = localStorage.getItem(`effectType_${currentUser}`);
-            if (savedEffectsEnabled) {
-                document.getElementById('effectsToggle').checked = savedEffectsEnabled === 'true';
-            }
-            if (savedEffectType) {
-                document.getElementById('effectType').value = savedEffectType;
+            if (currentUser) {
+                const savedEffectsEnabled = localStorage.getItem(`effectsEnabled_${currentUser}`);
+                const savedEffectType = localStorage.getItem(`effectType_${currentUser}`);
+                if (savedEffectsEnabled) {
+                    document.getElementById('effectsToggle').checked = savedEffectsEnabled === 'true';
+                }
+                if (savedEffectType) {
+                    document.getElementById('effectType').value = savedEffectType;
+                }
             }
         }
 
@@ -1894,9 +1959,11 @@
         }
 
         function loadOperationPreferences() {
-            const savedOperationMode = localStorage.getItem(`operationMode_${currentUser}`);
-            if (savedOperationMode) {
-                document.querySelector(`input[name="cutOption"][value="${savedOperationMode}"]`).checked = true;
+            if (currentUser) {
+                const savedOperationMode = localStorage.getItem(`operationMode_${currentUser}`);
+                if (savedOperationMode) {
+                    document.querySelector(`input[name="cutOption"][value="${savedOperationMode}"]`).checked = true;
+                }
             }
         }
 
