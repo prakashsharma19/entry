@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advertisements-PPH</title>
     <style>
-        body {
+body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: #f4f4f4;
             padding: 20px;
@@ -118,64 +118,63 @@
             border-bottom: 1px solid #e0e0e0;
             line-height: 1.5;
         }
-        
-        /* Toggle Switch Style */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
+		/* Toggle Switch Style */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 24px;
-        }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+}
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
 
-        input:checked + .slider {
-            background-color: #1171ba;
-        }
+input:checked + .slider {
+    background-color: #1171ba;
+}
 
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
 
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    }
 
-        #dearProfessorLabel {
-            font-size: 14px;
-            color: #333;
-        }
+#dearProfessorLabel {
+    font-size: 14px;
+    color: #333;
+}
 
         #undoButton,
         #lockButton {
@@ -264,19 +263,29 @@
         }
 
         #okButton {
-            align-self: flex-end;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
+    align-self: flex-end;
+    background-color: #28a745; /* Green color */
+    border: none;
+    color: white;
+    padding: 10px 20px; /* Smaller padding */
+    font-size: 14px; /* Smaller font size */
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
 
-        #okButton:hover {
-            background-color: #218838;
+#okButton:hover {
+    background-color: #218838; /* Darker green for hover effect */
+}
+
+        #adCount,
+        #dailyAdCount,
+        #remainingTime,
+        #countryCount {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
         }
 
         #loadingIndicator {
@@ -291,7 +300,7 @@
             vertical-align: middle;
         }
 
-        #countryFilters {
+        #countryCount {
             position: absolute;
             left: 20px;
             top: 250px;
@@ -299,13 +308,6 @@
             font-weight: bold;
             line-height: 1.5;
             color: #34495e;
-            width: 300px;
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-            transition: all 0.3s ease;
         }
 
         #cursorStart {
@@ -387,7 +389,7 @@
             position: absolute;
             top: 250px;
             right: 20px;
-            width: 250px;
+            width: 150px;
         }
 
         #currentTime {
@@ -398,6 +400,107 @@
             text-align: right;
         }
 
+        #remainingTimeText {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        .reminder-heading {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        .reminder-slots {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: right;
+        }
+
+        .reminder-slots li {
+            background-color: #d3eaf7;
+            color: #333;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .reminder-slots li:hover,
+        .reminder-slots li.selected {
+            background-color: #1171ba;
+            color: white;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 30px;
+            background-color: #2c3e50;
+            color: white;
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .popup button {
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.1s ease;
+            margin-top: 20px;
+        }
+
+        .popup button:hover {
+            background-color: #c0392b;
+        }
+
+        .popup button:active {
+            transform: scale(0.95);
+        }
+
+        .popup img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 20px;
+        }
+
+        .problem-heading {
+            color: #e74c3c;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .reminder-note {
+            font-style: italic;
+            font-size: 12px;
+            text-align: right;
+            margin-top: 5px;
+            color: #333;
+        }
+
+        /* Progress bar */
         .progress-bar-container {
             width: 100%;
             height: 5px;
@@ -517,258 +620,6 @@
             justify-content: flex-end;
             margin-top: 10px;
         }
-
-        /* Country toggle styles */
-        .country-toggle {
-            display: flex;
-            align-items: center;
-            margin: 5px 0;
-        }
-
-        .country-toggle-label {
-            margin-left: 10px;
-            font-size: 14px;
-        }
-
-        .country-toggle-container {
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            margin-top: 10px;
-            border: 1px solid #dee2e6;
-        }
-
-        .country-toggle-header {
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .country-toggle-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .country-toggle-actions button {
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 3px;
-            border: 1px solid #ddd;
-            background-color: #f8f9fa;
-            cursor: pointer;
-        }
-
-        .country-toggle-actions button:hover {
-            background-color: #e9ecef;
-        }
-
-        .count-badge {
-            background-color: #1171ba;
-            color: white;
-            border-radius: 10px;
-            padding: 0 5px;
-            font-size: 0.8em;
-            margin-left: 5px;
-        }
-
-        #countrySearch {
-            padding: 5px;
-            border-radius: 3px;
-            border: 1px solid #ddd;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .country-group {
-            margin-top: 15px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-
-        .country-group-header {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .country-group-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .country-group-actions button {
-            padding: 2px 5px;
-            font-size: 11px;
-        }
-
-        .add-group-btn {
-            margin-top: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .add-group-btn:hover {
-            background-color: #218838;
-        }
-
-        .group-input-container {
-            margin-top: 10px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .group-input-container input {
-            flex-grow: 1;
-            padding: 5px;
-            border-radius: 3px;
-            border: 1px solid #ddd;
-        }
-
-        .group-input-container button {
-            padding: 5px 10px;
-        }
-        
-        /* New styles for the toggle panel button */
-        .toggle-panel-btn {
-            position: absolute;
-            left: 20px;
-            top: 220px;
-            background-color: #1171ba;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .toggle-panel-btn:hover {
-            background-color: #0e619f;
-        }
-        
-        /* New styles for the stats panel */
-        .stats-panel {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-        
-        .stats-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        
-        .stats-label {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        
-        .stats-value {
-            color: #1171ba;
-            font-weight: bold;
-        }
-        
-        /* Active filter indicator */
-        .active-filter {
-            background-color: #e6f7ff;
-            border-left: 4px solid #1171ba;
-            padding-left: 10px;
-        }
-        
-        /* Professor signature style */
-        .professor-signature {
-            font-style: italic;
-            margin-top: 20px;
-            text-align: center;
-            color: #666;
-        }
-        
-        /* Button container styles */
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn.save {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .btn.save:hover {
-            background-color: #218838;
-        }
-        
-        .btn.delete {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .btn.delete:hover {
-            background-color: #c82333;
-        }
-        
-        .btn.email-list {
-            background-color: #17a2b8;
-            color: white;
-        }
-        
-        .btn.email-list:hover {
-            background-color: #138496;
-        }
-        
-        .btn.google {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        
-        .btn.google:hover {
-            background-color: #e0a800;
-        }
-        
-        .input-box {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            flex-grow: 1;
-            min-width: 200px;
-        }
-        
-        /* Hide duplicate stats elements */
-        #remainingTime, #adCount, #dailyAdCount {
-            display: none !important;
-        }
     </style>
 </head>
 
@@ -796,7 +647,7 @@
 
     <div class="font-controls" style="display:none;">
         <div class="control-group">
-            <div>
+<div>
                 <label>
                     <input type="radio" name="cutOption" value="keyboard" checked>
                     Keyboard
@@ -847,67 +698,118 @@
             </div>
         </div>
     </div>
+            			<div class="button-container">
+    <input type="email" id="unsubscribedEmail" placeholder="Enter Unsubscribed Email" class="input-box">
     
-    <div class="button-container">
-        <input type="email" id="unsubscribedEmail" placeholder="Enter Unsubscribed Email" class="input-box">
-        
-        <button onclick="saveUnsubscribedEmail()" id="exportButton" class="btn save">
-            Save
-        </button>
-        
-        <button onclick="deleteUnsubscribedEntries()" class="btn delete">
-             Delete Unsubscribed Ad ✘
-        </button>
-        
-        <button onclick="window.open('https://docs.google.com/document/d/14AIqhs3wQ_T0hV7YNH2ToBRBH1MEkzmunw2e9WNgeo8/edit?tab=t.0', '_blank')" 
-                class="btn email-list">
-            Email List
-        </button>
-        
-        <button onclick="window.open('https://docs.google.com/spreadsheets/d/10OYn06bPKVXmf__3d9Q_7kky8VHRlIKO/edit?gid=1887922208#gid=1887922208', '_blank')" class="btn google">
-            Update Ad Progress
-        </button>
-    </div>
+    <button onclick="saveUnsubscribedEmail()" id="exportButton" class="btn save">
+        Save
+    </button>
     
-    <div class="toggle-container">
-        <label class="switch">
-            <input type="checkbox" id="dearProfessorToggle" onchange="toggleDearProfessor()">
-            <span class="slider round"></span>
-        </label>
-        <span id="dearProfessorLabel">Include "Dear Professor"</span>
-    </div>
+    <button onclick="deleteUnsubscribedEntries()" class="btn delete">
+         Delete Unsubscribed Ad ✘
+    </button>
+    
+    <button onclick="window.open('https://docs.google.com/document/d/14AIqhs3wQ_T0hV7YNH2ToBRBH1MEkzmunw2e9WNgeo8/edit?tab=t.0', '_blank')" 
+            class="btn email-list">
+        Email List
+    </button>
+    
+    <button onclick="window.open('https://docs.google.com/spreadsheets/d/10OYn06bPKVXmf__3d9Q_7kky8VHRlIKO/edit?gid=1887922208#gid=1887922208', '_blank')" class="btn google">
+        Update Ad Progress
+    </button>
+</div>
+<div class="toggle-container">
+    <label class="switch">
+        <input type="checkbox" id="dearProfessorToggle" onchange="toggleDearProfessor()">
+        <span class="slider round"></span>
+    </label>
+    <span id="dearProfessorLabel">Include "Dear Professor"</span>
+</div>
 
-    <!-- Toggle panel button -->
-    <button class="toggle-panel-btn" id="togglePanelBtn" onclick="toggleCountryPanel()">◀</button>
 
-    <!-- Country Filters Panel -->
-    <div id="countryFilters" style="display:none;">
-        <div class="country-toggle-header">
-            <span>Filter Countries</span>
-            <div class="country-toggle-actions">
-                <button onclick="toggleAllCountries(true)">All</button>
-                <button onclick="toggleAllCountries(false)">None</button>
-            </div>
-        </div>
-        
-        <input type="text" id="countrySearch" placeholder="Search countries...">
-        
-        <div id="countryGroupsContainer"></div>
-        
-        <button class="add-group-btn" onclick="showAddGroupForm()">+ Add Country Group</button>
-        <div id="addGroupForm" class="group-input-container" style="display:none;">
-            <input type="text" id="newGroupName" placeholder="Group name">
-            <button onclick="addCountryGroup()">Add</button>
-            <button onclick="hideAddGroupForm()">Cancel</button>
-        </div>
-        
-        <div id="countryToggleContainer" class="country-toggle-container">
-            <!-- Country toggles will be added here dynamically -->
-        </div>
-    </div>
+<div id="successMessage" class="success-message" style="display: none;">Email saved successfully!</div>
+<!-- CSS Section -->
+<style>
+/* Container styling */
+.button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds space between the elements */
+    margin-bottom: 15px;
+}
 
-    <div id="successMessage" class="success-message" style="display: none;">Email saved successfully!</div>
+/* Input box styling */
+.input-box {
+    padding: 10px 15px;
+    font-size: 14px;
+    width: 300px; /* Adjust width to make it professional */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
 
+.input-box:focus {
+    border-color: #1171BA;
+    box-shadow: 0 0 5px rgba(17, 113, 186, 0.5);
+}
+
+/* Button styling */
+.btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Save button */
+.btn.save {
+    background-color: #1171BA; /* Blue color */
+}
+
+.btn.save:hover {
+    background-color: #0B4F87; /* Darker blue on hover */
+}
+
+/* Delete button */
+.btn.delete {
+    background-color: #DC3545; /* Red color */
+}
+
+.btn.delete:hover {
+    background-color: #A71D2A; /* Darker red on hover */
+}
+
+/* Email list button */
+.btn.email-list {
+    background-color: #0B6623; /* Green color */
+}
+
+.btn.email-list:hover {
+    background-color: #064417; /* Darker green on hover */
+}
+
+/* Google button */
+.btn.google {
+    background-color: #FF6F00; /* Orange color */
+}
+
+.btn.google:hover {
+    background-color: #C55200; /* Darker orange on hover */
+}
+
+/* Success message styling */
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px;
+}
+</style>
     <div class="input-container" style="display:none;">
         <div class="container-header" onclick="toggleBox('pasteBox')">
             Paste your text here
@@ -941,35 +843,39 @@
         </div>
     </div>
 
-    <div class="right-content">
+    <div class="top-controls" style="display:none;">
+        <div id="remainingTime">File completed by: <span id="remainingTimeText"></span> (<span id="completionPercentage">0%</span>)
+            <div class="hourglass"></div>
+        </div>
+    </div>
+
+    <div id="adCount" style="display:none;">
+        Total Advertisements: <span id="totalAds">0</span>
+        <span id="loadingIndicator">Processing, please wait...</span>
+    </div>
+    <div id="dailyAdCount" style="display:none;">Total Ads Sent Today: 0</div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div id="countryCount" style="display:none;"></div>
+
+    <div id="output" class="text-container" style="display:none;" contenteditable="true">
+        <p id="cursorStart">Place your cursor here</p>
+    </div>
+
+<div class="right-content">
         <div id="currentTime"></div>
-        
-        <!-- Stats Panel -->
-        <div class="stats-panel">
-            <div class="stats-item">
-                <span class="stats-label">File completed by:</span>
-                <span class="stats-value" id="statsRemainingTime">0h 0m (0.00%)</span>
-            </div>
-            <div class="stats-item">
-                <span class="stats-label">Total Advertisements:</span>
-                <span class="stats-value" id="statsTotalAds">0</span>
-            </div>
-            <div class="stats-item">
-                <span class="stats-label">Total Ads Today:</span>
-                <span class="stats-value" id="statsDailyAds">0</span>
-            </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="statsProgressBar"></div>
-            </div>
-        </div>
-        
-        <!-- Professor signature -->
-        <div class="professor-signature">
-            <p>Professor A. Chaoui</p>
-            <p>Laboratory of Applied Mathematics and Modelling</p>
-            <p>University 8 May 1945</p>
-            <p>Algeria</p>
-        </div>
+        <div class="reminder-heading">Ad Slots:</div>
+        <ul class="reminder-slots">
+            <li data-time="09:00">9:00-9:30 AM</li>
+            <li data-time="10:35">10:35-10:45 AM</li>
+            <li data-time="11:50">11:50-12:00 PM</li>
+            <li data-time="13:05">1:05-1:10 PM</li>
+            <li data-time="14:20">2:20-2:30 PM</li>
+            <li data-time="15:40">3:40-3:45 PM</li>
+            <li data-time="16:50">4:50-5:00 PM</li>
+        </ul>
+        <div class="reminder-note">(Select your slots to get reminder)</div>
 
         <!-- Button Container -->
         <div id="rightSidebar" style="display:none;">
@@ -978,9 +884,6 @@
             <button id="lockButton" onclick="toggleLock()">Lock</button>
         </div>
     </div>
-
-    <!-- Output Container -->
-    <div id="output" class="text-container" style="display:none;"></div>
 
     <div id="reminderPopup" class="popup">
         <span style="font-size: 50px;">⏰</span>
@@ -995,331 +898,104 @@
     <div id="credit">
         This Web-App is Developed by <a href="https://prakashsharma19.github.io/prakash/" target="_blank">Prakash</a>
     </div>
-    
+	
     <script>
-        const countryList = [
-            "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
-            "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
-        ];
+    const countryList = [
+        "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
+        "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
+    ];
 
-        // Country filter state
-        let countryFilterState = {};
-        let countryGroups = {};
-        let countryCounts = {};
-        let isCountryPanelVisible = true;
+	function showSuccessMessage(message) {
+    const successMessage = document.getElementById('successMessage');
+    successMessage.innerText = message;
+    successMessage.style.display = 'block';
 
-        // Toggle country panel visibility
-        function toggleCountryPanel() {
-            const panel = document.getElementById('countryFilters');
-            const toggleBtn = document.getElementById('togglePanelBtn');
-            
-            isCountryPanelVisible = !isCountryPanelVisible;
-            
-            if (isCountryPanelVisible) {
-                panel.style.display = 'block';
-                toggleBtn.textContent = '◀';
-                toggleBtn.style.left = '20px';
-            } else {
-                panel.style.display = 'none';
-                toggleBtn.textContent = '▶';
-                toggleBtn.style.left = '0';
+    setTimeout(() => {
+        successMessage.style.display = 'none';
+    }, 3000); // Hide the message after 3 seconds
+}
+
+// Google Sheets Configuration
+const SHEET_ID = 'SHEET-ID';
+const API_KEY = 'Enter-API';
+const SHEET_NAME = 'Unsubscribed Emails';  // Ensure this matches the sheet name in Google Sheets
+
+// Fetch unsubscribed emails from Google Sheets and save to local storage
+// Helper to fetch unsubscribed emails from localStorage or Google Sheets on load
+async function fetchUnsubscribedEmails() {
+    const storedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+    // Fetch from Google Sheets on load
+    const googleEmails = await fetchEmailsFromGoogleSheet();
+    const allEmails = [...new Set([...storedEmails, ...googleEmails])]; // Combine and de-duplicate
+    localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(allEmails));
+    processText();
+}
+
+// Fetch from Google Sheets only (used in fetchUnsubscribedEmails)
+async function fetchEmailsFromGoogleSheet() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:A?key=${API_KEY}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.values ? data.values.flat().map(email => email.toLowerCase()) : [];
+    } catch (error) {
+        console.error('Error fetching unsubscribed emails from Google Sheets:', error);
+        return [];
+    }
+}
+
+// Add new unsubscribed email to local storage (on change event)
+document.getElementById('unsubscribedEmail').addEventListener('change', function() {
+    const newEmail = this.value.trim().toLowerCase();
+    if (newEmail) {
+        addUnsubscribedEmail(newEmail);
+        this.value = ''; // Clear input box after storing
+        processText(); // Re-process text to apply highlighting
+    }
+});
+
+// Store new unsubscribed email locally
+function addUnsubscribedEmail(email) {
+    const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+    if (!emails.includes(email)) {
+        emails.push(email);
+        localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(emails));
+    }
+}
+
+// Highlight unsubscribed emails
+function highlightUnsubscribed(text) {
+    const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+    unsubscribedEmails.forEach(email => {
+        const emailRegex = new RegExp(`(${email})`, 'gi');
+        text = text.replace(emailRegex, '<span class="highlight-unsubscribed">$1</span>');
+    });
+    return text;
+}
+
+// Load unsubscribed emails when the page loads
+document.addEventListener('DOMContentLoaded', fetchUnsubscribedEmails);
+
+// Delete paragraphs containing unsubscribed emails
+function deleteUnsubscribedEntries() {
+    const outputContainer = document.getElementById('output');
+    const paragraphs = outputContainer.querySelectorAll('p');
+    const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+    let deletedCount = 0;
+
+    paragraphs.forEach(paragraph => {
+        unsubscribedEmails.forEach(email => {
+            if (paragraph.innerHTML.includes(email)) {
+                paragraph.remove();
+                deletedCount++;
             }
-            
-            // Save panel state
-            if (currentUser) {
-                localStorage.setItem(`countryPanelState_${currentUser}`, isCountryPanelVisible);
-            }
-        }
-
-        // Initialize country filter state and groups
-        function initializeCountryFilter() {
-            countryList.forEach(country => {
-                countryFilterState[country] = true; // Default to true (enabled)
-                countryCounts[country] = 0;
-            });
-            
-            // Load saved state from localStorage
-            const savedState = localStorage.getItem('countryFilterState');
-            if (savedState) {
-                const parsedState = JSON.parse(savedState);
-                Object.keys(parsedState).forEach(country => {
-                    if (countryFilterState.hasOwnProperty(country)) {
-                        countryFilterState[country] = parsedState[country];
-                    }
-                });
-            }
-            
-            // Load saved groups
-            const savedGroups = localStorage.getItem('countryGroups');
-            if (savedGroups) {
-                countryGroups = JSON.parse(savedGroups);
-            } else {
-                // Create some default groups
-                countryGroups = {
-                    "Asia": ["India", "China", "Japan", "South Korea", "Singapore", "Thailand", "Vietnam", "Malaysia"],
-                    "Europe": ["France", "Germany", "Italy", "Spain", "United Kingdom", "Poland", "Sweden"],
-                    "Americas": ["United States", "Canada", "Brazil", "Mexico", "Argentina"]
-                };
-                saveCountryGroups();
-            }
-            
-            renderCountryGroups();
-            renderCountryToggles();
-            
-            // Load panel state
-            if (currentUser) {
-                const savedPanelState = localStorage.getItem(`countryPanelState_${currentUser}`);
-                if (savedPanelState !== null) {
-                    isCountryPanelVisible = savedPanelState === 'true';
-                    if (!isCountryPanelVisible) {
-                        document.getElementById('countryFilters').style.display = 'none';
-                        document.getElementById('togglePanelBtn').textContent = '▶';
-                        document.getElementById('togglePanelBtn').style.left = '0';
-                    }
-                }
-            }
-        }
-
-        // Save country groups to localStorage
-        function saveCountryGroups() {
-            localStorage.setItem('countryGroups', JSON.stringify(countryGroups));
-        }
-
-        // Render country groups in the UI
-        function renderCountryGroups() {
-            const container = document.getElementById('countryGroupsContainer');
-            container.innerHTML = '';
-            
-            Object.keys(countryGroups).forEach(groupName => {
-                const groupDiv = document.createElement('div');
-                groupDiv.className = 'country-group';
-                groupDiv.innerHTML = `
-                    <div class="country-group-header">
-                        <span>${groupName}</span>
-                        <div class="country-group-actions">
-                            <button onclick="toggleGroup('${groupName}', true)">On</button>
-                            <button onclick="toggleGroup('${groupName}', false)">Off</button>
-                            <button onclick="removeGroup('${groupName}')">×</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(groupDiv);
-            });
-        }
-
-        // Toggle all countries in a group
-        function toggleGroup(groupName, enable) {
-            if (countryGroups[groupName]) {
-                countryGroups[groupName].forEach(country => {
-                    if (countryFilterState.hasOwnProperty(country)) {
-                        countryFilterState[country] = enable;
-                        const checkbox = document.getElementById(`toggle-${country.replace(/\s+/g, '-')}`);
-                        if (checkbox) checkbox.checked = enable;
-                    }
-                });
-                saveCountryFilterState();
-                filterOutputByCountries();
-                
-                // Highlight the group header to show it's active
-                const groupHeaders = document.querySelectorAll('.country-group-header');
-                groupHeaders.forEach(header => {
-                    if (header.textContent.includes(groupName)) {
-                        if (enable) {
-                            header.classList.add('active-filter');
-                        } else {
-                            header.classList.remove('active-filter');
-                        }
-                    }
-                });
-            }
-        }
-
-        // Remove a country group
-        function removeGroup(groupName) {
-            if (confirm(`Are you sure you want to remove the group "${groupName}"?`)) {
-                delete countryGroups[groupName];
-                saveCountryGroups();
-                renderCountryGroups();
-            }
-        }
-
-        // Show add group form
-        function showAddGroupForm() {
-            document.getElementById('addGroupForm').style.display = 'flex';
-            document.getElementById('newGroupName').focus();
-        }
-
-        // Hide add group form
-        function hideAddGroupForm() {
-            document.getElementById('addGroupForm').style.display = 'none';
-            document.getElementById('newGroupName').value = '';
-        }
-
-        // Add a new country group
-        function addCountryGroup() {
-            const groupName = document.getElementById('newGroupName').value.trim();
-            if (groupName && !countryGroups[groupName]) {
-                // Get selected countries
-                const selectedCountries = [];
-                document.querySelectorAll('.country-toggle input[type="checkbox"]:checked').forEach(checkbox => {
-                    const country = checkbox.id.replace('toggle-', '').replace(/-/g, ' ');
-                    if (countryList.includes(country)) {
-                        selectedCountries.push(country);
-                    }
-                });
-                
-                if (selectedCountries.length > 0) {
-                    countryGroups[groupName] = selectedCountries;
-                    saveCountryGroups();
-                    renderCountryGroups();
-                    hideAddGroupForm();
-                } else {
-                    alert('Please select at least one country for the group');
-                }
-            } else if (countryGroups[groupName]) {
-                alert('A group with this name already exists');
-            } else {
-                alert('Please enter a valid group name');
-            }
-        }
-
-        // Render country toggles in the UI
-        function renderCountryToggles() {
-            const container = document.getElementById('countryToggleContainer');
-            container.innerHTML = '';
-            
-            // Sort countries alphabetically
-            const sortedCountries = Object.keys(countryFilterState).sort();
-            
-            sortedCountries.forEach(country => {
-                const toggle = document.createElement('div');
-                toggle.className = 'country-toggle';
-                toggle.innerHTML = `
-                    <label class="switch">
-                        <input type="checkbox" id="toggle-${country.replace(/\s+/g, '-')}" 
-                               ${countryFilterState[country] ? 'checked' : ''} 
-                               onchange="toggleCountry('${country}', this.checked)">
-                        <span class="slider round"></span>
-                    </label>
-                    <span class="country-toggle-label">
-                        ${country} <span class="count-badge">${countryCounts[country] || 0}</span>
-                    </span>
-                `;
-                container.appendChild(toggle);
-            });
-        }
-
-        // Toggle a single country
-        function toggleCountry(country, isEnabled) {
-            countryFilterState[country] = isEnabled;
-            saveCountryFilterState();
-            filterOutputByCountries();
-            
-            // Highlight the toggle to show it's active
-            const toggleElement = document.getElementById(`toggle-${country.replace(/\s+/g, '-')}`).parentElement.parentElement;
-            if (isEnabled) {
-                toggleElement.classList.add('active-filter');
-            } else {
-                toggleElement.classList.remove('active-filter');
-            }
-        }
-
-        // Toggle all countries
-        function toggleAllCountries(enable) {
-            Object.keys(countryFilterState).forEach(country => {
-                countryFilterState[country] = enable;
-                const checkbox = document.getElementById(`toggle-${country.replace(/\s+/g, '-')}`);
-                if (checkbox) checkbox.checked = enable;
-                
-                // Update the visual state
-                const toggleElement = checkbox.parentElement.parentElement;
-                if (enable) {
-                    toggleElement.classList.add('active-filter');
-                } else {
-                    toggleElement.classList.remove('active-filter');
-                }
-            });
-            saveCountryFilterState();
-            filterOutputByCountries();
-        }
-
-        // Save the current filter state to localStorage
-        function saveCountryFilterState() {
-            localStorage.setItem('countryFilterState', JSON.stringify(countryFilterState));
-        }
-
-        // Filter the output based on enabled countries
-        function filterOutputByCountries() {
-            const outputContainer = document.getElementById('output');
-            if (!outputContainer) return;
-            
-            const paragraphs = outputContainer.querySelectorAll('p');
-            
-            paragraphs.forEach(paragraph => {
-                let hasEnabledCountry = false;
-                const text = paragraph.innerText;
-                
-                // Check if the paragraph contains any enabled country
-                for (const country in countryFilterState) {
-                    if (countryFilterState[country] && text.includes(country)) {
-                        hasEnabledCountry = true;
-                        break;
-                    }
-                }
-                
-                // Show/hide paragraph based on country filter
-                paragraph.style.display = hasEnabledCountry ? '' : 'none';
-            });
-            
-            updateCounts();
-        }
-
-        // Update country counts based on current output
-        function updateCountryCounts() {
-            // Reset counts
-            Object.keys(countryCounts).forEach(country => {
-                countryCounts[country] = 0;
-            });
-            
-            const outputContainer = document.getElementById('output');
-            if (!outputContainer) return;
-            
-            const paragraphs = outputContainer.querySelectorAll('p');
-            
-            paragraphs.forEach(paragraph => {
-                const text = paragraph.innerText;
-                for (const country in countryCounts) {
-                    if (text.includes(country)) {
-                        countryCounts[country]++;
-                    }
-                }
-            });
-            
-            // Update count badges
-            document.querySelectorAll('.count-badge').forEach(badge => {
-                const country = badge.parentElement.textContent.replace(/\s+\d+$/, '').trim();
-                badge.textContent = countryCounts[country] || 0;
-            });
-        }
-
-        // Add search functionality
-        document.getElementById('countrySearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            document.querySelectorAll('.country-toggle').forEach(toggle => {
-                const countryName = toggle.querySelector('.country-toggle-label').textContent.toLowerCase();
-                toggle.style.display = countryName.includes(searchTerm) ? '' : 'none';
-            });
         });
+    });
 
-        function showSuccessMessage(message) {
-            const successMessage = document.getElementById('successMessage');
-            successMessage.innerText = message;
-            successMessage.style.display = 'block';
+    saveText(); // Save changes after deleting
+    return deletedCount; // Return the number of deleted entries
+}
 
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
-        }
 
         let currentUser = null;
         let dailyAdCount = 0;
@@ -1338,7 +1014,147 @@
                 alert('Incorrect password. Memory not cleared.');
             }
         }
+function deleteUnsubscribedEntries() {
+    const outputContainer = document.getElementById('output');
+    const paragraphs = outputContainer.querySelectorAll('p');
+    const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+    const deletedEmails = [];
 
+    paragraphs.forEach(paragraph => {
+        unsubscribedEmails.forEach(email => {
+            if (paragraph.innerHTML.includes(email)) {
+                paragraph.remove();
+                deletedEmails.push(email);
+            }
+        });
+    });
+
+    if (deletedEmails.length > 0) {
+        displayDeletedAddressesPopup(deletedEmails);
+    }
+
+    saveText();
+    showSuccessMessage(`Successfully Deleted ${deletedEmails.length} addresses.`);
+}
+
+function showPopupNotification(message) {
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #1171ba;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    `;
+    popup.innerText = message;
+
+    const closeButton = document.createElement('button');
+    closeButton.innerText = 'OK';
+    closeButton.style.cssText = `
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: white;
+        color: #1171ba;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    `;
+    closeButton.onclick = () => {
+        popup.remove();
+    };
+
+    popup.appendChild(closeButton);
+    document.body.appendChild(popup);
+}
+
+// Function to display popup for deleted addresses
+function displayDeletedAddressesPopup(deletedEmails) {
+    let currentIndex = 0;
+
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #2c3e50;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        text-align: center;
+    `;
+
+    const message = document.createElement('div');
+    message.style.fontSize = '18px';
+    message.innerText = `Deleted Address: ${deletedEmails[currentIndex]}`;
+
+    const navigation = document.createElement('div');
+    navigation.style.margin = '10px 0';
+
+    const prevButton = document.createElement('button');
+    prevButton.innerText = '<';
+    prevButton.disabled = currentIndex === 0;
+    prevButton.style.marginRight = '10px';
+
+    const nextButton = document.createElement('button');
+    nextButton.innerText = '>';
+    nextButton.disabled = currentIndex === deletedEmails.length - 1;
+
+    navigation.appendChild(prevButton);
+    navigation.appendChild(nextButton);
+
+    const okButton = document.createElement('button');
+    okButton.innerText = 'OK';
+    okButton.style.marginTop = '10px';
+    okButton.style.backgroundColor = '#28a745';
+    okButton.style.color = 'white';
+    okButton.style.border = 'none';
+    okButton.style.padding = '10px 20px';
+    okButton.style.cursor = 'pointer';
+    okButton.style.borderRadius = '5px';
+
+    okButton.addEventListener('click', () => {
+        popup.remove();
+    });
+
+    prevButton.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            message.innerText = `Deleted Address: ${deletedEmails[currentIndex]}`;
+            nextButton.disabled = currentIndex === deletedEmails.length - 1;
+            prevButton.disabled = currentIndex === 0;
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentIndex < deletedEmails.length - 1) {
+            currentIndex++;
+            message.innerText = `Deleted Address: ${deletedEmails[currentIndex]}`;
+            prevButton.disabled = currentIndex === 0;
+            nextButton.disabled = currentIndex === deletedEmails.length - 1;
+        }
+    });
+
+    popup.appendChild(message);
+    popup.appendChild(navigation);
+    popup.appendChild(okButton);
+    document.body.appendChild(popup);
+}
         function saveText() {
             const inputText = document.getElementById('inputText').value;
             const roughText = document.getElementById('roughText').value;
@@ -1352,6 +1168,7 @@
                 localStorage.setItem(`dailyAdCount_${currentUser}`, dailyAdCount);
                 localStorage.setItem(`lastCutTime_${currentUser}`, Date.now());
                 localStorage.setItem(`totalParagraphs_${currentUser}`, totalParagraphs);
+                saveSelectedReminders();
                 saveEffectPreferences();
                 saveOperationPreferences();
                 saveFontPreferences();
@@ -1404,11 +1221,11 @@
                 }
                 loadEffectPreferences();
                 loadOperationPreferences();
+                loadSelectedReminders();
                 updateCounts();
                 updateFont();
                 document.getElementById('rightSidebar').style.display = 'block';
                 document.getElementById('lockButton').style.display = 'inline-block';
-                document.getElementById('output').style.display = 'block';
             }
         }
 
@@ -1428,7 +1245,7 @@
 
         function countCountryOccurrences(text) {
             const lines = text.split('\n');
-            const counts = {};
+            const countryCounts = {};
 
             for (let i = 0; i < lines.length - 1; i++) {
                 const line = lines[i].trim();
@@ -1437,12 +1254,12 @@
                 if (nextLine.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
                     countryList.forEach(country => {
                         if (line.includes(country)) {
-                            counts[country] = (counts[country] || 0) + 1;
+                            countryCounts[country] = (countryCounts[country] || 0) + 1;
                         }
                     });
                 }
             }
-            return counts;
+            return countryCounts;
         }
 
         function highlightErrors(text) {
@@ -1457,35 +1274,36 @@
         }
 
         function updateCounts() {
-            const outputContainer = document.getElementById('output');
-            if (!outputContainer) return;
-            
-            const paragraphs = outputContainer.querySelectorAll('p');
-            let adCount = 0;
+    const outputContainer = document.getElementById('output');
+    const paragraphs = outputContainer.querySelectorAll('p');
+    let adCount = 0;
 
-            // Increment count based on the start of each paragraph ("To" or "Professor")
-            paragraphs.forEach(paragraph => {
-                if (paragraph.style.display !== 'none') {
-                    const firstLine = paragraph.innerText.split('\n')[0];
-                    if (firstLine.startsWith('To') || firstLine.startsWith('Professor')) {
-                        adCount += 1;
-                    }
-                }
+    // Increment count based on the start of each paragraph ("To" or "Professor")
+    paragraphs.forEach(paragraph => {
+        const firstLine = paragraph.innerText.split('\n')[0];
+        if (firstLine.startsWith('To') || firstLine.startsWith('Professor')) {
+            adCount += 1;
+        }
+    });
+
+    document.getElementById('totalAds').innerText = adCount;
+    document.getElementById('dailyAdCount').innerText = `Total Ads Today: ${dailyAdCount}`;
+
+            const text = outputContainer.innerText;
+            const countryCounts = countCountryOccurrences(text);
+            const sortedCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
+            let countryCountText = 'Country Counts:<br>';
+            sortedCountries.forEach(([country, count]) => {
+                countryCountText += `<b>${country}</b>: ${count}<br>`;
             });
-
-            // Update stats panel
-            document.getElementById('statsTotalAds').textContent = adCount;
-            document.getElementById('statsDailyAds').textContent = dailyAdCount;
-
-            // Update country counts
-            updateCountryCounts();
+            document.getElementById('countryCount').innerHTML = countryCountText.trim();
 
             updateProgressBar(dailyAdCount);
             updateRemainingTime(dailyAdCount);
         }
 
         function updateProgressBar(dailyAdCount) {
-            const progressBar = document.getElementById('statsProgressBar');
+            const progressBar = document.getElementById('progressBar');
             const maxCount = 5000;
 
             const percentage = Math.min(dailyAdCount / maxCount, 1) * 100;
@@ -1505,199 +1323,194 @@
 
             const percentageCompleted = Math.min((dailyAdCount / totalParagraphs) * 100, 100).toFixed(2);
 
-            document.getElementById('statsRemainingTime').textContent = 
-                hours > 0 ? `${hours}h ${minutes}m (${percentageCompleted}%)` : `${minutes}m (${percentageCompleted}%)`;
+            document.getElementById('remainingTimeText').innerText = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+            document.getElementById('completionPercentage').innerText = `${percentageCompleted}%`;
         }
 
         let includeDearProfessor = true;
 
-        // Initialize the toggle state from localStorage
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedState = localStorage.getItem('includeDearProfessor');
-            if (savedState !== null) {
-                includeDearProfessor = savedState === 'true';
-                document.getElementById('dearProfessorToggle').checked = includeDearProfessor;
-                updateToggleLabel();
-            }
-            initializeCountryFilter();
-        });
+// Initialize the toggle state from localStorage
+document.addEventListener('DOMContentLoaded', () => {
+    const savedState = localStorage.getItem('includeDearProfessor');
+    if (savedState !== null) {
+        includeDearProfessor = savedState === 'true';
+        document.getElementById('dearProfessorToggle').checked = includeDearProfessor;
+        updateToggleLabel();
+    }
+});
 
-        function toggleDearProfessor() {
-            includeDearProfessor = document.getElementById('dearProfessorToggle').checked;
-            localStorage.setItem('includeDearProfessor', includeDearProfessor);
-            updateToggleLabel();
-        }
+function toggleDearProfessor() {
+    includeDearProfessor = document.getElementById('dearProfessorToggle').checked;
+    localStorage.setItem('includeDearProfessor', includeDearProfessor);
+    updateToggleLabel();
+}
 
-        function updateToggleLabel() {
-            const label = document.getElementById('dearProfessorLabel');
-            label.innerText = includeDearProfessor ? '✔ "Dear Professor"' : '✘ "Dear Professor"';
-        }
+function updateToggleLabel() {
+    const label = document.getElementById('dearProfessorLabel');
+    label.innerText = includeDearProfessor ? '✔ "Dear Professor"' : '✘ "Dear Professor"';
+}
 
-        function processText() {
-            if (isProcessing) return;
 
-            isProcessing = true;
-            document.getElementById('loadingIndicator').style.display = 'inline';
+// Update the toggle button text
+function updateToggleUI() {
+    const toggleButton = document.querySelector('.btn.toggle-dear-professor');
+    toggleButton.innerText = includeDearProfessor ? 'Exclude "Dear Professor"' : 'Include "Dear Professor"';
+}
 
-            const inputText = document.getElementById('inputText').value;
-            const paragraphs = inputText.split(/\n\s*\n/);
-            totalParagraphs = paragraphs.length;
-            const outputContainer = document.getElementById('output');
-            const incompleteContainer = document.getElementById('incompleteText');
-            outputContainer.innerHTML = '<p id="cursorStart">Place your cursor here</p>';
-            incompleteContainer.value = '';
+// Update processText function to include/exclude "Dear Professor"
+function processText() {
+    if (isProcessing) return;
 
-            let index = 0;
-            const nonRussiaEntries = [];
-            const russiaEntries = [];
+    isProcessing = true;
+    document.getElementById('loadingIndicator').style.display = 'inline';
 
-            const gapOption = document.getElementById('gapOption').value;
+    const inputText = document.getElementById('inputText').value;
+    const paragraphs = inputText.split(/\n\s*\n/);
+    totalParagraphs = paragraphs.length;
+    const outputContainer = document.getElementById('output');
+    const incompleteContainer = document.getElementById('incompleteText');
+    outputContainer.innerHTML = '<p id="cursorStart">Place your cursor here</p>';
+    incompleteContainer.value = '';
 
-            function processChunk() {
-                const chunkSize = 10;
-                const end = Math.min(index + chunkSize, paragraphs.length);
-                for (; index < end; index++) {
-                    let paragraph = paragraphs[index].trim();
-                    if (paragraph !== '') {
-                        const lines = paragraph.split('\n');
-                        let firstLine = lines[0].trim();
+    let index = 0;
+    const nonRussiaEntries = [];
+    const russiaEntries = [];
 
-                        // Ensure the first line starts with "Professor"
-                        if (!firstLine.startsWith('Professor')) {
-                            firstLine = `Professor ${firstLine}`;
-                            lines[0] = firstLine;
-                        }
+    const gapOption = document.getElementById('gapOption').value;
 
-                        let lastName = firstLine.split(' ').pop();
+    function processChunk() {
+        const chunkSize = 10;
+        const end = Math.min(index + chunkSize, paragraphs.length);
+        for (; index < end; index++) {
+            let paragraph = paragraphs[index].trim();
+            if (paragraph !== '') {
+                const lines = paragraph.split('\n');
+                let firstLine = lines[0].trim();
 
-                        if (includeDearProfessor) {
-                            const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-                            const emailLineIndex = lines.findIndex(line => emailRegex.test(line));
-                            if (emailLineIndex !== -1) {
-                                const greeting = `Dear Professor ${lastName},`;
-                                if (gapOption === 'nil') {
-                                    lines.splice(emailLineIndex + 1, 0, greeting);
-                                } else {
-                                    lines.splice(emailLineIndex + 1, 0, '', greeting);
-                                }
-                            }
-                        }
+                // Ensure the first line starts with "Professor"
+                if (!firstLine.startsWith('Professor')) {
+                    firstLine = `Professor ${firstLine}`;
+                    lines[0] = firstLine;
+                }
 
-                        let processedParagraph = lines.join('\n');
-                        const highlightedText = highlightErrors(processedParagraph.replace(/\n/g, '<br>'));
-                        const hasError = highlightedText.includes('error');
+                let lastName = firstLine.split(' ').pop();
 
-                        if (hasError) {
-                            incompleteContainer.value += `${highlightedText.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '')}\n\n`;
+                if (includeDearProfessor) {
+                    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                    const emailLineIndex = lines.findIndex(line => emailRegex.test(line));
+                    if (emailLineIndex !== -1) {
+                        const greeting = `Dear Professor ${lastName},`;
+                        if (gapOption === 'nil') {
+                            lines.splice(emailLineIndex + 1, 0, greeting);
                         } else {
-                            const p = document.createElement('p');
-                            p.innerHTML = highlightedText;
-
-                            if (paragraph.includes('Russia')) {
-                                russiaEntries.push(p);
-                            } else {
-                                nonRussiaEntries.push(p);
-                            }
+                            lines.splice(emailLineIndex + 1, 0, '', greeting);
                         }
                     }
                 }
-                if (index < paragraphs.length) {
-                    setTimeout(processChunk, 0); // Use setTimeout to prevent UI freeze
+
+                let processedParagraph = lines.join('\n');
+                const highlightedText = highlightErrors(processedParagraph.replace(/\n/g, '<br>'));
+                const hasError = highlightedText.includes('error');
+
+                if (hasError) {
+                    incompleteContainer.value += `${highlightedText.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '')}\n\n`;
                 } else {
-                    // Append all non-Russia entries first
-                    nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
-                    
-                    // Then append all Russia entries
-                    russiaEntries.forEach(entry => outputContainer.appendChild(entry));
+                    const p = document.createElement('p');
+                    p.innerHTML = highlightedText;
 
-                    updateCounts();
-                    saveText();
-                    document.getElementById('loadingIndicator').style.display = 'none';
-
-                    // Apply country filter after processing
-                    filterOutputByCountries();
-
-                    // Automatically delete unsubscribed entries
-                    const deletedCount = deleteUnsubscribedEntries();
-
-                    // Show a popup notification if unsubscribed entries were deleted
-                    if (deletedCount > 0) {
-                        showPopupNotification(`Deleted ${deletedCount} unsubscribed entries.`);
+                    if (paragraph.includes('Russia')) {
+                        russiaEntries.push(p);
+                    } else {
+                        nonRussiaEntries.push(p);
                     }
-
-                    isProcessing = false;
                 }
             }
-            processChunk();
         }
+        if (index < paragraphs.length) {
+            requestAnimationFrame(processChunk);
+        } else {
+            nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
+            russiaEntries.forEach(entry => outputContainer.appendChild(entry));
 
-        function cutParagraph(paragraph) {
-            if (cutCooldown || !paragraph) return;
-            cutCooldown = true;
-
-            const textToCopy = paragraph.innerText;
-            cutHistory.push(textToCopy);
-
-            const effectType = document.getElementById('effectType').value;
-            const effectsEnabled = document.getElementById('effectsToggle').checked;
-
-            // Always remove "To\n" prefix if present.
-            let textToProcess = textToCopy.replace(/^To\n/, '');
-
-            if (effectsEnabled && effectType !== 'none') {
-                paragraph.classList.add(effectType);
-                paragraph.addEventListener('animationend', () => {
-                    copyAndRemoveParagraph(paragraph, textToProcess);
-                });
-            } else {
-                copyAndRemoveParagraph(paragraph, textToProcess);
-            }
-
-            setTimeout(() => {
-                cutCooldown = false;
-            }, 100); // Reduced cooldown time
-        }
-
-        function copyAndRemoveParagraph(paragraph, textToCopy) {
-            // Create a temporary textarea for copying
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.style.position = 'fixed';
-            tempTextarea.style.opacity = '0';
-            tempTextarea.value = textToCopy;
-            document.body.appendChild(tempTextarea);
-            tempTextarea.select();
-            
-            try {
-                document.execCommand('copy');
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
-            }
-            
-            document.body.removeChild(tempTextarea);
-
-            // Remove the paragraph from the DOM
-            if (paragraph && paragraph.parentNode) {
-                paragraph.parentNode.removeChild(paragraph);
-            }
-
-            // Update the input text by removing the processed content
-            const inputText = document.getElementById('inputText');
-            const currentInput = inputText.value;
-            const updatedInput = currentInput.replace(textToCopy.split('\nDear Professor')[0], '').trim();
-            inputText.value = updatedInput;
-
-            // Update counters and save
-            dailyAdCount++;
             updateCounts();
             saveText();
+            document.getElementById('lockButton').style.display = 'inline-block';
+            document.getElementById('loadingIndicator').style.display = 'none';
 
-            // Show undo button
-            document.getElementById('undoButton').style.display = 'block';
+            // Automatically delete unsubscribed entries
+            const deletedCount = deleteUnsubscribedEntries();
 
-            // Focus on output container
-            document.getElementById('output').focus();
+            // Show a popup notification if unsubscribed entries were deleted
+            if (deletedCount > 0) {
+                showPopupNotification(`Deleted ${deletedCount} unsubscribed entries.`);
+            }
+
+            isProcessing = false;
         }
+    }
+    requestAnimationFrame(processChunk);
+}
 
+
+
+
+
+        function cutParagraph(paragraph) {
+    if (cutCooldown) return;
+    cutCooldown = true;
+
+    const textToCopy = paragraph.innerText;
+    cutHistory.push(textToCopy);
+
+    const effectType = document.getElementById('effectType').value;
+    const effectsEnabled = document.getElementById('effectsToggle').checked;
+
+    // Always remove "To\n" prefix if present.
+    let textToProcess = textToCopy.replace(/^To\n/, '');
+
+    if (effectsEnabled && effectType !== 'none') {
+        paragraph.classList.add(effectType);
+        paragraph.addEventListener('animationend', () => {
+            copyAndRemoveParagraph(paragraph, textToProcess);
+        });
+    } else {
+        copyAndRemoveParagraph(paragraph, textToProcess);
+    }
+
+    setTimeout(() => {
+        cutCooldown = false;
+    }, 500);
+}
+
+
+function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
+  const tempTextarea = document.createElement('textarea');
+  tempTextarea.style.position = 'fixed';
+  tempTextarea.style.opacity = '0';
+  tempTextarea.value   
+ = textToCopy;
+  document.body.appendChild(tempTextarea);
+  tempTextarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempTextarea);   
+
+
+  paragraph.remove();
+  cleanupSpaces();
+
+  const inputText = document.getElementById('inputText').value;
+  const remainingText = inputText.replace(textToCopy.split('\nDear Professor')[0], '').trim();
+  document.getElementById('inputText').value = remainingText;
+
+  dailyAdCount++;
+
+  updateCounts();
+  saveText();
+
+  document.getElementById('undoButton').style.display = 'block';
+
+  document.getElementById('output').focus();
+  }
         function undoLastCut() {
             if (cutHistory.length > 0) {
                 const lastCutText = cutHistory.pop();
@@ -1744,6 +1557,7 @@
 
                 if (paragraph && paragraph.textContent.includes('Professor')) {
                     cutParagraph(paragraph);
+
                     document.getElementById('output').focus();
                 }
             }
@@ -1752,10 +1566,7 @@
         function handleMouseClick(event) {
             const cutOption = document.querySelector('input[name="cutOption"]:checked').value;
             if (cutOption === 'mouse') {
-                const target = event.target;
-                if (target.tagName === 'P' && target.textContent.includes('Professor')) {
-                    cutParagraph(target);
-                }
+                handleCursorMovement(event);
             }
         }
 
@@ -1831,6 +1642,11 @@
                 document.querySelector('.login-container').style.display = 'none';
                 document.querySelector('.font-controls').style.display = 'block';
                 document.querySelectorAll('.input-container').forEach(container => container.style.display = 'block');
+                document.querySelector('.top-controls').style.display = 'flex';
+                document.getElementById('adCount').style.display = 'block';
+                document.getElementById('dailyAdCount').style.display = 'block';
+                document.getElementById('remainingTime').style.display = 'block';
+                document.getElementById('countryCount').style.display = 'block';
                 document.getElementById('output').style.display = 'block';
                 document.getElementById('userControls').style.display = 'flex';
                 document.getElementById('loggedInUser').innerText = username;
@@ -1845,6 +1661,11 @@
             document.querySelector('.login-container').style.display = 'block';
             document.querySelector('.font-controls').style.display = 'none';
             document.querySelectorAll('.input-container').forEach(container => container.style.display = 'none');
+            document.querySelector('.top-controls').style.display = 'none';
+            document.getElementById('adCount').style.display = 'none';
+            document.getElementById('dailyAdCount').style.display = 'none';
+            document.getElementById('remainingTime').style.display = 'none';
+            document.getElementById('countryCount').style.display = 'none';
             document.getElementById('output').style.display = 'none';
             document.getElementById('userControls').style.display = 'none';
         }
@@ -1887,6 +1708,155 @@
         // Update time every second
         setInterval(updateTime, 1000);
 
+        // Function to check if the selected time slot matches the current time
+        function checkReminders() {
+            const now = new Date();
+            const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            document.querySelectorAll('.reminder-slots li.selected').forEach(slot => {
+                if (slot.dataset.time === currentTime) {
+                    showPopup();
+                    showNotification('Ad Reminder', `It's time to send ads for ${slot.dataset.time}`);
+                    blinkBrowserIcon();
+                }
+            });
+        }
+
+        // Check reminders every minute
+        setInterval(checkReminders, 60000);
+
+        // Show the reminder popup
+        function showPopup() {
+            document.getElementById('reminderPopup').style.display = 'block';
+            blinkTab();
+        }
+
+        // Dismiss the reminder popup
+        function dismissPopup() {
+            document.getElementById('reminderPopup').style.display = 'none';
+            document.title = originalTitle;
+            clearInterval(blinkInterval);
+        }
+
+        // Handle slot selection and saving
+        document.querySelectorAll('.reminder-slots li').forEach(slot => {
+            slot.addEventListener('click', () => {
+                slot.classList.toggle('selected');
+                saveSelectedReminders();
+            });
+        });
+
+        function saveSelectedReminders() {
+            const selectedSlots = [];
+            document.querySelectorAll('.reminder-slots li.selected').forEach(slot => {
+                selectedSlots.push(slot.dataset.time);
+            });
+            localStorage.setItem(`selectedReminders_${currentUser}`, JSON.stringify(selectedSlots));
+        }
+
+        function loadSelectedReminders() {
+            const savedSlots = localStorage.getItem(`selectedReminders_${currentUser}`);
+            if (savedSlots) {
+                const selectedSlots = JSON.parse(savedSlots);
+                document.querySelectorAll('.reminder-slots li').forEach(slot => {
+                    if (selectedSlots.includes(slot.dataset.time)) {
+                        slot.classList.add('selected');
+                    }
+                });
+            }
+        }
+
+        // Blink tab title when minimized
+        let originalTitle = document.title;
+        let blinkInterval;
+
+        function blinkTab() {
+            let isOriginalTitle = true;
+            blinkInterval = setInterval(() => {
+                document.title = isOriginalTitle ? '?? Reminder: Send Ads!' : originalTitle;
+                isOriginalTitle = !isOriginalTitle;
+            }, 1000);
+        }
+
+        // Toggle Fullscreen Mode
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.querySelector('.fullscreen-button').textContent = 'Normal Screen';
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+                document.querySelector('.fullscreen-button').textContent = 'Full Screen';
+            }
+        }
+
+        // Show Desktop Notification
+        function showNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body });
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification(title, { body });
+                    }
+                });
+            }
+        }
+
+        // Blink browser icon
+        function blinkBrowserIcon() {
+            if (document.hidden) {
+                const favicon = document.querySelector('link[rel="icon"]');
+                const originalIcon = favicon.href;
+                let isOriginalIcon = true;
+                const attentionIcon = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Alarm_bell.png/600px-Alarm_bell.png';
+
+                const blinkFavicon = setInterval(() => {
+                    favicon.href = isOriginalIcon ? attentionIcon : originalIcon;
+                    isOriginalIcon = !isOriginalIcon;
+                }, 500);
+
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) {
+                        clearInterval(blinkFavicon);
+                        favicon.href = originalIcon;
+                    }
+                });
+            }
+        }
+
+        // Request Notification permission on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
+        });
+
+        // Copy incomplete entries to clipboard
+        function copyIncompleteEntries() {
+            const incompleteText = document.getElementById('incompleteText').value;
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.style.position = 'fixed';
+            tempTextarea.style.opacity = '0';
+            tempTextarea.value = incompleteText;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextarea);
+            alert('Incomplete entries copied to clipboard!');
+        }
+
+        // Handle scrolling lock and display notice
+        document.addEventListener('wheel', function(event) {
+            if (isLocked) {
+                event.preventDefault();
+                const scrollLockNotice = document.getElementById('scrollLockNotice');
+                scrollLockNotice.style.display = 'block';
+                setTimeout(() => {
+                    scrollLockNotice.style.display = 'none';
+                }, 2000);
+            }
+        }, { passive: false });
+
         function saveEffectPreferences() {
             const effectsEnabled = document.getElementById('effectsToggle').checked;
             const effectType = document.getElementById('effectType').value;
@@ -1919,183 +1889,59 @@
             if (savedOperationMode) {
                 document.querySelector(`input[name="cutOption"][value="${savedOperationMode}"]`).checked = true;
             }
+        // Function to export unsubscribed emails from localStorage as a JSON file
+function exportUnsubscribedEmails() {
+    console.log("Export button clicked");  // Debugging: Check if function is called
+
+    const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(emails));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "unsubscribed_emails.json");
+
+    // Get the export button and temporarily change its color and text
+    const exportButton = document.getElementById('exportButton');
+    if (exportButton) {
+        console.log("Export button found");  // Debugging: Verify the button element was found
+        exportButton.style.backgroundColor = 'green';
+        exportButton.innerText = 'Saved';
+
+        // Revert button color and text after 1 second
+        setTimeout(() => {
+            exportButton.style.backgroundColor = '#1171BA'; // Original color
+            exportButton.innerText = 'Export Unsubscribed Emails'; // Original text
+        }, 1000);
+    } else {
+        console.error("Export button not found");  // Error if the button ID is incorrect
+    }
+
+    // Trigger download
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    document.body.removeChild(downloadAnchor);
+}
+// Function to sync email with Google Sheets using the Google Apps Script web app
+function syncEmailWithGoogleSheets(email) {
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbz3yehn7Fc6bDqqcEVptxwrUtl9XzFeAYM1iEte_4MBxZMPFI2D0vPfSYuMjkVb2iJg/exec'; // Replace with the URL from the deployment step
+
+    fetch(webAppUrl, {
+        method: 'POST',
+        body: JSON.stringify({ email: email }),
+        headers: {
+            'Content-Type': 'application/json'
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Email synced with Google Sheets:", data);
+    })
+    .catch(error => {
+        console.error("Error syncing email:", error);
+    });
+}
 
-        function showPopupNotification(message) {
-            const popup = document.createElement('div');
-            popup.style.cssText = `
-                position: fixed;
-                top: 20%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #1171ba;
-                color: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                z-index: 1000;
-                text-align: center;
-                font-size: 18px;
-                font-weight: bold;
-            `;
-            popup.innerText = message;
-
-            const closeButton = document.createElement('button');
-            closeButton.innerText = 'OK';
-            closeButton.style.cssText = `
-                margin-top: 10px;
-                padding: 10px 20px;
-                background-color: white;
-                color: #1171ba;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 16px;
-            `;
-            closeButton.onclick = () => {
-                popup.remove();
-            };
-
-            popup.appendChild(closeButton);
-            document.body.appendChild(popup);
-        }
-
-        function deleteUnsubscribedEntries() {
-            const outputContainer = document.getElementById('output');
-            if (!outputContainer) return 0;
-            
-            const paragraphs = outputContainer.querySelectorAll('p');
-            const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
-            const deletedEmails = [];
-
-            paragraphs.forEach(paragraph => {
-                unsubscribedEmails.forEach(email => {
-                    if (paragraph.innerHTML.includes(email)) {
-                        paragraph.remove();
-                        deletedEmails.push(email);
-                    }
-                });
-            });
-
-            if (deletedEmails.length > 0) {
-                displayDeletedAddressesPopup(deletedEmails);
-            }
-
-            saveText();
-            showSuccessMessage(`Successfully Deleted ${deletedEmails.length} addresses.`);
-            return deletedEmails.length;
-        }
-
-        function displayDeletedAddressesPopup(deletedEmails) {
-            let currentIndex = 0;
-
-            const popup = document.createElement('div');
-            popup.style.cssText = `
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #2c3e50;
-                color: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-                text-align: center;
-            `;
-
-            const message = document.createElement('div');
-            message.style.fontSize = '18px';
-            message.innerText = `Deleted Address: ${deletedEmails[currentIndex]}`;
-
-            const navigation = document.createElement('div');
-            navigation.style.margin = '10px 0';
-
-            const prevButton = document.createElement('button');
-            prevButton.innerText = '<';
-            prevButton.disabled = currentIndex === 0;
-            prevButton.style.marginRight = '10px';
-
-            const nextButton = document.createElement('button');
-            nextButton.innerText = '>';
-            nextButton.disabled = currentIndex === deletedEmails.length - 1;
-
-            navigation.appendChild(prevButton);
-            navigation.appendChild(nextButton);
-
-            const okButton = document.createElement('button');
-            okButton.innerText = 'OK';
-            okButton.style.marginTop = '10px';
-            okButton.style.backgroundColor = '#28a745';
-            okButton.style.color = 'white';
-            okButton.style.border = 'none';
-            okButton.style.padding = '10px 20px';
-            okButton.style.cursor = 'pointer';
-            okButton.style.borderRadius = '5px';
-
-            okButton.addEventListener('click', () => {
-                popup.remove();
-            });
-
-            prevButton.addEventListener('click', () => {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    message.innerText = `Deleted Address: ${deletedEmails[currentIndex]}`;
-                    nextButton.disabled = currentIndex === deletedEmails.length - 1;
-                    prevButton.disabled = currentIndex === 0;
-                }
-            });
-
-            nextButton.addEventListener('click', () => {
-                if (currentIndex < deletedEmails.length - 1) {
-                    currentIndex++;
-                    message.innerText = `Deleted Address: ${deletedEmails[currentIndex]}`;
-                    prevButton.disabled = currentIndex === 0;
-                    nextButton.disabled = currentIndex === deletedEmails.length - 1;
-                }
-            });
-
-            popup.appendChild(message);
-            popup.appendChild(navigation);
-            popup.appendChild(okButton);
-            document.body.appendChild(popup);
-        }
-
-        function saveUnsubscribedEmail() {
-            const email = document.getElementById('unsubscribedEmail').value.trim();
-            if (email) {
-                const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
-                if (!emails.includes(email)) {
-                    emails.push(email);
-                    localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(emails));
-                    showSuccessMessage('Email saved successfully!');
-                    document.getElementById('unsubscribedEmail').value = '';
-                } else {
-                    showSuccessMessage('Email already exists in the list!');
-                }
-            }
-        }
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Make sure the output container exists
-            if (!document.getElementById('output')) {
-                const outputDiv = document.createElement('div');
-                outputDiv.id = 'output';
-                outputDiv.className = 'text-container';
-                outputDiv.style.display = 'none';
-                document.body.appendChild(outputDiv);
-            }
-            
-            // Initialize other components
-            initializeCountryFilter();
-            updateTime();
-        });
-    </script>
+		}
+ </script>
 </body>
 
-</html> 
+</html>
