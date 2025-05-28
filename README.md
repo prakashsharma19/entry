@@ -1,4 +1,4 @@
-<html lang="en">
+![image](https://github.com/user-attachments/assets/2d38a08c-0c3f-4086-9edc-3a475fa39f95)<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -1092,11 +1092,14 @@
             } else {
                 // Initialize with some default groups
                 countryGroups = {
-                    "Asia": ["India", "China", "Japan", "South Korea", "Singapore", "Thailand", "Vietnam", "Indonesia", "Malaysia", "Philippines"],
-                    "Europe": ["France", "Germany", "Italy", "Spain", "United Kingdom", "UK", "U.K.", "Switzerland", "Netherlands", "Belgium"],
-                    "Middle East": ["Saudi Arabia", "UAE", "U.A.E.", "Qatar", "Kuwait", "Oman", "Bahrain", "Israel"],
-                    "Africa": ["South Africa", "Egypt", "Nigeria", "Kenya", "Ghana", "Morocco", "Tunisia"],
-                    "Americas": ["United States", "USA", "U.S.A.", "Canada", "Brazil", "Brasil", "Mexico", "Argentina", "Chile", "Colombia"]
+                    "A - Japan Group": ["Indonesia", "Italy", "Japan", "Malaysia", "South Korea", "Korea", "Taiwan", "Thailand"],
+                    "B - African Group": ["Bosnia and Herzegovina", "Burkina Faso", "Chad", "Congo", "Côte d’Ivoire", "Egypt", "Kenya", "Mali", "Morocco", "Niger", "Nigeria", "Rwanda", "Senegal", "South Africa", "Togo", "Uganda", "Republic of Macedonia", "Gabon", "Ghana"],
+                    "C - Prime Group": ["Brazil", "Colombia", "Jordan", "Kuwait", "Mexico", "Qatar", "United Arab Emirates", "Philippines", "Russian Federation", "Saudi Arabia", "Vietnam"],
+                    "D - European Group": ["Austria", "France", "Germany", "Greece", "Hungary", "Luxembourg", "Spain", "Turkey", "Algeria", "Finland"],
+                    "E - Chinese Group": ["China", "Hongkong", "Iran", "Iraq"],
+                    "F - Indian Group": ["India"],
+                    "G - US Group": ["USA", "U. S. A.", "U. S. A", "U.S.A.", Canada"],
+                    "H - Other Countries": ["Afghanistan", "Albania", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Botswana", "Brunei Darussalam", "Bulgaria", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Central African Republic", "Chile", "Comoros", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Gambia", "Georgia", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Iceland", "Ireland", "Israel", "Jamaica", "Kazakhstan", "Kiribati", "Kyrgyzstan", "Lao People’s Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Madagascar", "Malawi", "Maldives", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Micronesia", "Monaco", "Mongolia", "Montenegro", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Republic of Moldova", "Romania", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Timor Leste", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkmenistan", "Tuvalu", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Yemen", "Zambia", "Zimbabwe"]
                 };
             }
         }
