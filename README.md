@@ -312,9 +312,9 @@
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            max-height: 400px;
+            max-height: 600px;
             overflow-y: auto;
-            width: 250px;
+            width: 300px;
             z-index: 100;
         }
 
@@ -661,7 +661,10 @@
         }
 
         .group-item {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
         }
 
         .group-toggle {
@@ -670,16 +673,21 @@
 
         .group-name {
             font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .group-countries {
             font-size: 12px;
             color: #666;
             margin-left: 20px;
+            margin-bottom: 5px;
         }
 
         .group-controls {
             margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
         .group-input {
@@ -702,87 +710,6 @@
 
         .group-button:hover {
             background-color: #0e619f;
-        }
-
-        /* CSS Section */
-        /* Container styling */
-        .button-container {
-            display: flex;
-            align-items: center;
-            gap: 10px; /* Adds space between the elements */
-            margin-bottom: 15px;
-        }
-
-        /* Input box styling */
-        .input-box {
-            padding: 10px 15px;
-            font-size: 14px;
-            width: 300px; /* Adjust width to make it professional */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-box:focus {
-            border-color: #1171BA;
-            box-shadow: 0 0 5px rgba(17, 113, 186, 0.5);
-        }
-
-        /* Button styling */
-        .btn {
-            padding: 10px 20px;
-            font-size: 14px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        /* Save button */
-        .btn.save {
-            background-color: #1171BA; /* Blue color */
-        }
-
-        .btn.save:hover {
-            background-color: #0B4F87; /* Darker blue on hover */
-        }
-
-        /* Delete button */
-        .btn.delete {
-            background-color: #DC3545; /* Red color */
-        }
-
-        .btn.delete:hover {
-            background-color: #A71D2A; /* Darker red on hover */
-        }
-
-        /* Email list button */
-        .btn.email-list {
-            background-color: #0B6623; /* Green color */
-        }
-
-        .btn.email-list:hover {
-            background-color: #064417; /* Darker green on hover */
-        }
-
-        /* Google button */
-        .btn.google {
-            background-color: #FF6F00; /* Orange color */
-        }
-
-        .btn.google:hover {
-            background-color: #C55200; /* Darker orange on hover */
-        }
-
-        /* Success message styling */
-        .success-message {
-            color: green;
-            font-weight: bold;
-            margin-top: 10px;
-            font-size: 16px;
         }
 
         /* Small toggle switch for countries */
@@ -834,7 +761,7 @@
         /* Collapsible sections */
         .collapsible {
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
             width: 100%;
             border: none;
             text-align: left;
@@ -842,6 +769,7 @@
             font-weight: bold;
             background-color: #f1f1f1;
             margin-top: 5px;
+            border-radius: 5px;
         }
 
         .collapsible:after {
@@ -861,6 +789,53 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.2s ease-out;
+        }
+
+        /* Search box */
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* Bulk action buttons */
+        .bulk-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .bulk-button {
+            padding: 5px 10px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .bulk-button:hover {
+            background-color: #5a6268;
+        }
+
+        .bulk-button.all {
+            background-color: #28a745;
+        }
+
+        .bulk-button.all:hover {
+            background-color: #218838;
+        }
+
+        .bulk-button.none {
+            background-color: #dc3545;
+        }
+
+        .bulk-button.none:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
@@ -1020,7 +995,14 @@
     <div id="countryCount" style="display:none;">
         <div class="country-filter">
             <button class="collapsible">Country Filters</button>
-            <div class="collapsible-content" id="countryFilters"></div>
+            <div class="collapsible-content" id="countryFilters">
+                <input type="text" id="countrySearch" class="search-box" placeholder="Search countries..." onkeyup="searchCountries()">
+                <div class="bulk-actions">
+                    <button class="bulk-button all" onclick="toggleAllCountries(true)">All</button>
+                    <button class="bulk-button none" onclick="toggleAllCountries(false)">None</button>
+                </div>
+                <div id="countryListContainer"></div>
+            </div>
         </div>
         <div class="group-management">
             <button class="collapsible">Country Groups</button>
@@ -1132,7 +1114,7 @@
         }
 
         function renderCountryFilters() {
-            const container = document.getElementById('countryFilters');
+            const container = document.getElementById('countryListContainer');
             container.innerHTML = '';
 
             // Sort countries alphabetically
@@ -1179,7 +1161,7 @@
                     <span class="small-slider"></span>
                 `;
 
-                const name = document.createElement('span');
+                const name = document.createElement('div');
                 name.className = 'group-name';
                 name.textContent = groupName;
 
@@ -1187,9 +1169,17 @@
                 countries.className = 'group-countries';
                 countries.textContent = countryGroups[groupName].join(', ');
 
+                const groupControls = document.createElement('div');
+                groupControls.className = 'group-controls';
+                groupControls.innerHTML = `
+                    <button onclick="editGroup('${groupName}')" class="group-button">Edit</button>
+                    <button onclick="deleteGroup('${groupName}')" class="group-button">Delete</button>
+                `;
+
                 groupItem.appendChild(toggle);
                 groupItem.appendChild(name);
                 groupItem.appendChild(countries);
+                groupItem.appendChild(groupControls);
                 container.appendChild(groupItem);
             });
         }
@@ -1200,9 +1190,20 @@
             filterCountries();
         }
 
+        function toggleAllCountries(enable) {
+            for (const country in countryStates) {
+                countryStates[country] = enable;
+            }
+            saveCountryStates();
+            renderCountryFilters();
+            filterCountries();
+        }
+
         function toggleGroup(groupName, enabled) {
             countryGroups[groupName].forEach(country => {
-                countryStates[country] = enabled;
+                if (countryStates.hasOwnProperty(country)) {
+                    countryStates[country] = enabled;
+                }
             });
             saveCountryStates();
             renderCountryFilters();
@@ -1212,13 +1213,51 @@
         function createGroup() {
             const groupName = document.getElementById('newGroupName').value.trim();
             if (groupName && !countryGroups[groupName]) {
-                // For simplicity, we'll create an empty group that can be populated later
-                // In a real app, you might want to let users select countries to add to the group
+                // Create an empty group that can be edited later
                 countryGroups[groupName] = [];
                 saveCountryGroups();
                 renderCountryGroups();
                 document.getElementById('newGroupName').value = '';
             }
+        }
+
+        function editGroup(groupName) {
+            const newName = prompt("Enter new group name:", groupName);
+            if (newName && newName !== groupName) {
+                countryGroups[newName] = countryGroups[groupName];
+                delete countryGroups[groupName];
+                saveCountryGroups();
+                renderCountryGroups();
+            }
+            
+            const newCountries = prompt("Edit countries (comma separated):", countryGroups[groupName].join(', '));
+            if (newCountries !== null) {
+                countryGroups[groupName] = newCountries.split(',').map(c => c.trim()).filter(c => c);
+                saveCountryGroups();
+                renderCountryGroups();
+            }
+        }
+
+        function deleteGroup(groupName) {
+            if (confirm(`Are you sure you want to delete the group "${groupName}"?`)) {
+                delete countryGroups[groupName];
+                saveCountryGroups();
+                renderCountryGroups();
+            }
+        }
+
+        function searchCountries() {
+            const searchTerm = document.getElementById('countrySearch').value.toLowerCase();
+            const countryItems = document.querySelectorAll('.country-item');
+            
+            countryItems.forEach(item => {
+                const countryName = item.querySelector('.country-name').textContent.toLowerCase();
+                if (countryName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
 
         function filterCountries() {
