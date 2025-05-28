@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/2d38a08c-0c3f-4086-9edc-3a475fa39f95)<html lang="en">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -111,12 +111,15 @@
             position: relative;
             margin-top: 20px;
             z-index: 2;
+            max-height: 500px;
+            overflow-y: auto;
         }
 
         .text-container p {
             margin: 0 0 10px;
             border-bottom: 1px solid #e0e0e0;
             line-height: 1.5;
+            transition: all 0.1s ease-out;
         }
         /* Toggle Switch Style */
         .switch {
@@ -578,15 +581,15 @@
         }
 
         .fadeOut {
-            animation: fadeOut 0.3s forwards;
+            animation: fadeOut 0.1s forwards;
         }
 
         .vanish {
-            animation: vanish 0.3s forwards;
+            animation: vanish 0.1s forwards;
         }
 
         .explode {
-            animation: explode 0.3s forwards;
+            animation: explode 0.1s forwards;
         }
 
         .highlight-added {
@@ -837,6 +840,62 @@
         .bulk-button.none:hover {
             background-color: #c82333;
         }
+
+        /* Button styles for new buttons */
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn.save {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn.email-list {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn.google {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            flex-grow: 1;
+        }
+
+        .success-message {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 
@@ -915,6 +974,7 @@
             </div>
         </div>
     </div>
+
     <div class="button-container">
         <input type="email" id="unsubscribedEmail" placeholder="Enter Unsubscribed Email" class="input-box">
         
@@ -935,6 +995,9 @@
             Update Ad Progress
         </button>
     </div>
+
+    <div id="successMessage" class="success-message" style="display: none;">Email saved successfully!</div>
+
     <div class="toggle-container">
         <label class="switch">
             <input type="checkbox" id="dearProfessorToggle" onchange="toggleDearProfessor()">
@@ -942,8 +1005,6 @@
         </label>
         <span id="dearProfessorLabel">Include "Dear Professor"</span>
     </div>
-
-    <div id="successMessage" class="success-message" style="display: none;">Email saved successfully!</div>
 
     <div class="input-container" style="display:none;">
         <div class="container-header" onclick="toggleBox('pasteBox')">
@@ -1059,7 +1120,7 @@
     <script>
         const countryList = [
             "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
-            "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "China", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
+            "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
         ];
 
         let currentUser = null;
@@ -1071,6 +1132,8 @@
         let cutCooldown = false;
         let countryStates = {};
         let countryGroups = {};
+        let processingChunkSize = 50; // Number of paragraphs to process at once
+        let processingDelay = 0; // Delay between chunks in ms (0 for immediate processing)
 
         // Initialize country states and groups from localStorage
         function initializeCountryStates() {
@@ -1092,14 +1155,11 @@
             } else {
                 // Initialize with some default groups
                 countryGroups = {
-                    "A - Japan Group": ["Indonesia", "Italy", "Japan", "Malaysia", "South Korea", "Korea", "Taiwan", "Thailand"],
-                    "B - African Group": ["Bosnia and Herzegovina", "Burkina Faso", "Chad", "Congo", "Côte d’Ivoire", "Egypt", "Kenya", "Mali", "Morocco", "Niger", "Nigeria", "Rwanda", "Senegal", "South Africa", "Togo", "Uganda", "Republic of Macedonia", "Gabon", "Ghana"],
-                    "C - Prime Group": ["Brazil", "Colombia", "Jordan", "Kuwait", "Mexico", "Qatar", "United Arab Emirates", "Philippines", "Russian Federation", "Saudi Arabia", "Vietnam"],
-                    "D - European Group": ["Austria", "France", "Germany", "Greece", "Hungary", "Luxembourg", "Spain", "Turkey", "Algeria", "Finland"],
-                    "E - Chinese Group": ["China", "Hongkong", "Iran", "Iraq"],
-                    "F - Indian Group": ["India"],
-                    "G - US Group": ["USA", "U. S. A.", "U. S. A", "U.S.A.", "Canada"],
-                    "H - Other Countries": ["Afghanistan", "Albania", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Botswana", "Brunei Darussalam", "Bulgaria", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Central African Republic", "Chile", "Comoros", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Gambia", "Georgia", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Iceland", "Ireland", "Israel", "Jamaica", "Kazakhstan", "Kiribati", "Kyrgyzstan", "Lao People’s Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Madagascar", "Malawi", "Maldives", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Micronesia", "Monaco", "Mongolia", "Montenegro", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Republic of Moldova", "Romania", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Timor Leste", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkmenistan", "Tuvalu", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Yemen", "Zambia", "Zimbabwe"]
+                    "Asia": ["India", "China", "Japan", "South Korea", "Singapore", "Thailand", "Vietnam", "Indonesia", "Malaysia", "Philippines"],
+                    "Europe": ["France", "Germany", "Italy", "Spain", "United Kingdom", "UK", "U.K.", "Switzerland", "Netherlands", "Belgium"],
+                    "Middle East": ["Saudi Arabia", "UAE", "U.A.E.", "Qatar", "Kuwait", "Oman", "Bahrain", "Israel"],
+                    "Africa": ["South Africa", "Egypt", "Nigeria", "Kenya", "Ghana", "Morocco", "Tunisia"],
+                    "Americas": ["United States", "USA", "U.S.A.", "Canada", "Brazil", "Brasil", "Mexico", "Argentina", "Chile", "Colombia"]
                 };
             }
         }
@@ -1705,7 +1765,7 @@
             const gapOption = document.getElementById('gapOption').value;
 
             function processChunk() {
-                const chunkSize = 10;
+                const chunkSize = processingChunkSize;
                 const end = Math.min(index + chunkSize, paragraphs.length);
                 for (; index < end; index++) {
                     let paragraph = paragraphs[index].trim();
@@ -1752,10 +1812,14 @@
                         }
                     }
                 }
+                
                 if (index < paragraphs.length) {
-                    requestAnimationFrame(processChunk);
+                    // Use setTimeout with processingDelay to allow UI updates between chunks
+                    setTimeout(processChunk, processingDelay);
                 } else {
+                    // Add all non-Russia entries first
                     nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
+                    // Then add Russia entries
                     russiaEntries.forEach(entry => outputContainer.appendChild(entry));
 
                     updateCounts();
@@ -1777,7 +1841,9 @@
                     isProcessing = false;
                 }
             }
-            requestAnimationFrame(processChunk);
+            
+            // Start processing with the first chunk
+            setTimeout(processChunk, processingDelay);
         }
 
         function cutParagraph(paragraph) {
@@ -1797,40 +1863,53 @@
                 paragraph.classList.add(effectType);
                 paragraph.addEventListener('animationend', () => {
                     copyAndRemoveParagraph(paragraph, textToProcess);
-                });
+                }, { once: true }); // Ensure the event listener is removed after firing
             } else {
                 copyAndRemoveParagraph(paragraph, textToProcess);
             }
 
             setTimeout(() => {
                 cutCooldown = false;
-            }, 500);
+            }, 100); // Reduced cooldown to 100ms for faster cutting
         }
 
-        function copyAndRemoveParagraph(paragraph, textToCopy, targetElementId) {
+        function copyAndRemoveParagraph(paragraph, textToCopy) {
+            // Create a temporary textarea for copying
             const tempTextarea = document.createElement('textarea');
             tempTextarea.style.position = 'fixed';
             tempTextarea.style.opacity = '0';
             tempTextarea.value = textToCopy;
             document.body.appendChild(tempTextarea);
             tempTextarea.select();
-            document.execCommand('copy');
+            
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            
             document.body.removeChild(tempTextarea);   
 
+            // Remove the paragraph immediately
             paragraph.remove();
+            
+            // Clean up any empty spaces
             cleanupSpaces();
 
+            // Update the input text by removing the processed content
             const inputText = document.getElementById('inputText').value;
             const remainingText = inputText.replace(textToCopy.split('\nDear Professor')[0], '').trim();
             document.getElementById('inputText').value = remainingText;
 
+            // Update counters
             dailyAdCount++;
-
             updateCounts();
             saveText();
 
+            // Show undo button
             document.getElementById('undoButton').style.display = 'block';
 
+            // Focus back on the output
             document.getElementById('output').focus();
         }
 
@@ -1868,6 +1947,8 @@
         }
 
         function handleCursorMovement(event) {
+            if (isLocked) return;
+            
             const selection = window.getSelection();
             if (selection.rangeCount > 0) {
                 const range = selection.getRangeAt(0);
@@ -1880,13 +1961,14 @@
 
                 if (paragraph && paragraph.textContent.includes('Professor')) {
                     cutParagraph(paragraph);
-
                     document.getElementById('output').focus();
                 }
             }
         }
 
         function handleMouseClick(event) {
+            if (isLocked) return;
+            
             const cutOption = document.querySelector('input[name="cutOption"]:checked').value;
             if (cutOption === 'mouse') {
                 handleCursorMovement(event);
