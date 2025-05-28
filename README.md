@@ -1870,7 +1870,7 @@
 
             setTimeout(() => {
                 cutCooldown = false;
-            }, 100); // Reduced cooldown to 100ms for faster cutting
+            }, 10); // Reduced cooldown to 100ms for faster cutting
         }
 
         function copyAndRemoveParagraph(paragraph, textToCopy) {
