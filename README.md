@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,7 +121,6 @@
             line-height: 1.5;
             transition: all 0.1s ease-out;
         }
-
         /* Toggle Switch Style */
         .switch {
             position: relative;
@@ -511,7 +511,6 @@
             color: #333;
         }
 
-        /* Progress bar */
         .progress-bar-container {
             width: 100%;
             height: 5px;
@@ -545,36 +544,19 @@
             display: none;
         }
 
-        /* Animations */
         @keyframes fadeOut {
-            0% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-            }
+            0% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
         @keyframes vanish {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
         }
 
         @keyframes explode {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(3);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
         }
 
         .fadeOut {
@@ -593,7 +575,6 @@
             background-color: #f4e542;
         }
 
-        /* Credit Section */
         #credit {
             position: fixed;
             bottom: 10px;
@@ -611,7 +592,6 @@
             text-decoration: underline;
         }
 
-        /* Right Sidebar for Buttons */
         #rightSidebar {
             margin-top: 20px;
             display: flex;
@@ -621,7 +601,6 @@
             z-index: 999;
         }
 
-        /* Options in the font control pane */
         .gap-control {
             display: flex;
             align-items: center;
@@ -629,7 +608,6 @@
             margin-top: 10px;
         }
 
-        /* Country Filter Section */
         .country-filter {
             margin-top: 10px;
         }
@@ -653,7 +631,6 @@
             margin-left: 10px;
         }
 
-        /* Group Management Section */
         .group-management {
             margin-top: 15px;
             border-top: 1px solid #e0e0e0;
@@ -712,7 +689,6 @@
             background-color: #0e619f;
         }
 
-        /* Small toggle switch for countries */
         .small-switch {
             position: relative;
             display: inline-block;
@@ -758,7 +734,6 @@
             transform: translateX(20px);
         }
 
-        /* Collapsible sections */
         .collapsible {
             cursor: pointer;
             padding: 8px;
@@ -791,7 +766,6 @@
             transition: max-height 0.2s ease-out;
         }
 
-        /* Search box */
         .search-box {
             width: 100%;
             padding: 8px;
@@ -801,7 +775,6 @@
             font-size: 14px;
         }
 
-        /* Bulk action buttons */
         .bulk-actions {
             display: flex;
             gap: 10px;
@@ -838,7 +811,6 @@
             background-color: #c82333;
         }
 
-        /* Button styles for new buttons */
         .btn {
             padding: 8px 15px;
             border: none;
@@ -895,16 +867,15 @@
         }
     </style>
 </head>
+
 <body>
     <h1>
         <img src="https://raw.githubusercontent.com/prakashsharma19/hosted-images/main/pphlogo.png" alt="PPH Logo">
         Advertisements-PPH
     </h1>
 
-    <!-- Clear memory button -->
     <button class="clear-memory-button" onclick="clearMemory()">Clear Memory</button>
 
-    <!-- User Controls in upper-right corner -->
     <div id="userControls" style="display: none;">
         <img src="https://raw.githubusercontent.com/prakashsharma19/hosted-images/main/pphlogo.png" alt="PPH Logo">
         <span id="loggedInUser"></span>
@@ -1013,7 +984,6 @@
         </div>
     </div>
 
-    <!-- Incomplete Entries Box -->
     <div class="input-container" style="display:none;">
         <div class="container-header" onclick="toggleBox('incompleteBox')">
             Incomplete Entries/Removed Countries
@@ -1091,7 +1061,6 @@
         </ul>
         <div class="reminder-note">(Select your slots to get reminder)</div>
 
-        <!-- Button Container -->
         <div id="rightSidebar" style="display:none;">
             <button class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
             <button id="undoButton" style="display:none;" onclick="undoLastCut()">Undo Last Cut</button>
@@ -1105,26 +1074,40 @@
         <button onclick="dismissPopup()">OK</button>
     </div>
 
-    <!-- Scroll Lock Notice -->
     <div id="scrollLockNotice" class="scroll-lock-notice">Scrolling is locked. Unlock to scroll.</div>
 
-    <!-- Credit Section -->
     <div id="credit">
         This Web-App is Developed by <a href="https://prakashsharma19.github.io/prakash/" target="_blank">Prakash</a>
     </div>
     
     <script>
-        // Country list shortened for brevity - include your full country list here
+        // Optimized country list with common countries first for faster matching
         const countryList = [
-            "Afghanistan", "Algeria", "Andorra", "Angola", /* ... include all your countries ... */, "Zimbabwe"
+            "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "United States", "India", "China", "Japan", "UK", "U.K.", 
+            "United Kingdom", "Canada", "Germany", "France", "Italy", "Spain", "Brazil", "Brasil", "Russia", "Australia",
+            "South Korea", "Mexico", "Indonesia", "Netherlands", "Saudi Arabia", "Turkey", "Switzerland", "Argentina", 
+            "Sweden", "Poland", "Belgium", "Thailand", "Iran", "Austria", "Norway", "United Arab Emirates", "UAE", "U.A.E.",
+            "Israel", "Ireland", "Singapore", "Malaysia", "Philippines", "Denmark", "South Africa", "Egypt", "Finland", 
+            "Colombia", "Vietnam", "Viet Nam", "Chile", "Pakistan", "Bangladesh", "Romania", "Czech Republic", "Portugal", 
+            "Iraq", "Peru", "New Zealand", "Greece", "Qatar", "Algeria", "Kazakhstan", "Hungary", "Ukraine", "Morocco", 
+            "Ecuador", "Slovakia", "Cuba", "Kuwait", "Dominican Republic", "Belarus", "Oman", "Azerbaijan", "Sri Lanka", 
+            "Myanmar", "Burma", "Luxembourg", "Bulgaria", "Tunisia", "Guatemala", "Serbia", "Croatia", "Lebanon", "Costa Rica",
+            "Lithuania", "Kenya", "Panama", "Uruguay", "Slovenia", "Latvia", "Ghana", "Uganda", "Ethiopia", "Jordan", 
+            "Nepal", "Cyprus", "Tanzania", "El Salvador", "Bahrain", "Libya", "Paraguay", "Zambia", "Estonia", "Cambodia", 
+            "Senegal", "Honduras", "Botswana", "Laos", "Nicaragua", "Mongolia", "Albania", "Armenia", "Georgia", "Jamaica", 
+            "Namibia", "Mozambique", "Brunei", "Zimbabwe", "Afghanistan", "Gabon", "Cameroon", "Iceland", "Papua New Guinea", 
+            "North Macedonia", "Macedonia", "Benin", "Madagascar", "Sudan", "Niger", "Burkina Faso", "Mali", "Haiti", "Malta", 
+            "Mauritius", "Bhutan", "Barbados", "Somalia", "Maldives", "Tajikistan", "Belize", "Fiji", "Guyana", "Suriname", 
+            "Montenegro", "Rwanda", "Mauritania", "Syria", "Eswatini", "Togo", "Sierra Leone", "Andorra", "Burundi", "Lesotho", 
+            "Kyrgyzstan", "Malawi", "Liberia", "Djibouti", "Central African Republic", "Congo", "Chad", "Tchad", "Gambia", 
+            "South Sudan", "Timor-Leste", "Belgium", "Grenada", "Kiribati", "Guinea", "Solomon Islands", "Comoros", "Samoa", 
+            "Cabo Verde", "Vanuatu", "Dominica", "Seychelles", "Antigua and Barbuda", "San Marino", "Palau", "Liechtenstein", 
+            "Monaco", "Saint Kitts and Nevis", "Marshall Islands", "Saint Vincent and the Grenadines", "Saint Lucia", "Tuvalu", 
+            "Micronesia", "Tonga", "Grenada", "Nauru", "Palestine", "Vatican City", "Sao Tome and Principe", "Equatorial Guinea", 
+            "Guinea-Bissau", "Eritrea", "Hong Kong", "Macau", "Macao", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", 
+            "Taiwan", "Yemen", "Venezuela", "Bosnia and Herzegovina", "Angola", "Korea", "Bolivia", "Trinidad and Tobago", "Nigeria"
         ];
 
-        // Performance optimized variables
-        const MAX_VISIBLE_PARAGRAPHS = 50;
-        const PROCESSING_CHUNK_SIZE = 100;
-        const PROCESSING_DELAY = 0;
-        const CUT_COOLDOWN = 50; // ms
-        
         let currentUser = null;
         let dailyAdCount = 0;
         let cutHistory = [];
@@ -1134,119 +1117,7 @@
         let cutCooldown = false;
         let countryStates = {};
         let countryGroups = {};
-        let allParagraphs = [];
-        let renderedParagraphs = [];
-        let visibleStartIndex = 0;
         let includeDearProfessor = true;
-        let worker = null;
-
-        // Initialize web worker
-        function initWorker() {
-            if (window.Worker) {
-                const workerCode = `
-                    const highlightErrors = (text) => {
-                        let modifiedText = text.replace(/\\?/g, '<span class="error">?</span>');
-                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/;
-                        
-                        if (!emailRegex.test(text)) {
-                            modifiedText += ' <span class="error">Missing email</span>';
-                        }
-                        
-                        const countries = ${JSON.stringify(countryList)};
-                        
-                        if (!countries.some(country => text.includes(country))) {
-                            modifiedText += ' <span class="error">Missing country</span>';
-                        }
-                        
-                        return modifiedText;
-                    };
-
-                    self.onmessage = function(e) {
-                        if (e.data.type === 'processChunk') {
-                            const results = [];
-                            const chunk = e.data.chunk;
-                            
-                            for (let i = 0; i < chunk.length; i++) {
-                                const paragraph = chunk[i].trim();
-                                if (paragraph !== '') {
-                                    const lines = paragraph.split('\\n');
-                                    let firstLine = lines[0].trim();
-                                    
-                                    if (!firstLine.startsWith('Professor')) {
-                                        firstLine = 'Professor ' + firstLine;
-                                        lines[0] = firstLine;
-                                    }
-
-                                    const lastName = firstLine.split(' ').pop();
-
-                                    if (e.data.includeDearProfessor) {
-                                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/;
-                                        const emailLineIndex = lines.findIndex(line => emailRegex.test(line));
-                                        if (emailLineIndex !== -1) {
-                                            const greeting = 'Dear Professor ' + lastName + ',';
-                                            if (e.data.gapOption === 'nil') {
-                                                lines.splice(emailLineIndex + 1, 0, greeting);
-                                            } else {
-                                                lines.splice(emailLineIndex + 1, 0, '', greeting);
-                                            }
-                                        }
-                                    }
-
-                                    const text = lines.join('\\n');
-                                    const html = highlightErrors(text.replace(/\\n/g, '<br>'));
-                                    const hasError = html.includes('error');
-                                    
-                                    results.push({
-                                        index: e.data.index + i,
-                                        text: text,
-                                        html: html,
-                                        hasError: hasError,
-                                        isRussia: paragraph.includes('Russia')
-                                    });
-                                }
-                            }
-                            
-                            self.postMessage({
-                                type: 'processedChunk',
-                                processed: results,
-                                isLast: e.data.isLast
-                            });
-                        }
-                    };
-                `;
-
-                const blob = new Blob([workerCode], { type: 'application/javascript' });
-                worker = new Worker(URL.createObjectURL(blob));
-                
-                worker.onmessage = function(e) {
-                    if (e.data.type === 'processedChunk') {
-                        processWorkerResponse(e.data);
-                    }
-                };
-            }
-        }
-
-        // Process worker response
-        function processWorkerResponse(data) {
-            const incompleteContainer = document.getElementById('incompleteText');
-            
-            data.processed.forEach(item => {
-                if (item.hasError) {
-                    incompleteContainer.value += item.text.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '') + '\n\n';
-                } else {
-                    allParagraphs[item.index] = {
-                        id: item.index,
-                        html: item.html,
-                        text: item.text,
-                        isRussia: item.isRussia
-                    };
-                }
-            });
-            
-            if (data.isLast) {
-                finalizeProcessing();
-            }
-        }
 
         // Initialize country states and groups from localStorage
         function initializeCountryStates() {
@@ -1254,6 +1125,7 @@
             if (savedStates) {
                 countryStates = JSON.parse(savedStates);
             } else {
+                // Initialize all countries as enabled by default
                 countryList.forEach(country => {
                     countryStates[country] = true;
                 });
@@ -1265,6 +1137,7 @@
             if (savedGroups) {
                 countryGroups = JSON.parse(savedGroups);
             } else {
+                // Initialize with some default groups
                 countryGroups = {
                     "Asia": ["India", "China", "Japan", "South Korea", "Singapore", "Thailand", "Vietnam", "Indonesia", "Malaysia", "Philippines"],
                     "Europe": ["France", "Germany", "Italy", "Spain", "United Kingdom", "UK", "U.K.", "Switzerland", "Netherlands", "Belgium"],
@@ -1291,8 +1164,8 @@
             const container = document.getElementById('countryListContainer');
             container.innerHTML = '';
 
+            // Sort countries alphabetically
             const sortedCountries = Object.keys(countryStates).sort((a, b) => a.localeCompare(b));
-            const countryCounts = countCountryOccurrences();
 
             sortedCountries.forEach(country => {
                 const countryItem = document.createElement('div');
@@ -1311,7 +1184,7 @@
 
                 const count = document.createElement('span');
                 count.className = 'country-count';
-                count.textContent = `(${countryCounts[country] || 0})`;
+                count.textContent = `(${countCountryOccurrences(document.getElementById('output').innerText)[country] || 0})`;
 
                 countryItem.appendChild(toggle);
                 countryItem.appendChild(name);
@@ -1433,23 +1306,35 @@
             });
         }
 
+        // Optimized filter function
         function filterCountries() {
             const outputContainer = document.getElementById('output');
             const paragraphs = outputContainer.querySelectorAll('p');
             
+            // Create a set of enabled countries for faster lookup
+            const enabledCountries = new Set();
+            for (const country in countryStates) {
+                if (countryStates[country]) {
+                    enabledCountries.add(country.toLowerCase());
+                }
+            }
+            
+            // If all countries are disabled, show all paragraphs
+            if (enabledCountries.size === 0) {
+                paragraphs.forEach(p => p.style.display = 'block');
+                return;
+            }
+            
             paragraphs.forEach(paragraph => {
+                const text = paragraph.innerText.toLowerCase();
                 let shouldShow = false;
-                const text = paragraph.innerText;
                 
-                for (const country in countryStates) {
-                    if (countryStates[country] && text.includes(country)) {
+                // Check if any enabled country is mentioned
+                for (const country of enabledCountries) {
+                    if (text.includes(country.toLowerCase())) {
                         shouldShow = true;
                         break;
                     }
-                }
-                
-                if (!shouldShow && !Object.values(countryStates).some(state => state)) {
-                    shouldShow = true;
                 }
                 
                 paragraph.style.display = shouldShow ? 'block' : 'none';
@@ -1545,17 +1430,28 @@
             }
         }
 
-        function countCountryOccurrences() {
-            const counts = {};
-            allParagraphs.forEach(p => {
-                if (!p) return;
-                countryList.forEach(country => {
-                    if (p.text.includes(country)) {
-                        counts[country] = (counts[country] || 0) + 1;
-                    }
-                });
-            });
-            return counts;
+        function countOccurrences(text, word) {
+            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+            return (text.match(regex) || []).length;
+        }
+
+        function countCountryOccurrences(text) {
+            const lines = text.split('\n');
+            const countryCounts = {};
+
+            for (let i = 0; i < lines.length - 1; i++) {
+                const line = lines[i].trim();
+                const nextLine = lines[i + 1].trim();
+
+                if (nextLine.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
+                    countryList.forEach(country => {
+                        if (line.includes(country)) {
+                            countryCounts[country] = (countryCounts[country] || 0) + 1;
+                        }
+                    });
+                }
+            }
+            return countryCounts;
         }
 
         function highlightErrors(text) {
@@ -1570,10 +1466,13 @@
         }
 
         function updateCounts() {
+            const outputContainer = document.getElementById('output');
+            const paragraphs = outputContainer.querySelectorAll('p');
             let adCount = 0;
-            allParagraphs.forEach(p => {
-                if (p) {
-                    const firstLine = p.text.split('\n')[0];
+
+            paragraphs.forEach(paragraph => {
+                if (paragraph.style.display !== 'none') {
+                    const firstLine = paragraph.innerText.split('\n')[0];
                     if (firstLine.startsWith('To') || firstLine.startsWith('Professor')) {
                         adCount += 1;
                     }
@@ -1582,7 +1481,16 @@
 
             document.getElementById('totalAds').innerText = adCount;
             document.getElementById('dailyAdCount').innerText = `Total Ads Today: ${dailyAdCount}`;
+
+            const text = outputContainer.innerText;
+            const countryCounts = countCountryOccurrences(text);
+            const sortedCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
+            let countryCountText = 'Country Counts:<br>';
+            sortedCountries.forEach(([country, count]) => {
+                countryCountText += `<b>${country}</b>: ${count}<br>`;
+            });
             
+            renderCountryFilters();
             updateProgressBar(dailyAdCount);
             updateRemainingTime(dailyAdCount);
         }
@@ -1633,9 +1541,6 @@
                     } 
                 });
             }
-            
-            // Initialize web worker
-            initWorker();
         });
 
         function toggleDearProfessor() {
@@ -1651,299 +1556,191 @@
 
         function processText() {
             if (isProcessing) return;
-            
+
             isProcessing = true;
             document.getElementById('loadingIndicator').style.display = 'inline';
-            
+
             const inputText = document.getElementById('inputText').value;
             const paragraphs = inputText.split(/\n\s*\n/);
             totalParagraphs = paragraphs.length;
-            
-            // Clear existing content
             const outputContainer = document.getElementById('output');
-            outputContainer.innerHTML = '<p id="cursorStart">Place your cursor here</p>';
-            document.getElementById('incompleteText').value = '';
-            
-            // Reset data structures
-            allParagraphs = [];
-            renderedParagraphs = [];
-            visibleStartIndex = 0;
-            
-            // Process in chunks using web worker if available
-            if (worker) {
-                const chunkSize = 1000;
-                for (let i = 0; i < paragraphs.length; i += chunkSize) {
-                    const chunk = paragraphs.slice(i, i + chunkSize);
-                    worker.postMessage({
-                        type: 'processChunk',
-                        chunk: chunk,
-                        includeDearProfessor: includeDearProfessor,
-                        gapOption: document.getElementById('gapOption').value,
-                        index: i,
-                        isLast: (i + chunkSize >= paragraphs.length)
-                    });
-                }
-            } else {
-                // Fallback to main thread processing
-                processChunkMainThread(paragraphs, 0);
-            }
-        }
-
-        // Main thread processing fallback
-        function processChunkMainThread(paragraphs, startIndex) {
-            const chunkSize = PROCESSING_CHUNK_SIZE;
-            const endIndex = Math.min(startIndex + chunkSize, paragraphs.length);
             const incompleteContainer = document.getElementById('incompleteText');
-            
-            for (let i = startIndex; i < endIndex; i++) {
-                let paragraph = paragraphs[i].trim();
-                if (paragraph !== '') {
-                    const processed = processSingleParagraph(paragraph);
-                    
-                    if (processed.hasError) {
-                        incompleteContainer.value += processed.text + '\n\n';
-                    } else {
-                        allParagraphs[i] = {
-                            id: i,
-                            html: processed.html,
-                            text: processed.text,
-                            isRussia: processed.isRussia
-                        };
+            outputContainer.innerHTML = '<p id="cursorStart">Place your cursor here</p>';
+            incompleteContainer.value = '';
+
+            const gapOption = document.getElementById('gapOption').value;
+            const nonRussiaEntries = [];
+            const russiaEntries = [];
+
+            // Process in chunks to prevent UI freezing
+            const processChunk = (startIndex, endIndex) => {
+                for (let i = startIndex; i < endIndex; i++) {
+                    let paragraph = paragraphs[i].trim();
+                    if (paragraph !== '') {
+                        const lines = paragraph.split('\n');
+                        let firstLine = lines[0].trim();
+
+                        if (!firstLine.startsWith('Professor')) {
+                            firstLine = `Professor ${firstLine}`;
+                            lines[0] = firstLine;
+                        }
+
+                        let lastName = firstLine.split(' ').pop();
+
+                        if (includeDearProfessor) {
+                            const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                            const emailLineIndex = lines.findIndex(line => emailRegex.test(line));
+                            if (emailLineIndex !== -1) {
+                                const greeting = `Dear Professor ${lastName},`;
+                                if (gapOption === 'nil') {
+                                    lines.splice(emailLineIndex + 1, 0, greeting);
+                                } else {
+                                    lines.splice(emailLineIndex + 1, 0, '', greeting);
+                                }
+                            }
+                        }
+
+                        let processedParagraph = lines.join('\n');
+                        const highlightedText = highlightErrors(processedParagraph.replace(/\n/g, '<br>'));
+                        const hasError = highlightedText.includes('error');
+
+                        if (hasError) {
+                            incompleteContainer.value += `${highlightedText.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '')}\n\n`;
+                        } else {
+                            const p = document.createElement('p');
+                            p.innerHTML = highlightedText;
+
+                            if (paragraph.includes('Russia')) {
+                                russiaEntries.push(p);
+                            } else {
+                                nonRussiaEntries.push(p);
+                            }
+                        }
                     }
                 }
-            }
-            
-            if (endIndex < paragraphs.length) {
-                setTimeout(() => processChunkMainThread(paragraphs, endIndex), PROCESSING_DELAY);
-            } else {
-                finalizeProcessing();
-            }
-        }
-
-        // Process single paragraph (reusable function)
-        function processSingleParagraph(paragraph) {
-            const lines = paragraph.split('\n');
-            let firstLine = lines[0].trim();
-            const result = {
-                hasError: false,
-                isRussia: false,
-                text: '',
-                html: ''
             };
 
-            // Ensure the first line starts with "Professor"
-            if (!firstLine.startsWith('Professor')) {
-                firstLine = `Professor ${firstLine}`;
-                lines[0] = firstLine;
-            }
-
-            let lastName = firstLine.split(' ').pop();
-
-            if (includeDearProfessor) {
-                const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-                const emailLineIndex = lines.findIndex(line => emailRegex.test(line));
-                if (emailLineIndex !== -1) {
-                    const greeting = `Dear Professor ${lastName},`;
-                    if (document.getElementById('gapOption').value === 'nil') {
-                        lines.splice(emailLineIndex + 1, 0, greeting);
-                    } else {
-                        lines.splice(emailLineIndex + 1, 0, '', greeting);
-                    }
-                }
-            }
-
-            result.text = lines.join('\n');
-            result.html = highlightErrors(result.text.replace(/\n/g, '<br>'));
-            result.hasError = result.html.includes('error');
-            result.isRussia = paragraph.includes('Russia');
+            // Process in chunks of 100 paragraphs at a time with small delays
+            const chunkSize = 100;
+            let index = 0;
             
-            return result;
-        }
-
-        // Finalize processing
-        function finalizeProcessing() {
-            // Sort allParagraphs (Russia last)
-            allParagraphs.sort((a, b) => {
-                if (!a || !b) return 0;
-                if (a.isRussia && !b.isRussia) return 1;
-                if (!a.isRussia && b.isRussia) return -1;
-                return a.id - b.id;
-            });
-
-            // Render initial visible paragraphs
-            renderVisibleParagraphs();
-            
-            updateCounts();
-            saveText();
-            document.getElementById('lockButton').style.display = 'inline-block';
-            document.getElementById('loadingIndicator').style.display = 'none';
-
-            // Automatically delete unsubscribed entries
-            const deletedCount = deleteUnsubscribedEntries();
-            
-            if (deletedCount > 0) {
-                showPopupNotification(`Deleted ${deletedCount} unsubscribed entries.`);
-            }
-            
-            filterCountries();
-            isProcessing = false;
-        }
-
-        // Render only visible paragraphs
-        function renderVisibleParagraphs() {
-            const outputContainer = document.getElementById('output');
-            const fragment = document.createDocumentFragment();
-            
-            // Clear existing rendered paragraphs
-            renderedParagraphs.forEach(p => {
-                if (p.parentNode === outputContainer) {
-                    outputContainer.removeChild(p);
-                }
-            });
-            renderedParagraphs = [];
-            
-            // Determine visible range
-            const start = Math.max(0, visibleStartIndex);
-            const end = Math.min(allParagraphs.length, visibleStartIndex + MAX_VISIBLE_PARAGRAPHS);
-            
-            // Create new paragraphs
-            for (let i = start; i < end; i++) {
-                if (!allParagraphs[i]) continue;
+            const processNextChunk = () => {
+                const endIndex = Math.min(index + chunkSize, paragraphs.length);
+                processChunk(index, endIndex);
+                index = endIndex;
                 
-                const p = document.createElement('p');
-                p.innerHTML = allParagraphs[i].html;
-                p.dataset.id = allParagraphs[i].id;
-                fragment.appendChild(p);
-                renderedParagraphs.push(p);
-            }
-            
-            outputContainer.appendChild(fragment);
-        }
-
-        // Optimized cutParagraph function
-        function cutParagraph(paragraph) {
-            if (cutCooldown || !paragraph) return;
-            
-            // Use requestAnimationFrame for smoother performance
-            requestAnimationFrame(() => {
-                const paragraphId = parseInt(paragraph.dataset.id);
-                const paragraphIndex = allParagraphs.findIndex(p => p && p.id === paragraphId);
-                
-                if (paragraphIndex === -1) return;
-                
-                const textToCopy = allParagraphs[paragraphIndex].text;
-                cutHistory.push({
-                    text: textToCopy,
-                    index: paragraphIndex,
-                    element: paragraph
-                });
-
-                const effectType = document.getElementById('effectType').value;
-                const effectsEnabled = document.getElementById('effectsToggle').checked;
-                const textToProcess = textToCopy.replace(/^To\n/, '');
-
-                // Use CSS transforms for animation
-                if (effectsEnabled && effectType !== 'none') {
-                    paragraph.style.transition = 'all 0.1s ease-out';
-                    
-                    switch(effectType) {
-                        case 'fadeOut':
-                            paragraph.style.opacity = '0';
-                            break;
-                        case 'vanish':
-                            paragraph.style.transform = 'scale(0)';
-                            break;
-                        case 'explode':
-                            paragraph.style.transform = 'scale(3)';
-                            paragraph.style.opacity = '0';
-                            break;
-                    }
-                    
-                    // Remove after animation
-                    setTimeout(() => {
-                        removeParagraph(paragraphIndex, textToProcess);
-                    }, 100);
+                if (index < paragraphs.length) {
+                    setTimeout(processNextChunk, 50);
                 } else {
-                    // Immediate removal
-                    removeParagraph(paragraphIndex, textToProcess);
+                    // Add all non-Russia entries first
+                    nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
+                    // Then add Russia entries
+                    russiaEntries.forEach(entry => outputContainer.appendChild(entry));
+
+                    updateCounts();
+                    saveText();
+                    document.getElementById('lockButton').style.display = 'inline-block';
+                    document.getElementById('loadingIndicator').style.display = 'none';
+
+                    // Automatically delete unsubscribed entries
+                    const deletedCount = deleteUnsubscribedEntries();
+                    if (deletedCount > 0) {
+                        showSuccessMessage(`Deleted ${deletedCount} unsubscribed entries.`);
+                    }
+
+                    filterCountries();
+                    isProcessing = false;
                 }
-            });
+            };
             
-            // Set minimal cooldown
-            cutCooldown = true;
-            setTimeout(() => { cutCooldown = false; }, CUT_COOLDOWN);
+            processNextChunk();
         }
 
-        // Optimized paragraph removal
-        function removeParagraph(index, textToProcess) {
-            // Remove from our data structure
-            allParagraphs.splice(index, 1);
+        // Optimized cut operation
+        function cutParagraph(paragraph) {
+            if (cutCooldown) return;
+            cutCooldown = true;
+
+            const textToCopy = paragraph.innerText;
+            cutHistory.push(textToCopy);
+
+            const effectType = document.getElementById('effectType').value;
+            const effectsEnabled = document.getElementById('effectsToggle').checked;
+
+            // Always remove "To\n" prefix if present
+            let textToProcess = textToCopy.replace(/^To\n/, '');
+
+            // Copy to clipboard immediately
+            navigator.clipboard.writeText(textToProcess).then(() => {
+                if (effectsEnabled && effectType !== 'none') {
+                    paragraph.classList.add(effectType);
+                    paragraph.addEventListener('animationend', () => {
+                        removeParagraph(paragraph, textToProcess);
+                    }, { once: true });
+                } else {
+                    removeParagraph(paragraph, textToProcess);
+                }
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                removeParagraph(paragraph, textToProcess);
+            });
+
+            setTimeout(() => {
+                cutCooldown = false;
+            }, 50); // Reduced cooldown to 50ms for faster cutting
+        }
+
+        function removeParagraph(paragraph, textToProcess) {
+            paragraph.remove();
+            cleanupSpaces();
             
-            // Update the input text
+            // Update the input text by removing the processed content
             const inputText = document.getElementById('inputText').value;
-            document.getElementById('inputText').value = inputText.replace(textToProcess.split('\nDear Professor')[0], '').trim();
-            
+            const remainingText = inputText.replace(textToProcess.split('\nDear Professor')[0], '').trim();
+            document.getElementById('inputText').value = remainingText;
+
             // Update counters
             dailyAdCount++;
             updateCounts();
             saveText();
-            
-            // Re-render visible paragraphs
-            renderVisibleParagraphs();
-            
+
             // Show undo button
             document.getElementById('undoButton').style.display = 'block';
-            
-            // Copy to clipboard
-            copyToClipboard(textToProcess);
-            
-            // Focus output
+
+            // Focus back on the output
             document.getElementById('output').focus();
         }
 
-        // Optimized clipboard copy
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).catch(err => {
-                // Fallback for older browsers
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                textarea.style.position = 'fixed';
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-            });
+        function undoLastCut() {
+            if (cutHistory.length > 0) {
+                const lastCutText = cutHistory.pop();
+
+                const outputContainer = document.getElementById('output');
+                const p = document.createElement('p');
+                p.innerText = lastCutText;
+                outputContainer.insertBefore(p, outputContainer.firstChild);
+
+                const inputText = document.getElementById('inputText').value;
+                document.getElementById('inputText').value = `${lastCutText}\n\n${inputText}`.trim();
+
+                dailyAdCount--;
+                updateCounts();
+                saveText();
+
+                if (cutHistory.length === 0) {
+                    document.getElementById('undoButton').style.display = 'none';
+                }
+            }
         }
 
-        // Optimized undoLastCut
-        function undoLastCut() {
-            if (cutHistory.length === 0) return;
-            
-            const lastCut = cutHistory.pop();
-            
-            // Restore to data structure
-            allParagraphs.splice(lastCut.index, 0, {
-                id: lastCut.index,
-                html: lastCut.element.innerHTML,
-                text: lastCut.text,
-                isRussia: lastCut.text.includes('Russia')
+        function cleanupSpaces() {
+            const outputContainer = document.getElementById('output');
+            const paragraphs = outputContainer.querySelectorAll('p');
+            paragraphs.forEach(paragraph => {
+                if (!paragraph.innerText.trim()) {
+                    paragraph.remove();
+                }
             });
-            
-            // Restore to input text
-            const inputText = document.getElementById('inputText').value;
-            document.getElementById('inputText').value = `${lastCut.text}\n\n${inputText}`.trim();
-            
-            // Update counters
-            dailyAdCount--;
-            updateCounts();
-            saveText();
-            
-            // Re-render
-            renderVisibleParagraphs();
-            
-            if (cutHistory.length === 0) {
-                document.getElementById('undoButton').style.display = 'none';
-            }
         }
 
         function handleCursorMovement(event) {
@@ -2101,7 +1898,6 @@
 
         setInterval(checkDailyReset, 60000);
 
-        // Function to display the current time
         function updateTime() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -2110,10 +1906,8 @@
             document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
         }
 
-        // Update time every second
         setInterval(updateTime, 1000);
 
-        // Function to check if the selected time slot matches the current time
         function checkReminders() {
             const now = new Date();
             const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -2127,23 +1921,19 @@
             });
         }
 
-        // Check reminders every minute
         setInterval(checkReminders, 60000);
 
-        // Show the reminder popup
         function showPopup() {
             document.getElementById('reminderPopup').style.display = 'block';
             blinkTab();
         }
 
-        // Dismiss the reminder popup
         function dismissPopup() {
             document.getElementById('reminderPopup').style.display = 'none';
             document.title = originalTitle;
             clearInterval(blinkInterval);
         }
 
-        // Handle slot selection and saving
         document.querySelectorAll('.reminder-slots li').forEach(slot => {
             slot.addEventListener('click', () => {
                 slot.classList.toggle('selected');
@@ -2171,7 +1961,6 @@
             }
         }
 
-        // Blink tab title when minimized
         let originalTitle = document.title;
         let blinkInterval;
 
@@ -2183,7 +1972,6 @@
             }, 1000);
         }
 
-        // Toggle Fullscreen Mode
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -2194,7 +1982,6 @@
             }
         }
 
-        // Show Desktop Notification
         function showNotification(title, body) {
             if (Notification.permission === 'granted') {
                 new Notification(title, { body });
@@ -2207,7 +1994,6 @@
             }
         }
 
-        // Blink browser icon
         function blinkBrowserIcon() {
             if (document.hidden) {
                 const favicon = document.querySelector('link[rel="icon"]');
@@ -2229,28 +2015,21 @@
             }
         }
 
-        // Request Notification permission on page load
         document.addEventListener('DOMContentLoaded', () => {
             if (Notification.permission !== 'granted') {
                 Notification.requestPermission();
             }
         });
 
-        // Copy incomplete entries to clipboard
         function copyIncompleteEntries() {
             const incompleteText = document.getElementById('incompleteText').value;
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.style.position = 'fixed';
-            tempTextarea.style.opacity = '0';
-            tempTextarea.value = incompleteText;
-            document.body.appendChild(tempTextarea);
-            tempTextarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextarea);
-            alert('Incomplete entries copied to clipboard!');
+            navigator.clipboard.writeText(incompleteText).then(() => {
+                alert('Incomplete entries copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
         }
 
-        // Handle scrolling lock and display notice
         document.addEventListener('wheel', function(event) {
             if (isLocked) {
                 event.preventDefault();
@@ -2348,39 +2127,36 @@
         function saveUnsubscribedEmail() {
             const email = document.getElementById('unsubscribedEmail').value.trim().toLowerCase();
             if (email) {
-                addUnsubscribedEmail(email);
-                document.getElementById('unsubscribedEmail').value = '';
-                showSuccessMessage('Email saved successfully!');
-                processText();
-            }
-        }
-
-        function addUnsubscribedEmail(email) {
-            const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
-            if (!emails.includes(email)) {
-                emails.push(email);
-                localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(emails));
+                const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+                if (!unsubscribedEmails.includes(email)) {
+                    unsubscribedEmails.push(email);
+                    localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(unsubscribedEmails));
+                    document.getElementById('unsubscribedEmail').value = '';
+                    showSuccessMessage('Email saved successfully!');
+                    processText();
+                } else {
+                    showSuccessMessage('Email already exists in unsubscribed list!');
+                }
             }
         }
 
         function deleteUnsubscribedEntries() {
+            const outputContainer = document.getElementById('output');
+            const paragraphs = outputContainer.querySelectorAll('p');
             const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
             let deletedCount = 0;
 
-            allParagraphs = allParagraphs.filter(p => {
-                if (!p) return true;
-                
-                let shouldKeep = true;
-                unsubscribedEmails.forEach(email => {
-                    if (p.text.includes(email)) {
-                        shouldKeep = false;
+            paragraphs.forEach(paragraph => {
+                const text = paragraph.innerText.toLowerCase();
+                for (const email of unsubscribedEmails) {
+                    if (text.includes(email.toLowerCase())) {
+                        paragraph.remove();
                         deletedCount++;
+                        break;
                     }
-                });
-                return shouldKeep;
+                }
             });
 
-            renderVisibleParagraphs();
             saveText();
             return deletedCount;
         }
