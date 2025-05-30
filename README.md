@@ -267,18 +267,18 @@
 
         #okButton {
             align-self: flex-end;
-            background-color: #28a745;
+            background-color: #28a745; /* Green color */
             border: none;
             color: white;
-            padding: 10px 20px;
-            font-size: 14px;
+            padding: 10px 20px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
             cursor: pointer;
             border-radius: 5px;
             margin-top: 10px;
         }
 
         #okButton:hover {
-            background-color: #218838;
+            background-color: #218838; /* Darker green for hover effect */
         }
 
         #adCount,
@@ -511,6 +511,7 @@
             color: #333;
         }
 
+        /* Progress bar */
         .progress-bar-container {
             width: 100%;
             height: 5px;
@@ -544,19 +545,39 @@
             display: none;
         }
 
+        /* Animations */
         @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
 
         @keyframes vanish {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
         }
 
         @keyframes explode {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
         }
 
         .fadeOut {
@@ -575,6 +596,7 @@
             background-color: #f4e542;
         }
 
+        /* Credit Section */
         #credit {
             position: fixed;
             bottom: 10px;
@@ -592,6 +614,7 @@
             text-decoration: underline;
         }
 
+        /* Right Sidebar for Buttons */
         #rightSidebar {
             margin-top: 20px;
             display: flex;
@@ -601,6 +624,7 @@
             z-index: 999;
         }
 
+        /* Options in the font control pane */
         .gap-control {
             display: flex;
             align-items: center;
@@ -608,6 +632,7 @@
             margin-top: 10px;
         }
 
+        /* Country Filter Section */
         .country-filter {
             margin-top: 10px;
         }
@@ -631,6 +656,7 @@
             margin-left: 10px;
         }
 
+        /* Group Management Section */
         .group-management {
             margin-top: 15px;
             border-top: 1px solid #e0e0e0;
@@ -689,6 +715,7 @@
             background-color: #0e619f;
         }
 
+        /* Small toggle switch for countries */
         .small-switch {
             position: relative;
             display: inline-block;
@@ -734,6 +761,7 @@
             transform: translateX(20px);
         }
 
+        /* Collapsible sections */
         .collapsible {
             cursor: pointer;
             padding: 8px;
@@ -766,6 +794,7 @@
             transition: max-height 0.2s ease-out;
         }
 
+        /* Search box */
         .search-box {
             width: 100%;
             padding: 8px;
@@ -775,6 +804,7 @@
             font-size: 14px;
         }
 
+        /* Bulk action buttons */
         .bulk-actions {
             display: flex;
             gap: 10px;
@@ -811,6 +841,7 @@
             background-color: #c82333;
         }
 
+        /* Button styles for new buttons */
         .btn {
             padding: 8px 15px;
             border: none;
@@ -874,8 +905,10 @@
         Advertisements-PPH
     </h1>
 
+    <!-- Clear memory button -->
     <button class="clear-memory-button" onclick="clearMemory()">Clear Memory</button>
 
+    <!-- User Controls in upper-right corner -->
     <div id="userControls" style="display: none;">
         <img src="https://raw.githubusercontent.com/prakashsharma19/hosted-images/main/pphlogo.png" alt="PPH Logo">
         <span id="loggedInUser"></span>
@@ -984,6 +1017,7 @@
         </div>
     </div>
 
+    <!-- Incomplete Entries Box -->
     <div class="input-container" style="display:none;">
         <div class="container-header" onclick="toggleBox('incompleteBox')">
             Incomplete Entries/Removed Countries
@@ -1061,6 +1095,7 @@
         </ul>
         <div class="reminder-note">(Select your slots to get reminder)</div>
 
+        <!-- Button Container -->
         <div id="rightSidebar" style="display:none;">
             <button class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
             <button id="undoButton" style="display:none;" onclick="undoLastCut()">Undo Last Cut</button>
@@ -1074,38 +1109,18 @@
         <button onclick="dismissPopup()">OK</button>
     </div>
 
+    <!-- Scroll Lock Notice -->
     <div id="scrollLockNotice" class="scroll-lock-notice">Scrolling is locked. Unlock to scroll.</div>
 
+    <!-- Credit Section -->
     <div id="credit">
         This Web-App is Developed by <a href="https://prakashsharma19.github.io/prakash/" target="_blank">Prakash</a>
     </div>
     
     <script>
-        // Optimized country list with common countries first for faster matching
         const countryList = [
-            "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "United States", "India", "China", "Japan", "UK", "U.K.", 
-            "United Kingdom", "Canada", "Germany", "France", "Italy", "Spain", "Brazil", "Brasil", "Russia", "Australia",
-            "South Korea", "Mexico", "Indonesia", "Netherlands", "Saudi Arabia", "Turkey", "Switzerland", "Argentina", 
-            "Sweden", "Poland", "Belgium", "Thailand", "Iran", "Austria", "Norway", "United Arab Emirates", "UAE", "U.A.E.",
-            "Israel", "Ireland", "Singapore", "Malaysia", "Philippines", "Denmark", "South Africa", "Egypt", "Finland", 
-            "Colombia", "Vietnam", "Viet Nam", "Chile", "Pakistan", "Bangladesh", "Romania", "Czech Republic", "Portugal", 
-            "Iraq", "Peru", "New Zealand", "Greece", "Qatar", "Algeria", "Kazakhstan", "Hungary", "Ukraine", "Morocco", 
-            "Ecuador", "Slovakia", "Cuba", "Kuwait", "Dominican Republic", "Belarus", "Oman", "Azerbaijan", "Sri Lanka", 
-            "Myanmar", "Burma", "Luxembourg", "Bulgaria", "Tunisia", "Guatemala", "Serbia", "Croatia", "Lebanon", "Costa Rica",
-            "Lithuania", "Kenya", "Panama", "Uruguay", "Slovenia", "Latvia", "Ghana", "Uganda", "Ethiopia", "Jordan", 
-            "Nepal", "Cyprus", "Tanzania", "El Salvador", "Bahrain", "Libya", "Paraguay", "Zambia", "Estonia", "Cambodia", 
-            "Senegal", "Honduras", "Botswana", "Laos", "Nicaragua", "Mongolia", "Albania", "Armenia", "Georgia", "Jamaica", 
-            "Namibia", "Mozambique", "Brunei", "Zimbabwe", "Afghanistan", "Gabon", "Cameroon", "Iceland", "Papua New Guinea", 
-            "North Macedonia", "Macedonia", "Benin", "Madagascar", "Sudan", "Niger", "Burkina Faso", "Mali", "Haiti", "Malta", 
-            "Mauritius", "Bhutan", "Barbados", "Somalia", "Maldives", "Tajikistan", "Belize", "Fiji", "Guyana", "Suriname", 
-            "Montenegro", "Rwanda", "Mauritania", "Syria", "Eswatini", "Togo", "Sierra Leone", "Andorra", "Burundi", "Lesotho", 
-            "Kyrgyzstan", "Malawi", "Liberia", "Djibouti", "Central African Republic", "Congo", "Chad", "Tchad", "Gambia", 
-            "South Sudan", "Timor-Leste", "Belgium", "Grenada", "Kiribati", "Guinea", "Solomon Islands", "Comoros", "Samoa", 
-            "Cabo Verde", "Vanuatu", "Dominica", "Seychelles", "Antigua and Barbuda", "San Marino", "Palau", "Liechtenstein", 
-            "Monaco", "Saint Kitts and Nevis", "Marshall Islands", "Saint Vincent and the Grenadines", "Saint Lucia", "Tuvalu", 
-            "Micronesia", "Tonga", "Grenada", "Nauru", "Palestine", "Vatican City", "Sao Tome and Principe", "Equatorial Guinea", 
-            "Guinea-Bissau", "Eritrea", "Hong Kong", "Macau", "Macao", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", 
-            "Taiwan", "Yemen", "Venezuela", "Bosnia and Herzegovina", "Angola", "Korea", "Bolivia", "Trinidad and Tobago", "Nigeria"
+            "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
+            "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
         ];
 
         let currentUser = null;
@@ -1117,7 +1132,9 @@
         let cutCooldown = false;
         let countryStates = {};
         let countryGroups = {};
-        let includeDearProfessor = true;
+        let processingChunkSize = 50; // Number of paragraphs to process at once
+        let processingDelay = 0; // Delay between chunks in ms (0 for immediate processing)
+        let filteredParagraphs = []; // Store filtered paragraphs for quick access
 
         // Initialize country states and groups from localStorage
         function initializeCountryStates() {
@@ -1260,6 +1277,7 @@
         function createGroup() {
             const groupName = document.getElementById('newGroupName').value.trim();
             if (groupName && !countryGroups[groupName]) {
+                // Create an empty group that can be edited later
                 countryGroups[groupName] = [];
                 saveCountryGroups();
                 renderCountryGroups();
@@ -1306,38 +1324,32 @@
             });
         }
 
-        // Optimized filter function
         function filterCountries() {
             const outputContainer = document.getElementById('output');
             const paragraphs = outputContainer.querySelectorAll('p');
-            
-            // Create a set of enabled countries for faster lookup
-            const enabledCountries = new Set();
-            for (const country in countryStates) {
-                if (countryStates[country]) {
-                    enabledCountries.add(country.toLowerCase());
-                }
-            }
-            
-            // If all countries are disabled, show all paragraphs
-            if (enabledCountries.size === 0) {
-                paragraphs.forEach(p => p.style.display = 'block');
-                return;
-            }
+            filteredParagraphs = []; // Reset filtered paragraphs
             
             paragraphs.forEach(paragraph => {
-                const text = paragraph.innerText.toLowerCase();
                 let shouldShow = false;
+                const text = paragraph.innerText;
                 
-                // Check if any enabled country is mentioned
-                for (const country of enabledCountries) {
-                    if (text.includes(country.toLowerCase())) {
+                // Check if any enabled country is mentioned in this paragraph
+                for (const country in countryStates) {
+                    if (countryStates[country] && text.includes(country)) {
                         shouldShow = true;
                         break;
                     }
                 }
                 
+                // If no countries are mentioned (shouldn't happen with our data), show by default
+                if (!shouldShow && !Object.values(countryStates).some(state => state)) {
+                    shouldShow = true;
+                }
+                
                 paragraph.style.display = shouldShow ? 'block' : 'none';
+                if (shouldShow) {
+                    filteredParagraphs.push(paragraph);
+                }
             });
             
             updateCounts();
@@ -1350,7 +1362,86 @@
 
             setTimeout(() => {
                 successMessage.style.display = 'none';
-            }, 3000);
+            }, 3000); // Hide the message after 3 seconds
+        }
+
+        // Google Sheets Configuration
+        const SHEET_ID = 'SHEET-ID';
+        const API_KEY = 'Enter-API';
+        const SHEET_NAME = 'Unsubscribed Emails';  // Ensure this matches the sheet name in Google Sheets
+
+        // Fetch unsubscribed emails from Google Sheets and save to local storage
+        // Helper to fetch unsubscribed emails from localStorage or Google Sheets on load
+        async function fetchUnsubscribedEmails() {
+            const storedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+            // Fetch from Google Sheets on load
+            const googleEmails = await fetchEmailsFromGoogleSheet();
+            const allEmails = [...new Set([...storedEmails, ...googleEmails])]; // Combine and de-duplicate
+            localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(allEmails));
+            processText();
+        }
+
+        // Fetch from Google Sheets only (used in fetchUnsubscribedEmails)
+        async function fetchEmailsFromGoogleSheet() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:A?key=${API_KEY}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.values ? data.values.flat().map(email => email.toLowerCase()) : [];
+            } catch (error) {
+                console.error('Error fetching unsubscribed emails from Google Sheets:', error);
+                return [];
+            }
+        }
+
+        // Add new unsubscribed email to local storage (on change event)
+        document.getElementById('unsubscribedEmail').addEventListener('change', function() {
+            const newEmail = this.value.trim().toLowerCase();
+            if (newEmail) {
+                addUnsubscribedEmail(newEmail);
+                this.value = ''; // Clear input box after storing
+                processText(); // Re-process text to apply highlighting
+            }
+        });
+
+        // Store new unsubscribed email locally
+        function addUnsubscribedEmail(email) {
+            const emails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+            if (!emails.includes(email)) {
+                emails.push(email);
+                localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(emails));
+            }
+        }
+
+        // Highlight unsubscribed emails
+        function highlightErrors(text) {
+            let modifiedText = text.replace(/\?/g, '<span class="error">?</span>');
+            if (!text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
+                modifiedText += ' <span class="error">Missing email</span>';
+            }
+            if (!countryList.some(country => text.includes(country))) {
+                modifiedText += ' <span class="error">Missing country</span>';
+            }
+            return modifiedText;
+        }
+
+        function deleteUnsubscribedEntries() {
+            const outputContainer = document.getElementById('output');
+            const paragraphs = outputContainer.querySelectorAll('p');
+            const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
+            let deletedCount = 0;
+
+            paragraphs.forEach(paragraph => {
+                unsubscribedEmails.forEach(email => {
+                    if (paragraph.innerHTML.includes(email)) {
+                        paragraph.remove();
+                        deletedCount++;
+                    }
+                });
+            });
+
+            saveText(); // Save changes after deleting
+            return deletedCount; // Return the number of deleted entries
         }
 
         function saveText() {
@@ -1388,12 +1479,18 @@
                 const savedFontStyle = localStorage.getItem(`fontStyle_${currentUser}`);
                 const savedFontSize = localStorage.getItem(`fontSize_${currentUser}`);
                 const savedGapOption = localStorage.getItem(`gapOption_${currentUser}`);
-                
-                if (savedInput) document.getElementById('inputText').value = savedInput;
-                if (savedRough) document.getElementById('roughText').value = savedRough;
-                if (savedOutput) document.getElementById('output').innerHTML = savedOutput;
-                if (savedIncomplete) document.getElementById('incompleteText').value = savedIncomplete;
-                
+                if (savedInput) {
+                    document.getElementById('inputText').value = savedInput;
+                }
+                if (savedRough) {
+                    document.getElementById('roughText').value = savedRough;
+                }
+                if (savedOutput) {
+                    document.getElementById('output').innerHTML = savedOutput;
+                }
+                if (savedIncomplete) {
+                    document.getElementById('incompleteText').value = savedIncomplete;
+                }
                 if (savedDailyAdCount && lastCutTime) {
                     const lastCutDate = new Date(parseInt(lastCutTime, 10));
                     const currentDate = new Date();
@@ -1401,12 +1498,18 @@
                         dailyAdCount = parseInt(savedDailyAdCount, 10);
                     }
                 }
-                
-                if (savedTotalParagraphs) totalParagraphs = parseInt(savedTotalParagraphs, 10);
-                if (savedFontStyle) document.getElementById('fontStyle').value = savedFontStyle;
-                if (savedFontSize) document.getElementById('fontSize').value = savedFontSize;
-                if (savedGapOption) document.getElementById('gapOption').value = savedGapOption;
-                
+                if (savedTotalParagraphs) {
+                    totalParagraphs = parseInt(savedTotalParagraphs, 10);
+                }
+                if (savedFontStyle) {
+                    document.getElementById('fontStyle').value = savedFontStyle;
+                }
+                if (savedFontSize) {
+                    document.getElementById('fontSize').value = savedFontSize;
+                }
+                if (savedGapOption) {
+                    document.getElementById('gapOption').value = savedGapOption;
+                }
                 loadEffectPreferences();
                 loadOperationPreferences();
                 loadSelectedReminders();
@@ -1418,6 +1521,9 @@
                 renderCountryGroups();
                 document.getElementById('rightSidebar').style.display = 'block';
                 document.getElementById('lockButton').style.display = 'inline-block';
+                
+                // Initialize filtered paragraphs after loading
+                filterCountries();
             }
         }
 
@@ -1454,22 +1560,12 @@
             return countryCounts;
         }
 
-        function highlightErrors(text) {
-            let modifiedText = text.replace(/\?/g, '<span class="error">?</span>');
-            if (!text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
-                modifiedText += ' <span class="error">Missing email</span>';
-            }
-            if (!countryList.some(country => text.includes(country))) {
-                modifiedText += ' <span class="error">Missing country</span>';
-            }
-            return modifiedText;
-        }
-
         function updateCounts() {
             const outputContainer = document.getElementById('output');
             const paragraphs = outputContainer.querySelectorAll('p');
             let adCount = 0;
 
+            // Increment count based on the start of each paragraph ("To" or "Professor")
             paragraphs.forEach(paragraph => {
                 if (paragraph.style.display !== 'none') {
                     const firstLine = paragraph.innerText.split('\n')[0];
@@ -1490,7 +1586,9 @@
                 countryCountText += `<b>${country}</b>: ${count}<br>`;
             });
             
+            // Update the counts in the filter list
             renderCountryFilters();
+            
             updateProgressBar(dailyAdCount);
             updateRemainingTime(dailyAdCount);
         }
@@ -1498,6 +1596,7 @@
         function updateProgressBar(dailyAdCount) {
             const progressBar = document.getElementById('progressBar');
             const maxCount = 5000;
+
             const percentage = Math.min(dailyAdCount / maxCount, 1) * 100;
             progressBar.style.width = `${percentage}%`;
 
@@ -1518,6 +1617,8 @@
             document.getElementById('remainingTimeText').innerText = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
             document.getElementById('completionPercentage').innerText = `${percentageCompleted}%`;
         }
+
+        let includeDearProfessor = true;
 
         // Initialize the toggle state from localStorage
         document.addEventListener('DOMContentLoaded', () => {
@@ -1554,6 +1655,11 @@
             label.innerText = includeDearProfessor ? '✔ "Dear Professor"' : '✘ "Dear Professor"';
         }
 
+        function updateToggleUI() {
+            const toggleButton = document.querySelector('.btn.toggle-dear-professor');
+            toggleButton.innerText = includeDearProfessor ? 'Exclude "Dear Professor"' : 'Include "Dear Professor"';
+        }
+
         function processText() {
             if (isProcessing) return;
 
@@ -1568,18 +1674,22 @@
             outputContainer.innerHTML = '<p id="cursorStart">Place your cursor here</p>';
             incompleteContainer.value = '';
 
-            const gapOption = document.getElementById('gapOption').value;
+            let index = 0;
             const nonRussiaEntries = [];
             const russiaEntries = [];
 
-            // Process in chunks to prevent UI freezing
-            const processChunk = (startIndex, endIndex) => {
-                for (let i = startIndex; i < endIndex; i++) {
-                    let paragraph = paragraphs[i].trim();
+            const gapOption = document.getElementById('gapOption').value;
+
+            function processChunk() {
+                const chunkSize = processingChunkSize;
+                const end = Math.min(index + chunkSize, paragraphs.length);
+                for (; index < end; index++) {
+                    let paragraph = paragraphs[index].trim();
                     if (paragraph !== '') {
                         const lines = paragraph.split('\n');
                         let firstLine = lines[0].trim();
 
+                        // Ensure the first line starts with "Professor"
                         if (!firstLine.startsWith('Professor')) {
                             firstLine = `Professor ${firstLine}`;
                             lines[0] = firstLine;
@@ -1618,19 +1728,10 @@
                         }
                     }
                 }
-            };
-
-            // Process in chunks of 100 paragraphs at a time with small delays
-            const chunkSize = 100;
-            let index = 0;
-            
-            const processNextChunk = () => {
-                const endIndex = Math.min(index + chunkSize, paragraphs.length);
-                processChunk(index, endIndex);
-                index = endIndex;
                 
                 if (index < paragraphs.length) {
-                    setTimeout(processNextChunk, 50);
+                    // Use setTimeout with processingDelay to allow UI updates between chunks
+                    setTimeout(processChunk, processingDelay);
                 } else {
                     // Add all non-Russia entries first
                     nonRussiaEntries.forEach(entry => outputContainer.appendChild(entry));
@@ -1644,19 +1745,23 @@
 
                     // Automatically delete unsubscribed entries
                     const deletedCount = deleteUnsubscribedEntries();
+
+                    // Show a popup notification if unsubscribed entries were deleted
                     if (deletedCount > 0) {
-                        showSuccessMessage(`Deleted ${deletedCount} unsubscribed entries.`);
+                        showPopupNotification(`Deleted ${deletedCount} unsubscribed entries.`);
                     }
 
+                    // Apply country filters
                     filterCountries();
+
                     isProcessing = false;
                 }
-            };
+            }
             
-            processNextChunk();
+            // Start processing with the first chunk
+            setTimeout(processChunk, processingDelay);
         }
 
-        // Optimized cut operation
         function cutParagraph(paragraph) {
             if (cutCooldown) return;
             cutCooldown = true;
@@ -1667,36 +1772,49 @@
             const effectType = document.getElementById('effectType').value;
             const effectsEnabled = document.getElementById('effectsToggle').checked;
 
-            // Always remove "To\n" prefix if present
+            // Always remove "To\n" prefix if present.
             let textToProcess = textToCopy.replace(/^To\n/, '');
 
-            // Copy to clipboard immediately
-            navigator.clipboard.writeText(textToProcess).then(() => {
-                if (effectsEnabled && effectType !== 'none') {
-                    paragraph.classList.add(effectType);
-                    paragraph.addEventListener('animationend', () => {
-                        removeParagraph(paragraph, textToProcess);
-                    }, { once: true });
-                } else {
-                    removeParagraph(paragraph, textToProcess);
-                }
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                removeParagraph(paragraph, textToProcess);
-            });
+            if (effectsEnabled && effectType !== 'none') {
+                paragraph.classList.add(effectType);
+                paragraph.addEventListener('animationend', () => {
+                    copyAndRemoveParagraph(paragraph, textToProcess);
+                }, { once: true }); // Ensure the event listener is removed after firing
+            } else {
+                copyAndRemoveParagraph(paragraph, textToProcess);
+            }
 
             setTimeout(() => {
                 cutCooldown = false;
-            }, 50); // Reduced cooldown to 50ms for faster cutting
+            }, 100); // Reduced cooldown to 100ms for faster cutting
         }
 
-        function removeParagraph(paragraph, textToProcess) {
-            paragraph.remove();
-            cleanupSpaces();
+        function copyAndRemoveParagraph(paragraph, textToCopy) {
+            // Create a temporary textarea for copying
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.style.position = 'fixed';
+            tempTextarea.style.opacity = '0';
+            tempTextarea.value = textToCopy;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
             
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            
+            document.body.removeChild(tempTextarea);   
+
+            // Remove the paragraph immediately
+            paragraph.remove();
+            
+            // Clean up any empty spaces
+            cleanupSpaces();
+
             // Update the input text by removing the processed content
             const inputText = document.getElementById('inputText').value;
-            const remainingText = inputText.replace(textToProcess.split('\nDear Professor')[0], '').trim();
+            const remainingText = inputText.replace(textToCopy.split('\nDear Professor')[0], '').trim();
             document.getElementById('inputText').value = remainingText;
 
             // Update counters
@@ -1709,28 +1827,6 @@
 
             // Focus back on the output
             document.getElementById('output').focus();
-        }
-
-        function undoLastCut() {
-            if (cutHistory.length > 0) {
-                const lastCutText = cutHistory.pop();
-
-                const outputContainer = document.getElementById('output');
-                const p = document.createElement('p');
-                p.innerText = lastCutText;
-                outputContainer.insertBefore(p, outputContainer.firstChild);
-
-                const inputText = document.getElementById('inputText').value;
-                document.getElementById('inputText').value = `${lastCutText}\n\n${inputText}`.trim();
-
-                dailyAdCount--;
-                updateCounts();
-                saveText();
-
-                if (cutHistory.length === 0) {
-                    document.getElementById('undoButton').style.display = 'none';
-                }
-            }
         }
 
         function cleanupSpaces() {
@@ -1898,6 +1994,7 @@
 
         setInterval(checkDailyReset, 60000);
 
+        // Function to display the current time
         function updateTime() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -1906,8 +2003,10 @@
             document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
         }
 
+        // Update time every second
         setInterval(updateTime, 1000);
 
+        // Function to check if the selected time slot matches the current time
         function checkReminders() {
             const now = new Date();
             const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -1921,19 +2020,23 @@
             });
         }
 
+        // Check reminders every minute
         setInterval(checkReminders, 60000);
 
+        // Show the reminder popup
         function showPopup() {
             document.getElementById('reminderPopup').style.display = 'block';
             blinkTab();
         }
 
+        // Dismiss the reminder popup
         function dismissPopup() {
             document.getElementById('reminderPopup').style.display = 'none';
             document.title = originalTitle;
             clearInterval(blinkInterval);
         }
 
+        // Handle slot selection and saving
         document.querySelectorAll('.reminder-slots li').forEach(slot => {
             slot.addEventListener('click', () => {
                 slot.classList.toggle('selected');
@@ -1961,6 +2064,7 @@
             }
         }
 
+        // Blink tab title when minimized
         let originalTitle = document.title;
         let blinkInterval;
 
@@ -1972,6 +2076,7 @@
             }, 1000);
         }
 
+        // Toggle Fullscreen Mode
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -1982,6 +2087,7 @@
             }
         }
 
+        // Show Desktop Notification
         function showNotification(title, body) {
             if (Notification.permission === 'granted') {
                 new Notification(title, { body });
@@ -1994,6 +2100,7 @@
             }
         }
 
+        // Blink browser icon
         function blinkBrowserIcon() {
             if (document.hidden) {
                 const favicon = document.querySelector('link[rel="icon"]');
@@ -2015,21 +2122,28 @@
             }
         }
 
+        // Request Notification permission on page load
         document.addEventListener('DOMContentLoaded', () => {
             if (Notification.permission !== 'granted') {
                 Notification.requestPermission();
             }
         });
 
+        // Copy incomplete entries to clipboard
         function copyIncompleteEntries() {
             const incompleteText = document.getElementById('incompleteText').value;
-            navigator.clipboard.writeText(incompleteText).then(() => {
-                alert('Incomplete entries copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.style.position = 'fixed';
+            tempTextarea.style.opacity = '0';
+            tempTextarea.value = incompleteText;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextarea);
+            alert('Incomplete entries copied to clipboard!');
         }
 
+        // Handle scrolling lock and display notice
         document.addEventListener('wheel', function(event) {
             if (isLocked) {
                 event.preventDefault();
@@ -2127,39 +2241,13 @@
         function saveUnsubscribedEmail() {
             const email = document.getElementById('unsubscribedEmail').value.trim().toLowerCase();
             if (email) {
-                const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
-                if (!unsubscribedEmails.includes(email)) {
-                    unsubscribedEmails.push(email);
-                    localStorage.setItem('permanentUnsubscribedEmails', JSON.stringify(unsubscribedEmails));
-                    document.getElementById('unsubscribedEmail').value = '';
-                    showSuccessMessage('Email saved successfully!');
-                    processText();
-                } else {
-                    showSuccessMessage('Email already exists in unsubscribed list!');
-                }
+                addUnsubscribedEmail(email);
+                document.getElementById('unsubscribedEmail').value = '';
+                showSuccessMessage('Email saved successfully!');
+                processText();
             }
-        }
-
-        function deleteUnsubscribedEntries() {
-            const outputContainer = document.getElementById('output');
-            const paragraphs = outputContainer.querySelectorAll('p');
-            const unsubscribedEmails = JSON.parse(localStorage.getItem('permanentUnsubscribedEmails')) || [];
-            let deletedCount = 0;
-
-            paragraphs.forEach(paragraph => {
-                const text = paragraph.innerText.toLowerCase();
-                for (const email of unsubscribedEmails) {
-                    if (text.includes(email.toLowerCase())) {
-                        paragraph.remove();
-                        deletedCount++;
-                        break;
-                    }
-                }
-            });
-
-            saveText();
-            return deletedCount;
         }
     </script>
 </body>
+
 </html>
