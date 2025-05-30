@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Country Entry Filter Tool</title>
+  <title>PPH - Country Grouping Management</title>
   <style>
     :root {
       --primary-color: #3498db;
