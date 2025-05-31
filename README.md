@@ -9,6 +9,8 @@
       --primary-hover: #2980b9;
       --secondary-color: #e74c3c;
       --secondary-hover: #c0392b;
+      --success-color: #2ecc71;
+      --success-hover: #27ae60;
       --light-gray: #ecf0f1;
       --dark-gray: #7f8c8d;
       --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -111,6 +113,15 @@
     
     .btn-primary:hover {
       background-color: var(--primary-hover);
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: var(--success-hover);
     }
     
     .btn-secondary {
@@ -219,6 +230,11 @@
     .download-btn {
       margin-top: 15px;
     }
+    
+    #filteredGroupName {
+      color: var(--primary-color);
+      font-weight: normal;
+    }
   </style>
 </head>
 <body>
@@ -271,18 +287,17 @@
     </div>
     
     <div class="btn-group">
-      <button class="btn btn-primary" onclick="applyCountryFilter()">Filter by Selected Countries</button>
-      <button class="btn btn-primary" onclick="copyVisibleEntries()">Copy Visible Entries</button>
+      <button class="btn btn-success" onclick="copyVisibleEntries()">Copy Visible Entries</button>
       <button class="btn btn-outline" onclick="createNewGroup()">Create New Group</button>
     </div>
   </div>
 
   <div class="counter">
     <span>Total Entries: <span id="totalCount" style="color: var(--primary-color)">0</span></span>
-    <span>Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
+    <span>Filtered Group: <span id="filteredGroupName">None</span> (<span id="filteredCount" style="color: var(--primary-color)">0</span>)</span>
   </div>
 
-  <button id="downloadBtn" class="btn btn-primary download-btn" onclick="downloadFilteredEntries()" style="display: none;">
+  <button id="downloadBtn" class="btn btn-success download-btn" onclick="downloadFilteredEntries()" style="display: none;">
     Download Filtered Entries (TXT)
   </button>
 
@@ -339,6 +354,7 @@
     let entries = '';
     let allParts = [];
     let currentFilteredEntries = [];
+    let currentFilteredGroup = '';
 
     // Improved country matching function
     function entryContainsCountry(entry, country) {
@@ -421,11 +437,12 @@
       });
     }
 
-    function renderEntries(filterFn) {
+    function renderEntries(filterFn, groupName = '') {
       const container = document.getElementById('entriesContainer');
       container.innerHTML = '';
       let count = 0;
       currentFilteredEntries = [];
+      currentFilteredGroup = groupName;
       
       allParts.forEach(entry => {
         if (filterFn(entry)) {
@@ -494,18 +511,11 @@
       updateGroupCountriesDisplay(val);
       
       if (val && countryGroups[val]) {
-        renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)));
+        renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)), val);
       } else {
         renderEntries(() => true);
       }
     });
-
-    function applyCountryFilter() {
-      document.getElementById('groupSelect').value = '';
-      document.getElementById('groupCountries').style.display = 'none';
-      const selectedOptions = Array.from(document.getElementById('countrySelect').selectedOptions).map(opt => opt.value);
-      renderEntries(entry => selectedOptions.some(country => entryContainsCountry(entry, country)));
-    }
 
     function copyVisibleEntries() {
       const visibleEntries = Array.from(document.querySelectorAll('.entry')).map(div => div.textContent).join('\n\n');
@@ -548,7 +558,7 @@
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay(groupName);
-      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)));
+      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)), groupName);
     }
 
     function deleteGroup(groupName) {
@@ -565,6 +575,7 @@
     function updateCounters(filteredCount = 0) {
       document.getElementById('totalCount').textContent = allParts.length;
       document.getElementById('filteredCount').textContent = filteredCount;
+      document.getElementById('filteredGroupName').textContent = currentFilteredGroup || 'None';
     }
 
     // Initialize the page
