@@ -1,7 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PPH - Country Grouping Management</title>
+  <title>Country Entry Filter Tool</title>
   <style>
     :root {
       --primary-color: #3498db;
@@ -198,11 +200,31 @@
       width: 16px;
       height: 16px;
     }
+    
+    .group-countries {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    
+    .country-count {
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 5px;
+    }
+    
+    .download-btn {
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h2>PPH - Country Grouping Management</h2>
+    <h2>Country-Based Entry Filtering Tool</h2>
     <button class="refresh-btn" onclick="clearAll()">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -235,6 +257,8 @@
           <option value="">-- None --</option>
         </select>
         
+        <div id="groupCountries" class="group-countries"></div>
+        
         <div id="userGroupsContainer" style="margin-top: 15px; display: none;">
           <label>Your Groups:</label>
           <div id="userGroupsList" style="background: var(--light-gray); padding: 10px; border-radius: 5px;"></div>
@@ -258,6 +282,10 @@
     <span>Total Entries: <span id="totalCount" style="color: var(--primary-color)">0</span></span>
     <span>Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
   </div>
+
+  <button id="downloadBtn" class="btn btn-primary download-btn" onclick="downloadFilteredEntries()" style="display: none;">
+    Download Filtered Entries (TXT)
+  </button>
 
   <div class="output-section">
     <h3 class="section-title">Results</h3>
@@ -311,6 +339,7 @@
     let countryGroups = { ...defaultGroups, ...userGroups };
     let entries = '';
     let allParts = [];
+    let currentFilteredEntries = [];
 
     // Improved country matching function
     function entryContainsCountry(entry, country) {
@@ -332,6 +361,11 @@
       
       // Check all patterns
       return patterns.some(pattern => pattern.test(entry));
+    }
+
+    function countEntriesForCountry(country) {
+      if (!allParts.length) return 0;
+      return allParts.filter(entry => entryContainsCountry(entry, country)).length;
     }
 
     function populateDropdowns() {
@@ -392,6 +426,7 @@
       const container = document.getElementById('entriesContainer');
       container.innerHTML = '';
       let count = 0;
+      currentFilteredEntries = [];
       
       allParts.forEach(entry => {
         if (filterFn(entry)) {
@@ -400,10 +435,31 @@
           div.textContent = entry.trim();
           container.appendChild(div);
           count++;
+          currentFilteredEntries.push(entry.trim());
         }
       });
       
       updateCounters(count);
+      document.getElementById('downloadBtn').style.display = count > 0 ? 'block' : 'none';
+    }
+
+    function updateGroupCountriesDisplay(groupName) {
+      const groupCountriesDiv = document.getElementById('groupCountries');
+      if (!groupName || !countryGroups[groupName]) {
+        groupCountriesDiv.style.display = 'none';
+        return;
+      }
+      
+      const countries = countryGroups[groupName];
+      let html = '';
+      
+      countries.forEach(country => {
+        const count = countEntriesForCountry(country);
+        html += `<span class="country-count">${country}(${count})</span>`;
+      });
+      
+      groupCountriesDiv.innerHTML = html;
+      groupCountriesDiv.style.display = 'block';
     }
 
     function loadEntries() {
@@ -435,6 +491,9 @@
         createNewGroup();
         return;
       }
+      
+      updateGroupCountriesDisplay(val);
+      
       if (val && countryGroups[val]) {
         renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)));
       } else {
@@ -444,6 +503,7 @@
 
     function applyCountryFilter() {
       document.getElementById('groupSelect').value = '';
+      document.getElementById('groupCountries').style.display = 'none';
       const selectedOptions = Array.from(document.getElementById('countrySelect').selectedOptions).map(opt => opt.value);
       renderEntries(entry => selectedOptions.some(country => entryContainsCountry(entry, country)));
     }
@@ -455,6 +515,20 @@
       }).catch(err => {
         alert('Failed to copy: ' + err);
       });
+    }
+
+    function downloadFilteredEntries() {
+      if (currentFilteredEntries.length === 0) return;
+      
+      const blob = new Blob([currentFilteredEntries.join('\n\n')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'filtered_entries.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     function clearAll() {
@@ -474,6 +548,7 @@
       countryGroups = { ...defaultGroups, ...userGroups };
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
+      updateGroupCountriesDisplay(groupName);
       renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)));
     }
 
@@ -484,6 +559,7 @@
         countryGroups = { ...defaultGroups, ...userGroups };
         populateDropdowns();
         renderEntries(() => true);
+        document.getElementById('groupCountries').style.display = 'none';
       }
     }
 
