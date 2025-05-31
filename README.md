@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -200,6 +199,26 @@
       width: 16px;
       height: 16px;
     }
+    
+    .group-countries {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    
+    .country-count {
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 5px;
+    }
+    
+    .download-btn {
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
@@ -237,6 +256,8 @@
           <option value="">-- None --</option>
         </select>
         
+        <div id="groupCountries" class="group-countries"></div>
+        
         <div id="userGroupsContainer" style="margin-top: 15px; display: none;">
           <label>Your Groups:</label>
           <div id="userGroupsList" style="background: var(--light-gray); padding: 10px; border-radius: 5px;"></div>
@@ -260,6 +281,10 @@
     <span>Total Entries: <span id="totalCount" style="color: var(--primary-color)">0</span></span>
     <span>Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
   </div>
+
+  <button id="downloadBtn" class="btn btn-primary download-btn" onclick="downloadFilteredEntries()" style="display: none;">
+    Download Filtered Entries (TXT)
+  </button>
 
   <div class="output-section">
     <h3 class="section-title">Results</h3>
@@ -313,6 +338,7 @@
     let countryGroups = { ...defaultGroups, ...userGroups };
     let entries = '';
     let allParts = [];
+    let currentFilteredEntries = [];
 
     // Improved country matching function
     function entryContainsCountry(entry, country) {
@@ -334,6 +360,11 @@
       
       // Check all patterns
       return patterns.some(pattern => pattern.test(entry));
+    }
+
+    function countEntriesForCountry(country) {
+      if (!allParts.length) return 0;
+      return allParts.filter(entry => entryContainsCountry(entry, country)).length;
     }
 
     function populateDropdowns() {
@@ -394,6 +425,7 @@
       const container = document.getElementById('entriesContainer');
       container.innerHTML = '';
       let count = 0;
+      currentFilteredEntries = [];
       
       allParts.forEach(entry => {
         if (filterFn(entry)) {
@@ -402,10 +434,31 @@
           div.textContent = entry.trim();
           container.appendChild(div);
           count++;
+          currentFilteredEntries.push(entry.trim());
         }
       });
       
       updateCounters(count);
+      document.getElementById('downloadBtn').style.display = count > 0 ? 'block' : 'none';
+    }
+
+    function updateGroupCountriesDisplay(groupName) {
+      const groupCountriesDiv = document.getElementById('groupCountries');
+      if (!groupName || !countryGroups[groupName]) {
+        groupCountriesDiv.style.display = 'none';
+        return;
+      }
+      
+      const countries = countryGroups[groupName];
+      let html = '';
+      
+      countries.forEach(country => {
+        const count = countEntriesForCountry(country);
+        html += `<span class="country-count">${country}(${count})</span>`;
+      });
+      
+      groupCountriesDiv.innerHTML = html;
+      groupCountriesDiv.style.display = 'block';
     }
 
     function loadEntries() {
@@ -437,6 +490,9 @@
         createNewGroup();
         return;
       }
+      
+      updateGroupCountriesDisplay(val);
+      
       if (val && countryGroups[val]) {
         renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)));
       } else {
@@ -446,6 +502,7 @@
 
     function applyCountryFilter() {
       document.getElementById('groupSelect').value = '';
+      document.getElementById('groupCountries').style.display = 'none';
       const selectedOptions = Array.from(document.getElementById('countrySelect').selectedOptions).map(opt => opt.value);
       renderEntries(entry => selectedOptions.some(country => entryContainsCountry(entry, country)));
     }
@@ -457,6 +514,20 @@
       }).catch(err => {
         alert('Failed to copy: ' + err);
       });
+    }
+
+    function downloadFilteredEntries() {
+      if (currentFilteredEntries.length === 0) return;
+      
+      const blob = new Blob([currentFilteredEntries.join('\n\n')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'filtered_entries.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     function clearAll() {
@@ -476,6 +547,7 @@
       countryGroups = { ...defaultGroups, ...userGroups };
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
+      updateGroupCountriesDisplay(groupName);
       renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)));
     }
 
@@ -486,6 +558,7 @@
         countryGroups = { ...defaultGroups, ...userGroups };
         populateDropdowns();
         renderEntries(() => true);
+        document.getElementById('groupCountries').style.display = 'none';
       }
     }
 
