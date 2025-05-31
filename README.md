@@ -9,8 +9,6 @@
       --primary-hover: #2980b9;
       --secondary-color: #e74c3c;
       --secondary-hover: #c0392b;
-      --success-color: #2ecc71;
-      --success-hover: #27ae60;
       --light-gray: #ecf0f1;
       --dark-gray: #7f8c8d;
       --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -124,15 +122,6 @@
       background-color: var(--secondary-hover);
     }
     
-    .btn-success {
-      background-color: var(--success-color);
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background-color: var(--success-hover);
-    }
-    
     .btn-outline {
       background-color: white;
       color: var(--primary-color);
@@ -230,19 +219,6 @@
     .download-btn {
       margin-top: 15px;
     }
-    
-    .country-filter-btn {
-      width: auto;
-      padding: 8px 12px;
-      font-size: 13px;
-      margin-top: -10px;
-      margin-bottom: 15px;
-    }
-    
-    .filter-name {
-      font-weight: normal;
-      color: var(--primary-color);
-    }
   </style>
 </head>
 <body>
@@ -291,22 +267,22 @@
       <div>
         <label for="countrySelect">Select Countries:</label>
         <select id="countrySelect" multiple size="10"></select>
-        <button class="btn btn-primary country-filter-btn" onclick="applyCountryFilter()">Filter by Selected Countries</button>
       </div>
     </div>
     
     <div class="btn-group">
-      <button class="btn btn-success" onclick="copyVisibleEntries()">Copy Visible Entries</button>
+      <button class="btn btn-primary" onclick="applyCountryFilter()">Filter by Selected Countries</button>
+      <button class="btn btn-primary" onclick="copyVisibleEntries()">Copy Visible Entries</button>
       <button class="btn btn-outline" onclick="createNewGroup()">Create New Group</button>
     </div>
   </div>
 
   <div class="counter">
     <span>Total Entries: <span id="totalCount" style="color: var(--primary-color)">0</span></span>
-    <span id="filteredLabel">Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
+    <span>Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
   </div>
 
-  <button id="downloadBtn" class="btn btn-success download-btn" onclick="downloadFilteredEntries()" style="display: none;">
+  <button id="downloadBtn" class="btn btn-primary download-btn" onclick="downloadFilteredEntries()" style="display: none;">
     Download Filtered Entries (TXT)
   </button>
 
@@ -316,44 +292,12 @@
   </div>
 
   <script>
-    // Country list with standardized names
     const countryList = [
-      "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", 
-      "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
-      "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", 
-      "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brasil", "Brunei", 
-      "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", 
-      "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "China", 
-      "Colombia", "Comoros", "Congo", "Costa Rica", "Cote d'Ivoire", "Côte d'Ivoire", 
-      "Cote D'Ivoire", "Ivory Coast", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
-      "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", 
-      "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", 
-      "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", 
-      "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", 
-      "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", 
-      "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", 
-      "Korea", "South Korea", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", 
-      "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
-      "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", 
-      "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", 
-      "Montenegro", "Morocco", "Mozambique", "Myanmar", "Burma", "Namibia", "Nauru", 
-      "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", 
-      "North Macedonia", "Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", 
-      "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", 
-      "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", 
-      "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", 
-      "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", 
-      "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
-      "South Africa", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", 
-      "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", 
-      "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", 
-      "Uganda", "Ukraine", "United Arab Emirates", "UAE", "U.A.E.", "U. A. E", "U. A. E.", 
-      "United Kingdom", "UK", "U.K.", "United States", "USA", "U.S.A.", "U.S.A", "U. S. A.", 
-      "U. S. A", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", 
-      "Vietnam", "Viet Nam", "Yemen", "Zambia", "Zimbabwe", "Hong Kong", "Macau", "Macao"
+      "Afghanistan", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
+      "Bahamas", "Bahrain", "Barbados", "Belize", "Benin", "Bolivia", "Bosnia and Herzegovina", "Brazil", "Brasil", "Brunei", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Canada", "Central African Republic", "Chad", "Tchad", "Chile", "Colombia", "Comoros", "Congo", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Eswatini", "Fiji", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "India", "Indonesia", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kenya", "Kiribati", "Kuwait", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Oman", "Pakistan", "Palau", "Palestine", "Philippines", "Qatar", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Solomon Islands", "Somalia", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Switzerland", "Syria", "Taiwan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "United Arab Emirates", "United States", "Vanuatu", "Vatican City", "Vietnam", "Yemen", "USA", "U.S.A.", "U.S.A", "U. S. A.", "U. S. A", "Korea", "UAE", "U.A.E.", "U. A. E", "U. A. E.", "Hong Kong", "Ivory Coast", "Cote d'Ivoire", "Côte d'Ivoire", "Cote D'Ivoire", "Macau", "Macao", "Macedonia", "Greece", "Albania", "Austria", "Azerbaijan", "Bangladesh", "Belgium", "Bhutan", "Botswana", "Bulgaria", "Cameroon", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Ethiopia", "Finland", "Hungary", "Iceland", "Iran", "Israel", "Kazakhstan", "Kyrgyzstan", "Lebanon", "Lithuania", "Maldives", "Mongolia", "Myanmar", "Burma", "Nepal", "Netherlands", "New Zealand", "Norway", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Romania", "Serbia", "Singapore", "Slovakia", "Slovenia", "Sweden", "Tajikistan", "Tanzania", "Ukraine", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Zambia", "Zimbabwe", "UK", "U.K.", "Viet Nam", "Belarus", "South Africa"
     ];
 
-    // Country name standardization map
+    // Create a map of country names to their standardized form
     const countryMap = {
       "USA": "United States",
       "U.S.A.": "United States",
@@ -379,65 +323,55 @@
       "Brasil": "Brazil"
     };
 
-    // Default country groups
-    const defaultGroups = {
-      "A - Japan Group": ["Japan", "South Korea", "Taiwan", "Thailand"],
-      "B - African Group": ["Egypt", "Kenya", "Morocco", "Nigeria", "South Africa"],
-      "C - Prime Group": ["Brazil", "Mexico", "Russia", "Saudi Arabia"],
-      "D - European Group": ["France", "Germany", "Italy", "Spain", "UK"],
-      "E - Chinese Group": ["China", "Hong Kong"],
+    let defaultGroups = {
+      "A - Japan Group": ["Indonesia", "Italy", "Japan", "Malaysia", "South Korea", "Korea", "Taiwan", "Thailand"],
+      "B - African Group": ["Bosnia and Herzegovina", "Burkina Faso", "Chad", "Congo", "Côte d'Ivoire", "Egypt", "Kenya", "Mali", "Morocco", "Niger", "Nigeria", "Rwanda", "Senegal", "South Africa", "Togo", "Uganda", "North Macedonia", "Gabon", "Ghana"],
+      "C - Prime Group": ["Brazil", "Colombia", "Jordan", "Kuwait", "Mexico", "Qatar", "United Arab Emirates", "Philippines", "Russia", "Saudi Arabia", "Vietnam"],
+      "D - European Group": ["Austria", "France", "Germany", "Greece", "Hungary", "Luxembourg", "Spain", "Turkey", "Algeria", "Finland"],
+      "E - Chinese Group": ["China", "Hong Kong", "Iran", "Iraq"],
       "F - Indian Group": ["India"],
-      "G - US Group": ["United States", "Canada"],
-      "H - Other Countries": ["Australia", "Argentina", "Israel"]
+      "G - US Group": ["USA", "U. S. A.", "U. S. A", "U.S.A.", "Canada"],
+      "H - Other Countries": ["Afghanistan", "Albania", "Andorra", "Angola"]
     };
     
-    // Load user groups from localStorage or initialize empty object
     let userGroups = JSON.parse(localStorage.getItem('userGroups')) || {};
     let countryGroups = { ...defaultGroups, ...userGroups };
     let entries = '';
     let allParts = [];
     let currentFilteredEntries = [];
-    let currentFilterName = '';
-
-    // Initialize the page when loaded
-    document.addEventListener('DOMContentLoaded', function() {
-      populateDropdowns();
-      document.getElementById('manualInput').addEventListener('input', function() {
-        if (this.value.trim()) {
-          entries = this.value.trim();
-          allParts = entries.split(/\n\n+/);
-          renderEntries(() => true);
-        }
-      });
-    });
 
     // Improved country matching function
     function entryContainsCountry(entry, country) {
+      // Standardize the country name first
       const standardizedCountry = countryMap[country] || country;
+      
+      // Create regex patterns that will match the country more precisely
       const patterns = [
+        // Match at end of line (most likely to be the actual country designation)
         new RegExp(`\\b${standardizedCountry}\\s*$`, 'im'),
+        // Match whole word (with word boundaries)
         new RegExp(`\\b${standardizedCountry}\\b`, 'im'),
+        // Match common abbreviations
         ...(country !== standardizedCountry ? [
           new RegExp(`\\b${country}\\s*$`, 'im'),
           new RegExp(`\\b${country}\\b`, 'im')
         ] : [])
       ];
+      
+      // Check all patterns
       return patterns.some(pattern => pattern.test(entry));
     }
 
-    // Count entries matching a specific country
     function countEntriesForCountry(country) {
       if (!allParts.length) return 0;
       return allParts.filter(entry => entryContainsCountry(entry, country)).length;
     }
 
-    // Populate dropdowns with countries and groups
     function populateDropdowns() {
       const groupSelect = document.getElementById('groupSelect');
       const countrySelect = document.getElementById('countrySelect');
       const userGroupsList = document.getElementById('userGroupsList');
       
-      // Clear existing options
       groupSelect.innerHTML = '<option value="">-- None --</option>';
       countrySelect.innerHTML = '';
       userGroupsList.innerHTML = '';
@@ -478,7 +412,7 @@
       customOption.textContent = '+ Create New Group';
       groupSelect.appendChild(customOption);
 
-      // Populate country select with sorted countries
+      // Populate country select
       countryList.sort().forEach(country => {
         const option = document.createElement('option');
         option.value = country;
@@ -487,13 +421,11 @@
       });
     }
 
-    // Render entries based on filter function
-    function renderEntries(filterFn, filterName = '') {
+    function renderEntries(filterFn) {
       const container = document.getElementById('entriesContainer');
       container.innerHTML = '';
       let count = 0;
       currentFilteredEntries = [];
-      currentFilterName = filterName;
       
       allParts.forEach(entry => {
         if (filterFn(entry)) {
@@ -510,7 +442,6 @@
       document.getElementById('downloadBtn').style.display = count > 0 ? 'block' : 'none';
     }
 
-    // Update group countries display
     function updateGroupCountriesDisplay(groupName) {
       const groupCountriesDiv = document.getElementById('groupCountries');
       if (!groupName || !countryGroups[groupName]) {
@@ -523,14 +454,13 @@
       
       countries.forEach(country => {
         const count = countEntriesForCountry(country);
-        html += `<span class="country-count">${country} (${count})</span>`;
+        html += `<span class="country-count">${country}(${count})</span>`;
       });
       
       groupCountriesDiv.innerHTML = html;
       groupCountriesDiv.style.display = 'block';
     }
 
-    // Load entries from textarea
     function loadEntries() {
       const manualText = document.getElementById('manualInput').value;
       if (manualText.trim()) {
@@ -540,7 +470,6 @@
       }
     }
 
-    // Handle file upload
     document.getElementById('fileInput').addEventListener('change', function() {
       const file = this.files[0];
       if (!file) return;
@@ -555,7 +484,6 @@
       reader.readAsText(file);
     });
 
-    // Handle group selection change
     document.getElementById('groupSelect').addEventListener('change', function() {
       const val = this.value;
       if (val === '__create__') {
@@ -566,23 +494,19 @@
       updateGroupCountriesDisplay(val);
       
       if (val && countryGroups[val]) {
-        renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)), val);
+        renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)));
       } else {
         renderEntries(() => true);
       }
     });
 
-    // Apply country filter
     function applyCountryFilter() {
       document.getElementById('groupSelect').value = '';
       document.getElementById('groupCountries').style.display = 'none';
       const selectedOptions = Array.from(document.getElementById('countrySelect').selectedOptions).map(opt => opt.value);
-      const filterName = selectedOptions.length === 1 ? selectedOptions[0] : 
-                        selectedOptions.length > 1 ? 'Selected Countries' : '';
-      renderEntries(entry => selectedOptions.some(country => entryContainsCountry(entry, country)), filterName);
+      renderEntries(entry => selectedOptions.some(country => entryContainsCountry(entry, country)));
     }
 
-    // Copy visible entries to clipboard
     function copyVisibleEntries() {
       const visibleEntries = Array.from(document.querySelectorAll('.entry')).map(div => div.textContent).join('\n\n');
       navigator.clipboard.writeText(visibleEntries).then(() => {
@@ -592,32 +516,24 @@
       });
     }
 
-    // Download filtered entries
     function downloadFilteredEntries() {
       if (currentFilteredEntries.length === 0) return;
-      
-      const filename = currentFilterName 
-        ? `${currentFilterName.replace(/[^a-z0-9]/gi, '_')}_entries.txt` 
-        : 'filtered_entries.txt';
       
       const blob = new Blob([currentFilteredEntries.join('\n\n')], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = filename;
+      a.download = 'filtered_entries.txt';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
 
-    // Clear all and refresh page
     function clearAll() {
-      localStorage.removeItem('userGroups');
       location.reload();
     }
 
-    // Create new country group
     function createNewGroup() {
       const groupName = prompt("Enter new group name:");
       if (!groupName) return;
@@ -632,10 +548,9 @@
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay(groupName);
-      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)), groupName;
+      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)));
     }
 
-    // Delete a user group
     function deleteGroup(groupName) {
       if (confirm(`Are you sure you want to delete the group "${groupName}"?`)) {
         delete userGroups[groupName];
@@ -647,18 +562,13 @@
       }
     }
 
-    // Update counters with current filter status
     function updateCounters(filteredCount = 0) {
       document.getElementById('totalCount').textContent = allParts.length;
       document.getElementById('filteredCount').textContent = filteredCount;
-      
-      const filteredLabel = document.getElementById('filteredLabel');
-      if (currentFilterName) {
-        filteredLabel.innerHTML = `Filtered (<span class="filter-name">${currentFilterName}</span>): <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
-      } else {
-        filteredLabel.innerHTML = `Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
-      }
     }
+
+    // Initialize the page
+    populateDropdowns();
   </script>
 </body>
 </html>
