@@ -219,6 +219,11 @@
     .download-btn {
       margin-top: 15px;
     }
+    
+    .country-filter-btn {
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -267,11 +272,11 @@
       <div>
         <label for="countrySelect">Select Countries:</label>
         <select id="countrySelect" multiple size="10"></select>
+        <button class="btn btn-primary country-filter-btn" onclick="applyCountryFilter()">Filter by Selected Countries</button>
       </div>
     </div>
     
     <div class="btn-group">
-      <button class="btn btn-primary" onclick="applyCountryFilter()">Filter by Selected Countries</button>
       <button class="btn btn-primary" onclick="copyVisibleEntries()">Copy Visible Entries</button>
       <button class="btn btn-outline" onclick="createNewGroup()">Create New Group</button>
     </div>
@@ -279,7 +284,7 @@
 
   <div class="counter">
     <span>Total Entries: <span id="totalCount" style="color: var(--primary-color)">0</span></span>
-    <span>Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
+    <span id="filteredCountLabel">Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
   </div>
 
   <button id="downloadBtn" class="btn btn-primary download-btn" onclick="downloadFilteredEntries()" style="display: none;">
@@ -339,6 +344,7 @@
     let entries = '';
     let allParts = [];
     let currentFilteredEntries = [];
+    let currentGroupName = '';
 
     // Improved country matching function
     function entryContainsCountry(entry, country) {
@@ -421,11 +427,12 @@
       });
     }
 
-    function renderEntries(filterFn) {
+    function renderEntries(filterFn, groupName = '') {
       const container = document.getElementById('entriesContainer');
       container.innerHTML = '';
       let count = 0;
       currentFilteredEntries = [];
+      currentGroupName = groupName;
       
       allParts.forEach(entry => {
         if (filterFn(entry)) {
@@ -494,7 +501,7 @@
       updateGroupCountriesDisplay(val);
       
       if (val && countryGroups[val]) {
-        renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)));
+        renderEntries(entry => countryGroups[val].some(c => entryContainsCountry(entry, c)), val);
       } else {
         renderEntries(() => true);
       }
@@ -548,7 +555,7 @@
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay(groupName);
-      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)));
+      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)), groupName);
     }
 
     function deleteGroup(groupName) {
@@ -565,6 +572,13 @@
     function updateCounters(filteredCount = 0) {
       document.getElementById('totalCount').textContent = allParts.length;
       document.getElementById('filteredCount').textContent = filteredCount;
+      
+      const filteredLabel = document.getElementById('filteredCountLabel');
+      if (currentGroupName) {
+        filteredLabel.innerHTML = `${currentGroupName}: <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
+      } else {
+        filteredLabel.innerHTML = `Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
+      }
     }
 
     // Initialize the page
