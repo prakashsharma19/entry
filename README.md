@@ -258,7 +258,7 @@
       <div>
         <label for="groupSelect">Select Group:</label>
         <select id="groupSelect">
-          <option value="">-- None --</option>
+          <option value="">-- All Entries --</option>
         </select>
         
         <div id="groupCountries" class="group-countries"></div>
@@ -378,7 +378,7 @@
       const countrySelect = document.getElementById('countrySelect');
       const userGroupsList = document.getElementById('userGroupsList');
       
-      groupSelect.innerHTML = '<option value="">-- None --</option>';
+      groupSelect.innerHTML = '<option value="">-- All Entries --</option>';
       countrySelect.innerHTML = '';
       userGroupsList.innerHTML = '';
 
