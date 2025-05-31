@@ -298,7 +298,7 @@
   </div>
 
   <button id="downloadBtn" class="btn btn-success download-btn" onclick="downloadFilteredEntries()" style="display: none;">
-    Download Filtered Entries (TXT)
+    Download Entries
   </button>
 
   <div class="output-section">
