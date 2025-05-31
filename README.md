@@ -115,15 +115,6 @@
       background-color: var(--primary-hover);
     }
     
-    .btn-success {
-      background-color: var(--success-color);
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background-color: var(--success-hover);
-    }
-    
     .btn-secondary {
       background-color: var(--secondary-color);
       color: white;
@@ -131,6 +122,15 @@
     
     .btn-secondary:hover {
       background-color: var(--secondary-hover);
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: var(--success-hover);
     }
     
     .btn-outline {
@@ -231,9 +231,10 @@
       margin-top: 15px;
     }
     
-    #filteredGroupName {
-      color: var(--primary-color);
-      font-weight: normal;
+    .country-filter-btn {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -283,6 +284,7 @@
       <div>
         <label for="countrySelect">Select Countries:</label>
         <select id="countrySelect" multiple size="10"></select>
+        <button class="btn btn-primary country-filter-btn" onclick="applyCountryFilter()">Filter by Selected Countries</button>
       </div>
     </div>
     
@@ -294,11 +296,11 @@
 
   <div class="counter">
     <span>Total Entries: <span id="totalCount" style="color: var(--primary-color)">0</span></span>
-    <span>Filtered Group: <span id="filteredGroupName">None</span> (<span id="filteredCount" style="color: var(--primary-color)">0</span>)</span>
+    <span id="filteredLabel">Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">0</span></span>
   </div>
 
   <button id="downloadBtn" class="btn btn-success download-btn" onclick="downloadFilteredEntries()" style="display: none;">
-    Download Entries
+    Download Filtered Entries (TXT)
   </button>
 
   <div class="output-section">
@@ -354,7 +356,7 @@
     let entries = '';
     let allParts = [];
     let currentFilteredEntries = [];
-    let currentFilteredGroup = '';
+    let currentFilterName = '';
 
     // Improved country matching function
     function entryContainsCountry(entry, country) {
@@ -437,12 +439,12 @@
       });
     }
 
-    function renderEntries(filterFn, groupName = '') {
+    function renderEntries(filterFn, filterName = '') {
       const container = document.getElementById('entriesContainer');
       container.innerHTML = '';
       let count = 0;
       currentFilteredEntries = [];
-      currentFilteredGroup = groupName;
+      currentFilterName = filterName;
       
       allParts.forEach(entry => {
         if (filterFn(entry)) {
@@ -517,6 +519,15 @@
       }
     });
 
+    function applyCountryFilter() {
+      document.getElementById('groupSelect').value = '';
+      document.getElementById('groupCountries').style.display = 'none';
+      const selectedOptions = Array.from(document.getElementById('countrySelect').selectedOptions).map(opt => opt.value);
+      const filterName = selectedOptions.length === 1 ? selectedOptions[0] : 
+                        selectedOptions.length > 1 ? 'Selected Countries' : '';
+      renderEntries(entry => selectedOptions.some(country => entryContainsCountry(entry, country)), filterName);
+    }
+
     function copyVisibleEntries() {
       const visibleEntries = Array.from(document.querySelectorAll('.entry')).map(div => div.textContent).join('\n\n');
       navigator.clipboard.writeText(visibleEntries).then(() => {
@@ -533,7 +544,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'filtered_entries.txt';
+      a.download = currentFilterName ? `${currentFilterName}_entries.txt` : 'filtered_entries.txt';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -558,7 +569,7 @@
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay(groupName);
-      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)), groupName);
+      renderEntries(entry => countryListNew.some(c => entryContainsCountry(entry, c)), groupName;
     }
 
     function deleteGroup(groupName) {
@@ -575,7 +586,13 @@
     function updateCounters(filteredCount = 0) {
       document.getElementById('totalCount').textContent = allParts.length;
       document.getElementById('filteredCount').textContent = filteredCount;
-      document.getElementById('filteredGroupName').textContent = currentFilteredGroup || 'None';
+      
+      const filteredLabel = document.getElementById('filteredLabel');
+      if (currentFilterName) {
+        filteredLabel.innerHTML = `Filtered (${currentFilterName}): <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
+      } else {
+        filteredLabel.innerHTML = `Filtered Entries: <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
+      }
     }
 
     // Initialize the page
