@@ -47,9 +47,30 @@
       align-items: center;
       gap: 5px;
     }
-    
+
     .refresh-btn:hover {
       background-color: #dfe6e9;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dept-btn {
+      background-color: #90ee90;
+      color: #000;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dept-btn:hover {
+      background-color: #76d275;
     }
     
     .input-section, .filter-section, .output-section {
@@ -301,12 +322,15 @@
 <body>
   <div class="header">
     <h2>Country Group Entry Management</h2>
-    <button class="refresh-btn" onclick="clearAll()">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-      </svg>
-      Refresh
-    </button>
+    <div class="header-actions">
+      <button class="refresh-btn" onclick="clearAll()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Refresh
+      </button>
+      <a href="https://prakashsharma19.github.io/dep/" target="_blank" class="dept-btn">Dept-wise Entry</a>
+    </div>
   </div>
 
   <div class="input-section">
