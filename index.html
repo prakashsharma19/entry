@@ -199,7 +199,7 @@
         grid-template-columns: 1fr;
       }
     }
-    
+
     .group-item {
       display: flex;
       justify-content: space-between;
@@ -472,6 +472,7 @@
     let currentFilteredEntries = [];
     let currentGroupNames = [];
     let groupCounts = {};
+    let uploadedFileName = '';
 
     // Show loading overlay
     function showLoading(text = "Processing entries...") {
@@ -718,17 +719,18 @@
       if (manualText.trim()) {
         entries = manualText.trim();
         allParts = entries.split(/\n\n+/);
+        uploadedFileName = 'manual_entries.txt';
         updateGroupCounts();
         renderEntries(() => true);
       }
     }
-
     document.getElementById('fileInput').addEventListener('change', function() {
       const file = this.files[0];
       if (!file) return;
-      
+
+      uploadedFileName = file.name;
       showLoading("Loading file...");
-      
+
       const reader = new FileReader();
       reader.onload = function(e) {
         entries = e.target.result;
@@ -810,12 +812,19 @@
 
     function downloadFilteredEntries() {
       if (currentFilteredEntries.length === 0) return;
-      
+
       const blob = new Blob([currentFilteredEntries.join('\n\n')], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'filtered_entries.txt';
+
+      let baseName = uploadedFileName || 'filtered_entries.txt';
+      baseName = baseName.replace(/\.[^/.]+$/, '');
+      baseName = baseName.replace(/\s*\([^)]*\)\s*$/, '');
+
+      const groupPart = currentGroupNames.length > 0 ? ' ' + currentGroupNames.join(' & ') : '';
+      a.download = `${baseName}${groupPart} (${currentFilteredEntries.length} Entries).txt`;
+
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
