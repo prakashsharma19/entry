@@ -490,6 +490,11 @@
       document.getElementById('progressBar').style.width = `${percent}%`;
     }
 
+    function formatDate(date) {
+      const pad = n => n.toString().padStart(2, '0');
+      return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()}`;
+    }
+
     // Improved country detection - looks for country on the line before email
     async function getCountryFromEntry(entry) {
       const lines = entry.split('\n').map(line => line.trim()).filter(line => line.length > 0);
@@ -820,10 +825,11 @@
 
       let baseName = uploadedFileName || 'filtered_entries.txt';
       baseName = baseName.replace(/\.[^/.]+$/, '');
-      baseName = baseName.replace(/\s*\([^)]*\)\s*$/, '');
+      const firstWord = baseName.trim().split(/\s+/)[0];
 
-      const groupPart = currentGroupNames.length > 0 ? ' ' + currentGroupNames.join(' & ') : '';
-      a.download = `${baseName}${groupPart} (${currentFilteredEntries.length} Entries).txt`;
+      const groupPart = currentGroupNames.length > 0 ? currentGroupNames.join(' & ') : 'Filtered';
+      const dateStr = formatDate(new Date());
+      a.download = `${firstWord} - ${groupPart} (${currentFilteredEntries.length} Entries) - ${dateStr}.txt`;
 
       document.body.appendChild(a);
       a.click();
