@@ -491,8 +491,16 @@
     }
 
     function formatDate(date) {
-      const pad = n => n.toString().padStart(2, '0');
-      return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()}`;
+      return `${date.getFullYear()}`;
+    }
+
+    function getGroupPrefix(name) {
+      let cleaned = name.replace(/\bGroup\b$/i, '').trim();
+      const parts = cleaned.split(/\s+/);
+      if (parts[1] === '-') {
+        return parts.slice(0, 3).join(' ');
+      }
+      return parts.slice(0, 2).join(' ');
     }
 
     // Improved country detection - looks for country on the line before email
@@ -825,11 +833,27 @@
 
       let baseName = uploadedFileName || 'filtered_entries.txt';
       baseName = baseName.replace(/\.[^/.]+$/, '');
+
+      baseName = baseName.replace(/\b\d{1,2}-\d{1,2}-\d{4}\b/, '').trim();
+      baseName = baseName.replace(/\(\s*\d+\s*entries?\s*\)/i, '').trim();
+
+      const yearMatch = baseName.match(/\b(19|20)\d{2}\b/);
+      if (yearMatch) {
+        baseName = baseName.replace(yearMatch[0], '').trim();
+      }
+
+      let trailing = '';
+      const hyphenIndex = baseName.indexOf(' - ');
+      if (hyphenIndex !== -1) {
+        trailing = baseName.slice(hyphenIndex);
+        baseName = baseName.slice(0, hyphenIndex).trim();
+      }
+
       const firstWord = baseName.trim().split(/\s+/)[0];
 
-      const groupPart = currentGroupNames.length > 0 ? currentGroupNames.join(' & ') : 'Filtered';
-      const dateStr = formatDate(new Date());
-      a.download = `${firstWord} - ${groupPart} (${currentFilteredEntries.length} Entries) - ${dateStr}.txt`;
+      const groupPart = currentGroupNames.length > 0 ? currentGroupNames.map(n => getGroupPrefix(n)).join(' & ') : 'Filtered';
+      const yearStr = formatDate(new Date());
+      a.download = `${firstWord} - ${groupPart} (${currentFilteredEntries.length} entries) - ${yearStr}${trailing}.txt`;
 
       document.body.appendChild(a);
       a.click();
