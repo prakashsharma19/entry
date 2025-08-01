@@ -834,26 +834,14 @@
       let baseName = uploadedFileName || 'filtered_entries.txt';
       baseName = baseName.replace(/\.[^/.]+$/, '');
 
-      baseName = baseName.replace(/\b\d{1,2}-\d{1,2}-\d{4}\b/, '').trim();
       baseName = baseName.replace(/\(\s*\d+\s*entries?\s*\)/i, '').trim();
 
-      const yearMatch = baseName.match(/\b(19|20)\d{2}\b/);
-      if (yearMatch) {
-        baseName = baseName.replace(yearMatch[0], '').trim();
-      }
-
-      let trailing = '';
       const hyphenIndex = baseName.indexOf(' - ');
-      if (hyphenIndex !== -1) {
-        trailing = baseName.slice(hyphenIndex);
-        baseName = baseName.slice(0, hyphenIndex).trim();
-      }
-
-      const firstWord = baseName.trim().split(/\s+/)[0];
+      const prefix = hyphenIndex !== -1 ? baseName.slice(0, hyphenIndex).trim() : baseName.trim();
 
       const groupPart = currentGroupNames.length > 0 ? currentGroupNames.map(n => getGroupPrefix(n)).join(' & ') : 'Filtered';
-      const yearStr = formatDate(new Date());
-      a.download = `${firstWord} - ${groupPart} (${currentFilteredEntries.length} entries) - ${yearStr}${trailing}.txt`;
+
+      a.download = `${prefix} - ${groupPart} - (${currentFilteredEntries.length} Entries).txt`;
 
       document.body.appendChild(a);
       a.click();
