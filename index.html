@@ -580,10 +580,15 @@
         
         for (const entry of chunk) {
           const entryCountry = await getCountryFromEntry(entry);
-          if (!entryCountry) continue;
-          
+          if (!entryCountry) {
+            if (groupName === 'H - Other Countries') {
+              count++;
+            }
+            continue;
+          }
+
           const standardizedEntryCountry = countryMap[entryCountry] || entryCountry;
-          
+
           for (const country of countries) {
             const standardizedCountry = countryMap[country] || country;
             if (standardizedEntryCountry.toLowerCase() === standardizedCountry.toLowerCase()) {
@@ -795,8 +800,10 @@
         
         await renderEntries(async (entry) => {
           const entryCountry = await getCountryFromEntry(entry);
-          if (!entryCountry) return false;
-          
+          if (!entryCountry) {
+            return filteredOptions.includes('H - Other Countries');
+          }
+
           const standardizedCountry = countryMap[entryCountry] || entryCountry;
           return selectedCountries.has(standardizedCountry.toLowerCase());
         }, filteredOptions);
@@ -889,8 +896,10 @@
       
       await renderEntries(async (entry) => {
         const entryCountry = await getCountryFromEntry(entry);
-        if (!entryCountry) return false;
-        
+        if (!entryCountry) {
+          return groupName === 'H - Other Countries';
+        }
+
         const standardizedCountry = countryMap[entryCountry] || entryCountry;
         return selectedCountries.has(standardizedCountry.toLowerCase());
       }, [groupName]);
