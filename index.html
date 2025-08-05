@@ -444,29 +444,40 @@
       "D - European Group": ["Austria", "France", "Germany", "Greece", "Hungary", "Luxembourg", "Spain", "Turkey", "Turkiye", "Türkiye", "Algeria", "Finland"],
       "E - Chinese Group": ["China", "Hong Kong", "Iran", "P. R. China", "Iraq"],
       "F - Indian Group": ["India"],
-      "G - US Group": ["USA", "U. S. A.", "U. S. A", "U.S.A.", "Canada"],
-      "H - Other Countries": [
-        "Afghanistan", "Albania", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia",
-        "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
-        "Bolivia", "Botswana", "Brunei Darussalam", "Bulgaria", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Chile",
-        "Comoros", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia", "Czech Republic", "Denmark", "Djibouti",
-        "Dominica", "Dominican Republic", "Ecuador", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia",
-        "Fiji", "Gambia", "Georgia", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras",
-        "Iceland", "Ireland", "Israel", "Jamaica", "Kazakhstan", "Kiribati", "Kyrgyzstan", "Lao", "Latvia", "Lebanon",
-        "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Madagascar", "Malawi", "Maldives", "Malta",
-        "Marshall Islands", "Mauritania", "Mauritius", "Micronesia", "Monaco", "Mongolia", "Montenegro", "Mozambique",
-        "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "North Korea", "Norway", "Oman",
-        "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal", "Republic of Moldova",
-        "Romania", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent", "Samoa", "San Marino", "Sao Tome and Principe",
-        "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
-        "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania",
-        "Timor Leste", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkmenistan", "Tuvalu", "Ukraine", "United Kingdom",
-        "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Yemen", "Zambia", "Zimbabwe"
-      ]
+      "G - US Group": ["USA", "U. S. A.", "U. S. A", "U.S.A.", "Canada"]
     };
-    
+
+    function computeOtherCountries() {
+      const assigned = new Set();
+      const groups = { ...defaultGroups, ...userGroups };
+      for (const [name, countries] of Object.entries(groups)) {
+        if (name === "H - Other Countries") continue;
+        for (const country of countries) {
+          const standardized = countryMap[country] || country;
+          assigned.add(standardized.toLowerCase());
+        }
+      }
+      const others = [];
+      for (const country of countryList) {
+        const standardized = countryMap[country] || country;
+        const key = standardized.toLowerCase();
+        if (!assigned.has(key)) {
+          assigned.add(key);
+          others.push(standardized);
+        }
+      }
+      return others.sort();
+    }
+
     let userGroups = JSON.parse(localStorage.getItem('userGroups')) || {};
-    let countryGroups = { ...defaultGroups, ...userGroups };
+    let countryGroups = {};
+
+    function updateCountryGroups() {
+      defaultGroups["H - Other Countries"] = computeOtherCountries();
+      countryGroups = { ...defaultGroups, ...userGroups };
+    }
+
+    updateCountryGroups();
     let entries = '';
     let allParts = [];
     let currentFilteredEntries = [];
@@ -863,7 +874,7 @@
       const countryListNew = selected.split(',').map(s => s.trim()).filter(Boolean);
       userGroups[groupName] = countryListNew;
       localStorage.setItem('userGroups', JSON.stringify(userGroups));
-      countryGroups = { ...defaultGroups, ...userGroups };
+      updateCountryGroups();
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay([groupName]);
@@ -889,7 +900,7 @@
       if (confirm(`Are you sure you want to delete the group "${groupName}"?`)) {
         delete userGroups[groupName];
         localStorage.setItem('userGroups', JSON.stringify(userGroups));
-        countryGroups = { ...defaultGroups, ...userGroups };
+        updateCountryGroups();
         populateDropdowns();
         await updateGroupCounts();
         await renderEntries(() => true);
