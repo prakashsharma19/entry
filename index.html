@@ -154,12 +154,21 @@
     }
 
     .btn-download {
-      background-color: #90ee90;
-      color: #000;
+      background-color: #003366;
+      color: #fff;
     }
 
     .btn-download:hover {
-      background-color: #76d275;
+      background-color: #002244;
+    }
+
+    .btn-download-all {
+      background-color: #006400;
+      color: #fff;
+    }
+
+    .btn-download-all:hover {
+      background-color: #004d00;
     }
     
     .btn-group {
@@ -252,7 +261,7 @@
       margin-bottom: 5px;
     }
     
-    .download-btn {
+    #downloadBtn {
       margin-top: 15px;
     }
     
@@ -276,6 +285,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .group-count-item .btn {
+      margin: 0;
     }
     
     /* Loading indicator styles */
@@ -638,7 +651,7 @@
       const allDiv = document.createElement('div');
       allDiv.className = 'group-count-item';
       const allBtn = document.createElement('button');
-      allBtn.className = 'btn btn-download';
+      allBtn.className = 'btn btn-download-all';
       allBtn.textContent = `Download All (${allParts.length})`;
       allBtn.onclick = downloadAllGroups;
       allDiv.appendChild(allBtn);
