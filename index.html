@@ -510,6 +510,14 @@
     let groupCounts = {};
     let uploadedFileName = '';
 
+    function getFilePrefix() {
+      let baseName = uploadedFileName || 'manual_entries.txt';
+      baseName = baseName.replace(/\.[^/.]+$/, '');
+      baseName = baseName.replace(/\(\s*\d+\s*entries?\s*\)/i, '').trim();
+      const hyphenIndex = baseName.indexOf(' - ');
+      return hyphenIndex !== -1 ? baseName.slice(0, hyphenIndex).trim() : baseName.trim();
+    }
+
     // Show loading overlay
     function showLoading(text = "Processing entries...") {
       document.getElementById('loadingText').textContent = text;
@@ -715,12 +723,7 @@
       const a = document.createElement('a');
       a.href = url;
 
-      let baseName = uploadedFileName || 'filtered_entries.txt';
-      baseName = baseName.replace(/\.[^/.]+$/, '');
-      baseName = baseName.replace(/\(\s*\d+\s*entries?\s*\)/i, '').trim();
-
-      const hyphenIndex = baseName.indexOf(' - ');
-      const prefix = hyphenIndex !== -1 ? baseName.slice(0, hyphenIndex).trim() : baseName.trim();
+      const prefix = getFilePrefix();
 
       const groupPart = getGroupPrefix(groupName);
       a.download = `${prefix} - ${groupPart} - (${entries.length} Entries) CQ.txt`;
@@ -954,13 +957,7 @@
       const a = document.createElement('a');
       a.href = url;
 
-      let baseName = uploadedFileName || 'filtered_entries.txt';
-      baseName = baseName.replace(/\.[^/.]+$/, '');
-
-      baseName = baseName.replace(/\(\s*\d+\s*entries?\s*\)/i, '').trim();
-
-      const hyphenIndex = baseName.indexOf(' - ');
-      const prefix = hyphenIndex !== -1 ? baseName.slice(0, hyphenIndex).trim() : baseName.trim();
+      const prefix = getFilePrefix();
 
       const groupPart = currentGroupNames.length > 0 ? currentGroupNames.map(n => getGroupPrefix(n)).join(' & ') : 'Filtered';
 
