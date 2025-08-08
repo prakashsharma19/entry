@@ -170,12 +170,34 @@
     .btn-download-all:hover {
       background-color: #004d00;
     }
-    
+
+    .btn-load {
+      background-color: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .btn-load.active {
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .btn-load.active:hover {
+      background-color: #218838;
+    }
+
     .btn-group {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 15px;
+    }
+
+    .file-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
     
     .counter {
@@ -389,7 +411,10 @@
   <div class="input-section">
     <h3 class="section-title">Input Data</h3>
     <label for="fileInput">Upload File:</label>
-    <input type="file" id="fileInput" accept=".txt">
+    <div class="file-input-wrapper">
+      <input type="file" id="fileInput" accept=".txt">
+      <button id="loadFileButton" class="btn btn-load" disabled>Load Entries</button>
+    </div>
     <details id="manualInputSection" class="collapsible">
       <summary class="collapsible-label">Or Paste Entries:</summary>
       <textarea id="manualInput" rows="5" placeholder="Paste entries here, separated by blank lines..."></textarea>
@@ -538,6 +563,7 @@
     let currentGroupNames = [];
     let groupCounts = {};
     let uploadedFileName = '';
+    let pendingFile = null;
 
     function getFilePrefix() {
       let baseName = uploadedFileName || 'manual_entries.txt';
@@ -556,6 +582,17 @@
     // Hide loading overlay
     function hideLoading() {
       document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    function updateLoadFileButton() {
+      const btn = document.getElementById('loadFileButton');
+      if (pendingFile) {
+        btn.disabled = false;
+        btn.classList.add('active');
+      } else {
+        btn.disabled = true;
+        btn.classList.remove('active');
+      }
     }
     
     // Update progress bar
@@ -888,13 +925,20 @@
         uploadedFileName = 'manual_entries.txt';
         updateGroupCounts();
         renderEntries(() => true);
+        pendingFile = null;
+        updateLoadFileButton();
       }
     }
     document.getElementById('fileInput').addEventListener('change', function() {
-      const file = this.files[0];
-      if (!file) return;
+      pendingFile = this.files[0] || null;
+      if (pendingFile) {
+        uploadedFileName = pendingFile.name;
+      }
+      updateLoadFileButton();
+    });
 
-      uploadedFileName = file.name;
+    document.getElementById('loadFileButton').addEventListener('click', function() {
+      if (!pendingFile) return;
       showLoading("Loading file...");
 
       const reader = new FileReader();
@@ -904,10 +948,10 @@
         document.getElementById('manualInput').value = entries;
         updateGroupCounts();
         renderEntries(() => true);
-        // Reset the file input so selecting the same file again triggers the change event
-        document.getElementById('fileInput').value = '';
+        pendingFile = null;
+        updateLoadFileButton();
       };
-      reader.readAsText(file);
+      reader.readAsText(pendingFile);
     });
 
     document.getElementById('groupSelect').addEventListener('change', async function() {
