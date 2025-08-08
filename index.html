@@ -904,6 +904,8 @@
         document.getElementById('manualInput').value = entries;
         updateGroupCounts();
         renderEntries(() => true);
+        // Reset the file input so selecting the same file again triggers the change event
+        document.getElementById('fileInput').value = '';
       };
       reader.readAsText(file);
     });
