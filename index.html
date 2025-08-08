@@ -171,22 +171,6 @@
       background-color: #004d00;
     }
 
-    .btn-load {
-      background-color: #ccc;
-      color: #666;
-      cursor: not-allowed;
-    }
-
-    .btn-load.active {
-      background-color: #28a745;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .btn-load.active:hover {
-      background-color: #218838;
-    }
-
     .btn-group {
       display: flex;
       flex-wrap: wrap;
@@ -413,7 +397,6 @@
     <label for="fileInput">Upload File:</label>
     <div class="file-input-wrapper">
       <input type="file" id="fileInput" accept=".txt">
-      <button id="loadFileButton" class="btn btn-load" disabled>Load Entries</button>
     </div>
     <details id="manualInputSection" class="collapsible">
       <summary class="collapsible-label">Or Paste Entries:</summary>
@@ -563,7 +546,6 @@
     let currentGroupNames = [];
     let groupCounts = {};
     let uploadedFileName = '';
-    let pendingFile = null;
 
     function getFilePrefix() {
       let baseName = uploadedFileName || 'manual_entries.txt';
@@ -584,17 +566,6 @@
       document.getElementById('loadingOverlay').style.display = 'none';
     }
 
-    function updateLoadFileButton() {
-      const btn = document.getElementById('loadFileButton');
-      if (pendingFile) {
-        btn.disabled = false;
-        btn.classList.add('active');
-      } else {
-        btn.disabled = true;
-        btn.classList.remove('active');
-      }
-    }
-    
     // Update progress bar
     function updateProgress(percent) {
       document.getElementById('progressBar').style.width = `${percent}%`;
@@ -923,8 +894,6 @@
       document.getElementById('manualInput').value = entries;
       updateGroupCounts();
       renderEntries(() => true);
-      pendingFile = null;
-      updateLoadFileButton();
     }
 
     function loadEntries() {
@@ -935,23 +904,15 @@
       }
     }
     document.getElementById('fileInput').addEventListener('change', function() {
-      pendingFile = this.files[0] || null;
-      if (pendingFile) {
-        uploadedFileName = pendingFile.name;
-      }
-      updateLoadFileButton();
-    });
-
-    document.getElementById('loadFileButton').addEventListener('click', function() {
-      if (!pendingFile) return;
+      const file = this.files[0];
+      if (!file) return;
+      uploadedFileName = file.name;
       showLoading("Loading file...");
-
       const reader = new FileReader();
       reader.onload = function(e) {
-        uploadedFileName = pendingFile.name;
         processEntries(e.target.result);
       };
-      reader.readAsText(pendingFile);
+      reader.readAsText(file);
     });
 
     document.getElementById('groupSelect').addEventListener('change', async function() {
