@@ -917,16 +917,21 @@
       groupCountriesDiv.style.display = 'block';
     }
 
+    function processEntries(text) {
+      entries = text.trim();
+      allParts = entries.split(/\n\n+/);
+      document.getElementById('manualInput').value = entries;
+      updateGroupCounts();
+      renderEntries(() => true);
+      pendingFile = null;
+      updateLoadFileButton();
+    }
+
     function loadEntries() {
       const manualText = document.getElementById('manualInput').value;
       if (manualText.trim()) {
-        entries = manualText.trim();
-        allParts = entries.split(/\n\n+/);
         uploadedFileName = 'manual_entries.txt';
-        updateGroupCounts();
-        renderEntries(() => true);
-        pendingFile = null;
-        updateLoadFileButton();
+        processEntries(manualText);
       }
     }
     document.getElementById('fileInput').addEventListener('change', function() {
@@ -943,13 +948,8 @@
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        entries = e.target.result;
-        allParts = entries.split(/\n\n+/);
-        document.getElementById('manualInput').value = entries;
-        updateGroupCounts();
-        renderEntries(() => true);
-        pendingFile = null;
-        updateLoadFileButton();
+        uploadedFileName = pendingFile.name;
+        processEntries(e.target.result);
       };
       reader.readAsText(pendingFile);
     });
