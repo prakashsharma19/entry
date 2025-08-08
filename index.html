@@ -276,7 +276,7 @@
       gap: 15px;
       margin-top: 10px;
     }
-    
+
     .group-count-item {
       background: #f0f7ff;
       padding: 5px 10px;
@@ -285,10 +285,38 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      border: 1px solid #ddd;
     }
 
     .group-count-item .btn {
       margin: 0;
+    }
+
+    /* Collapsible sections */
+    .collapsible summary {
+      cursor: pointer;
+      list-style: none;
+      position: relative;
+    }
+
+    .collapsible summary::before {
+      content: '+';
+      margin-right: 5px;
+    }
+
+    .collapsible[open] summary::before {
+      content: '-';
+    }
+
+    .collapsible summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .collapsible-label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
     }
     
     /* Loading indicator styles */
@@ -362,19 +390,20 @@
     <h3 class="section-title">Input Data</h3>
     <label for="fileInput">Upload File:</label>
     <input type="file" id="fileInput" accept=".txt">
-    
-    <label for="manualInput">Or Paste Entries:</label>
-    <textarea id="manualInput" rows="5" placeholder="Paste entries here, separated by blank lines..."></textarea>
-    
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="loadEntries()">Load Entries</button>
-      <button class="btn btn-outline" onclick="document.getElementById('manualInput').value = ''">Clear Text</button>
-    </div>
+    <details id="manualInputSection" class="collapsible">
+      <summary class="collapsible-label">Or Paste Entries:</summary>
+      <textarea id="manualInput" rows="5" placeholder="Paste entries here, separated by blank lines..."></textarea>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="loadEntries()">Load Entries</button>
+        <button class="btn btn-outline" onclick="document.getElementById('manualInput').value = ''">Clear Text</button>
+      </div>
+    </details>
   </div>
 
-  <div class="filter-section">
-    <h3 class="section-title">Filter Options</h3>
-    
+  <details id="filterSection" class="filter-section collapsible">
+    <summary class="section-title">Filter Options</summary>
+
     <div class="two-column">
       <div>
         <label for="groupSelect">Select Group(s):</label>
@@ -401,7 +430,7 @@
       <button class="btn btn-primary" onclick="copyVisibleEntries()">Copy Visible Entries</button>
       <button class="btn btn-outline" onclick="createNewGroup()">Create New Group</button>
     </div>
-  </div>
+  </details>
 
   <div class="counter">
     <div class="counter-row">
