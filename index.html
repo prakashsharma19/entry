@@ -171,6 +171,17 @@
       background-color: #004d00;
     }
 
+    .btn-download-countries {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .btn-download-countries:hover {
+      background-color: #218838;
+    }
+
     .btn-group {
       display: flex;
       flex-wrap: wrap;
@@ -736,11 +747,69 @@
       hideLoading();
     }
 
+    async function distributeEntriesToCountries() {
+      showLoading("Preparing files...");
+      const buckets = {};
+      const chunkSize = 100;
+
+      for (let i = 0; i < allParts.length; i += chunkSize) {
+        const chunk = allParts.slice(i, i + chunkSize);
+        await Promise.all(chunk.map(async (entry) => {
+          const country = await getCountryFromEntry(entry);
+          if (country) {
+            const standardized = countryMap[country] || country;
+            if (!buckets[standardized]) buckets[standardized] = [];
+            buckets[standardized].push(entry);
+          }
+        }));
+        updateProgress((i / allParts.length) * 100);
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+      hideLoading();
+      return buckets;
+    }
+
+    async function downloadAllCountries() {
+      const buckets = await distributeEntriesToCountries();
+      const countries = Object.keys(buckets).sort();
+
+      if (countries.length === 0) {
+        alert("No entries to download.");
+        return;
+      }
+
+      if (!confirm(`This will download ${countries.length} files. Continue?`)) return;
+
+      for (const country of countries) {
+        const entries = buckets[country];
+        const blob = new Blob([entries.join('\n\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const prefix = getFilePrefix();
+        a.download = `${prefix} - ${country} - (${entries.length} Entries).txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        await new Promise(r => setTimeout(r, 100));
+      }
+    }
+
     function renderGroupCounts() {
       const container = document.getElementById('groupCounts');
       container.innerHTML = '';
       const allDiv = document.createElement('div');
       allDiv.className = 'group-count-item';
+
+      const allCountriesBtn = document.createElement('button');
+      allCountriesBtn.className = 'btn btn-download-countries';
+      allCountriesBtn.textContent = `Download All Countries`;
+      allCountriesBtn.onclick = downloadAllCountries;
+      allCountriesBtn.style.marginRight = '10px';
+      allDiv.appendChild(allCountriesBtn);
+
       const allBtn = document.createElement('button');
       allBtn.className = 'btn btn-download-all';
       allBtn.textContent = `Download All Files (${allParts.length})`;
