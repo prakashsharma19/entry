@@ -13,7 +13,7 @@
       --dark-gray: #7f8c8d;
       --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f6f8;
@@ -22,19 +22,19 @@
       max-width: 1200px;
       margin: 0 auto;
     }
-    
+
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-    
+
     h2 {
       margin: 0;
       color: #2c3e50;
     }
-    
+
     .refresh-btn {
       background-color: var(--light-gray);
       color: var(--dark-gray);
@@ -72,7 +72,7 @@
     .dept-btn:hover {
       background-color: #76d275;
     }
-    
+
     .input-section, .filter-section, .output-section {
       background: white;
       border-radius: 8px;
@@ -80,7 +80,7 @@
       box-shadow: var(--shadow);
       margin-bottom: 20px;
     }
-    
+
     .section-title {
       font-size: 18px;
       margin-top: 0;
@@ -89,14 +89,14 @@
       border-bottom: 1px solid #eee;
       padding-bottom: 10px;
     }
-    
+
     label {
       font-weight: 600;
       display: block;
       margin-bottom: 8px;
       font-size: 14px;
     }
-    
+
     select, textarea, input[type="file"] {
       width: 100%;
       padding: 10px;
@@ -106,11 +106,11 @@
       border-radius: 5px;
       box-sizing: border-box;
     }
-    
+
     select[multiple] {
       height: 200px;
     }
-    
+
     .btn {
       padding: 8px 15px;
       font-size: 14px;
@@ -124,31 +124,31 @@
       align-items: center;
       gap: 5px;
     }
-    
+
     .btn-primary {
       background-color: var(--primary-color);
       color: white;
     }
-    
+
     .btn-primary:hover {
       background-color: var(--primary-hover);
     }
-    
+
     .btn-secondary {
       background-color: var(--secondary-color);
       color: white;
     }
-    
+
     .btn-secondary:hover {
       background-color: var(--secondary-hover);
     }
-    
+
     .btn-outline {
       background-color: white;
       color: var(--primary-color);
       border: 1px solid var(--primary-color);
     }
-    
+
     .btn-outline:hover {
       background-color: var(--light-gray);
     }
@@ -183,7 +183,7 @@
       gap: 10px;
       align-items: center;
     }
-    
+
     .counter {
       background: #ffffff;
       border: 1px solid #ddd;
@@ -195,13 +195,13 @@
       font-weight: 600;
       box-shadow: var(--shadow);
     }
-    
+
     .counter-row {
       display: flex;
       justify-content: space-between;
       margin-bottom: 5px;
     }
-    
+
     .entry {
       background: white;
       border-radius: 6px;
@@ -211,13 +211,13 @@
       white-space: pre-line;
       border-left: 4px solid var(--primary-color);
     }
-    
+
     .two-column {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-    
+
     @media (max-width: 768px) {
       .two-column {
         grid-template-columns: 1fr;
@@ -231,51 +231,68 @@
       padding: 8px;
       border-bottom: 1px solid #eee;
     }
-    
+
     .group-item:last-child {
       border-bottom: none;
     }
-    
+
     .delete-group {
       color: var(--secondary-color);
       cursor: pointer;
       font-size: 14px;
     }
-    
+
     .delete-group:hover {
       color: var(--secondary-hover);
     }
-    
+
     .icon {
       width: 16px;
       height: 16px;
     }
-    
+
     .group-countries {
       margin-top: 10px;
-      font-size: 12px;
       color: #666;
       background: #f9f9f9;
       padding: 10px;
       border-radius: 5px;
       display: none;
     }
-    
+
+    .country-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .country-row:last-child {
+      border-bottom: none;
+    }
+
+    .btn-sm {
+      padding: 2px 8px;
+      font-size: 12px;
+      margin: 0;
+    }
+
     .country-count {
       display: inline-block;
       margin-right: 10px;
       margin-bottom: 5px;
     }
-    
+
     #downloadBtn {
       margin-top: 15px;
     }
-    
+
     .country-filter-btn {
       margin-top: -10px;
       margin-bottom: 15px;
     }
-    
+
     .group-count-display {
       display: flex;
       flex-wrap: wrap;
@@ -324,7 +341,7 @@
       margin-bottom: 8px;
       font-size: 14px;
     }
-    
+
     /* Loading indicator styles */
     .loading-overlay {
       position: fixed;
@@ -339,7 +356,7 @@
       align-items: center;
       z-index: 1000;
     }
-    
+
     .spinner {
       width: 50px;
       height: 50px;
@@ -349,18 +366,18 @@
       animation: spin 1s linear infinite;
       margin-bottom: 15px;
     }
-    
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    
+
     .loading-text {
       font-size: 18px;
       font-weight: bold;
       color: var(--primary-color);
     }
-    
+
     .progress-bar {
       width: 300px;
       height: 20px;
@@ -369,7 +386,7 @@
       margin-top: 15px;
       overflow: hidden;
     }
-    
+
     .progress {
       height: 100%;
       background-color: var(--primary-color);
@@ -418,22 +435,22 @@
         <select id="groupSelect" multiple size="8">
           <option value="">-- All Entries --</option>
         </select>
-        
+
         <div id="groupCountries" class="group-countries"></div>
-        
+
         <div id="userGroupsContainer" style="margin-top: 15px; display: none;">
           <label>Your Groups:</label>
           <div id="userGroupsList" style="background: var(--light-gray); padding: 10px; border-radius: 5px;"></div>
         </div>
       </div>
-      
+
       <div>
         <label for="countrySelect">Select Countries:</label>
         <select id="countrySelect" multiple size="10"></select>
         <button class="btn btn-primary country-filter-btn" onclick="applyCountryFilter()">Filter by Selected Countries</button>
       </div>
     </div>
-    
+
     <div class="btn-group">
       <button class="btn btn-primary" onclick="copyVisibleEntries()">Copy Visible Entries</button>
       <button class="btn btn-outline" onclick="createNewGroup()">Create New Group</button>
@@ -566,7 +583,7 @@
       document.getElementById('loadingText').textContent = text;
       document.getElementById('loadingOverlay').style.display = 'flex';
     }
-    
+
     // Hide loading overlay
     function hideLoading() {
       document.getElementById('loadingOverlay').style.display = 'none';
@@ -593,14 +610,14 @@
     // Improved country detection - looks for country on the line before email
     async function getCountryFromEntry(entry) {
       const lines = entry.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-      
+
       // Find the email line (contains @)
       const emailIndex = lines.findIndex(line => line.includes('@'));
       if (emailIndex === -1 || emailIndex === 0) return null;
-      
+
       // The country is likely the line before the email
       const potentialCountryLine = lines[emailIndex - 1];
-      
+
       // Check if this line matches any country
       for (const country of countryList) {
         const standardizedCountry = countryMap[country] || country;
@@ -608,19 +625,19 @@
           new RegExp(`^\\s*${standardizedCountry}\\s*$`, 'i'),
           new RegExp(`^\\s*${country}\\s*$`, 'i')
         ];
-        
+
         if (patterns.some(pattern => pattern.test(potentialCountryLine))) {
           return standardizedCountry;
         }
       }
-      
+
       return null;
     }
 
     async function entryContainsCountry(entry, country) {
       const entryCountry = await getCountryFromEntry(entry);
       if (!entryCountry) return false;
-      
+
       const standardizedCountry = countryMap[country] || country;
       return entryCountry.toLowerCase() === standardizedCountry.toLowerCase();
     }
@@ -628,32 +645,32 @@
     async function countEntriesForCountry(country) {
       if (!allParts.length) return 0;
       let count = 0;
-      
+
       // Process in chunks to avoid freezing
       const chunkSize = 100;
       for (let i = 0; i < allParts.length; i += chunkSize) {
         const chunk = allParts.slice(i, i + chunkSize);
         const results = await Promise.all(chunk.map(entry => entryContainsCountry(entry, country)));
         count += results.filter(Boolean).length;
-        
+
         // Update progress
         updateProgress(Math.min(100, (i / allParts.length) * 100));
       }
-      
+
       return count;
     }
 
     async function countEntriesForGroup(groupName) {
       if (!allParts.length || !countryGroups[groupName]) return 0;
-      
+
       let count = 0;
       const countries = countryGroups[groupName];
-      
+
       // Process in chunks to avoid freezing
       const chunkSize = 100;
       for (let i = 0; i < allParts.length; i += chunkSize) {
         const chunk = allParts.slice(i, i + chunkSize);
-        
+
         for (const entry of chunk) {
           const entryCountry = await getCountryFromEntry(entry);
           if (!entryCountry) {
@@ -673,25 +690,25 @@
             }
           }
         }
-        
+
         // Update progress
         updateProgress(Math.min(100, (i / allParts.length) * 100));
       }
-      
+
       return count;
     }
 
     async function updateGroupCounts() {
       showLoading("Calculating group counts...");
       groupCounts = {};
-      
+
       const groupNames = Object.keys(countryGroups);
       for (let i = 0; i < groupNames.length; i++) {
         const groupName = groupNames[i];
         groupCounts[groupName] = await countEntriesForGroup(groupName);
         updateProgress((i / groupNames.length) * 100);
       }
-      
+
       renderGroupCounts();
       hideLoading();
     }
@@ -757,6 +774,44 @@
       return entries;
     }
 
+    async function downloadCountry(country) {
+      showLoading(`Preparing download for ${country}...`);
+      const entries = [];
+      const chunkSize = 100;
+
+      for (let i = 0; i < allParts.length; i += chunkSize) {
+        const chunk = allParts.slice(i, i + chunkSize);
+        const results = await Promise.all(chunk.map(entry => entryContainsCountry(entry, country)));
+
+        for (let j = 0; j < results.length; j++) {
+          if (results[j]) {
+            entries.push(chunk[j]);
+          }
+        }
+        updateProgress(Math.min(100, (i / allParts.length) * 100));
+      }
+
+      hideLoading();
+
+      if (!entries.length) {
+        alert(`No entries found for ${country}`);
+        return;
+      }
+
+      const blob = new Blob([entries.join('\n\n')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      const prefix = getFilePrefix();
+      a.download = `${prefix} - ${country} - (${entries.length} Entries).txt`;
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
     async function downloadGroup(groupName) {
       const entries = await getEntriesForGroup(groupName);
       if (!entries.length) return;
@@ -787,7 +842,7 @@
       const groupSelect = document.getElementById('groupSelect');
       const countrySelect = document.getElementById('countrySelect');
       const userGroupsList = document.getElementById('userGroupsList');
-      
+
       groupSelect.innerHTML = '<option value="">-- All Entries --</option>';
       countrySelect.innerHTML = '';
       userGroupsList.innerHTML = '';
@@ -808,7 +863,7 @@
         option.value = group;
         option.textContent = group;
         groupSelect.appendChild(option);
-        
+
         // Add to user groups list
         const groupItem = document.createElement('div');
         groupItem.className = 'group-item';
@@ -844,13 +899,13 @@
       let count = 0;
       currentFilteredEntries = [];
       currentGroupNames = groupNames;
-      
+
       // Process in chunks to avoid freezing
       const chunkSize = 100;
       for (let i = 0; i < allParts.length; i += chunkSize) {
         const chunk = allParts.slice(i, i + chunkSize);
         const results = await Promise.all(chunk.map(entry => filterFn(entry)));
-        
+
         for (let j = 0; j < results.length; j++) {
           if (results[j]) {
             const div = document.createElement('div');
@@ -861,11 +916,11 @@
             currentFilteredEntries.push(chunk[j].trim());
           }
         }
-        
+
         // Update progress
         updateProgress(Math.min(100, (i / allParts.length) * 100));
       }
-      
+
       updateCounters(count);
       document.getElementById('downloadBtn').style.display = count > 0 ? 'block' : 'none';
       hideLoading();
@@ -877,19 +932,23 @@
         groupCountriesDiv.style.display = 'none';
         return;
       }
-      
+
       let html = '';
-      
+
       groupNames.forEach(groupName => {
         if (countryGroups[groupName]) {
           html += `<strong>${groupName}:</strong><br>`;
           countryGroups[groupName].forEach(country => {
-            html += `<span class="country-count">${country}</span>`;
+            const safeCountry = country.replace(/'/g, "\\'");
+            html += `<div class="country-row">
+              <span class="country-name">${country}</span>
+              <button class="btn btn-primary btn-sm" onclick="downloadCountry('${safeCountry}')">Download</button>
+            </div>`;
           });
           html += '<br><br>';
         }
       });
-      
+
       groupCountriesDiv.innerHTML = html;
       groupCountriesDiv.style.display = 'block';
     }
@@ -923,19 +982,19 @@
 
     document.getElementById('groupSelect').addEventListener('change', async function() {
       const selectedOptions = Array.from(this.selectedOptions).map(opt => opt.value);
-      
+
       if (selectedOptions.includes('__create__')) {
         createNewGroup();
         return;
       }
-      
+
       // Remove empty option if other options are selected
-      const filteredOptions = selectedOptions.includes('') && selectedOptions.length > 1 
-        ? selectedOptions.filter(opt => opt !== '') 
+      const filteredOptions = selectedOptions.includes('') && selectedOptions.length > 1
+        ? selectedOptions.filter(opt => opt !== '')
         : selectedOptions;
-      
+
       updateGroupCountriesDisplay(filteredOptions);
-      
+
       if (filteredOptions.length > 0 && !(filteredOptions.length === 1 && filteredOptions[0] === '')) {
         // Create a set of all countries in the selected groups for faster lookup
         const selectedCountries = new Set();
@@ -947,7 +1006,7 @@
             }
           }
         }
-        
+
         await renderEntries(async (entry) => {
           const entryCountry = await getCountryFromEntry(entry);
           if (!entryCountry) {
@@ -966,17 +1025,17 @@
       document.getElementById('groupSelect').value = '';
       document.getElementById('groupCountries').style.display = 'none';
       const selectedOptions = Array.from(document.getElementById('countrySelect').selectedOptions).map(opt => opt.value);
-      
+
       // Create a Set for faster lookup
       const selectedCountries = new Set(selectedOptions.map(c => {
         const standardizedCountry = countryMap[c] || c;
         return standardizedCountry.toLowerCase();
       }));
-      
+
       await renderEntries(async entry => {
         const entryCountry = await getCountryFromEntry(entry);
         if (!entryCountry) return false;
-        
+
         const standardizedCountry = countryMap[entryCountry] || entryCountry;
         return selectedCountries.has(standardizedCountry.toLowerCase());
       });
@@ -1018,10 +1077,10 @@
     async function createNewGroup() {
       const groupName = prompt("Enter new group name:");
       if (!groupName) return;
-      
+
       const selected = prompt("Enter comma-separated country names:\n(" + countryList.join(', ') + ")");
       if (!selected) return;
-      
+
       const countryListNew = selected.split(',').map(s => s.trim()).filter(Boolean);
       userGroups[groupName] = countryListNew;
       localStorage.setItem('userGroups', JSON.stringify(userGroups));
@@ -1030,14 +1089,14 @@
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay([groupName]);
       await updateGroupCounts();
-      
+
       // Create a set of all countries in the new group for faster lookup
       const selectedCountries = new Set();
       for (const country of countryListNew) {
         const standardizedCountry = countryMap[country] || country;
         selectedCountries.add(standardizedCountry.toLowerCase());
       }
-      
+
       await renderEntries(async (entry) => {
         const entryCountry = await getCountryFromEntry(entry);
         if (!entryCountry) {
@@ -1064,7 +1123,7 @@
     function updateCounters(filteredCount = 0) {
       document.getElementById('totalCount').textContent = allParts.length;
       document.getElementById('filteredCount').textContent = filteredCount;
-      
+
       const filteredLabel = document.getElementById('filteredCountLabel');
       if (currentGroupNames.length > 0) {
         filteredLabel.innerHTML = `${currentGroupNames.join(', ')}: <span id="filteredCount" style="color: var(--primary-color)">${filteredCount}</span>`;
@@ -1078,9 +1137,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
