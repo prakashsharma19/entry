@@ -171,6 +171,17 @@
       background-color: #004d00;
     }
 
+    .btn-download-countries {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .btn-download-countries:hover {
+      background-color: #218838;
+    }
+
     .btn-group {
       display: flex;
       flex-wrap: wrap;
@@ -736,11 +747,38 @@
       hideLoading();
     }
 
+    async function downloadCountriesInGroup(groupName) {
+      if (!countryGroups[groupName]) return;
+      const countries = countryGroups[groupName];
+      const validCountries = [];
+
+      // Filter countries that actually have entries
+      for (const country of countries) {
+        const standardized = countryMap[country] || country;
+        if ((countryEntryCounts[standardized.toLowerCase()] || 0) > 0) {
+           validCountries.push(country);
+        }
+      }
+
+      if (validCountries.length === 0) {
+         alert("No entries found for any country in this group.");
+         return;
+      }
+
+      if (!confirm(`This will download ${validCountries.length} files for group "${groupName}". Continue?`)) return;
+
+      for (const country of validCountries) {
+        await downloadCountry(country);
+        await new Promise(r => setTimeout(r, 500)); // Delay to prevent browser blocking
+      }
+    }
+
     function renderGroupCounts() {
       const container = document.getElementById('groupCounts');
       container.innerHTML = '';
       const allDiv = document.createElement('div');
       allDiv.className = 'group-count-item';
+
       const allBtn = document.createElement('button');
       allBtn.className = 'btn btn-download-all';
       allBtn.textContent = `Download All Files (${allParts.length})`;
@@ -960,7 +998,11 @@
 
       groupNames.forEach(groupName => {
         if (countryGroups[groupName]) {
-          html += `<strong>${groupName}:</strong><br>`;
+          const safeGroupName = groupName.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+          html += `<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <strong>${groupName}:</strong>
+                    <button class="btn btn-download-countries" onclick="downloadCountriesInGroup('${safeGroupName}')">Download All Countries</button>
+                   </div>`;
           countryGroups[groupName].forEach(country => {
             const standardized = countryMap[country] || country;
             const count = countryEntryCounts[standardized.toLowerCase()] || 0;
