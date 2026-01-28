@@ -568,6 +568,7 @@
     let currentFilteredEntries = [];
     let currentGroupNames = [];
     let groupCounts = {};
+    let countryEntryCounts = {};
     let uploadedFileName = '';
 
     function getFilePrefix() {
@@ -660,56 +661,78 @@
       return count;
     }
 
-    async function countEntriesForGroup(groupName) {
-      if (!allParts.length || !countryGroups[groupName]) return 0;
+    async function analyzeEntries() {
+      showLoading("Analyzing entries...");
 
-      let count = 0;
-      const countries = countryGroups[groupName];
+      // Reset counts
+      groupCounts = {};
+      countryEntryCounts = {};
+      const groupNames = Object.keys(countryGroups);
+      for (const group of groupNames) {
+        groupCounts[group] = 0;
+      }
 
-      // Process in chunks to avoid freezing
+      // Pre-compute country -> groups mapping for faster lookup
+      const countryToGroups = {};
+
+      for (const groupName of groupNames) {
+        if (!countryGroups[groupName]) continue;
+
+        for (const c of countryGroups[groupName]) {
+          const standardized = countryMap[c] || c;
+          const key = standardized.toLowerCase();
+          if (!countryToGroups[key]) countryToGroups[key] = [];
+          if (!countryToGroups[key].includes(groupName)) {
+            countryToGroups[key].push(groupName);
+          }
+        }
+      }
+
       const chunkSize = 100;
       for (let i = 0; i < allParts.length; i += chunkSize) {
         const chunk = allParts.slice(i, i + chunkSize);
 
-        for (const entry of chunk) {
-          const entryCountry = await getCountryFromEntry(entry);
-          if (!entryCountry) {
-            if (groupName === 'H - Other Countries') {
-              count++;
+        await Promise.all(chunk.map(async (entry) => {
+          const country = await getCountryFromEntry(entry);
+
+          if (!country) {
+            // No country detected - add to H group if it exists
+            if (groupCounts['H - Other Countries'] !== undefined) {
+              groupCounts['H - Other Countries']++;
             }
-            continue;
-          }
+          } else {
+            const standardized = countryMap[country] || country;
+            const key = standardized.toLowerCase();
 
-          const standardizedEntryCountry = countryMap[entryCountry] || entryCountry;
+            // Update individual country count
+            countryEntryCounts[key] = (countryEntryCounts[key] || 0) + 1;
 
-          for (const country of countries) {
-            const standardizedCountry = countryMap[country] || country;
-            if (standardizedEntryCountry.toLowerCase() === standardizedCountry.toLowerCase()) {
-              count++;
-              break;
+            // Update group counts
+            const groups = countryToGroups[key];
+            if (groups) {
+              for (const g of groups) {
+                groupCounts[g]++;
+              }
             }
           }
-        }
+        }));
 
-        // Update progress
-        updateProgress(Math.min(100, (i / allParts.length) * 100));
-      }
-
-      return count;
-    }
-
-    async function updateGroupCounts() {
-      showLoading("Calculating group counts...");
-      groupCounts = {};
-
-      const groupNames = Object.keys(countryGroups);
-      for (let i = 0; i < groupNames.length; i++) {
-        const groupName = groupNames[i];
-        groupCounts[groupName] = await countEntriesForGroup(groupName);
-        updateProgress((i / groupNames.length) * 100);
+        // Yield to main thread to keep UI responsive
+        await new Promise(resolve => setTimeout(resolve, 0));
+        updateProgress((i / allParts.length) * 100);
       }
 
       renderGroupCounts();
+
+      // Also update the country list display if it's currently visible
+      const groupSelect = document.getElementById('groupSelect');
+      if (groupSelect && groupSelect.selectedOptions) {
+        const selectedOptions = Array.from(groupSelect.selectedOptions).map(opt => opt.value);
+        if (selectedOptions.length > 0 && !selectedOptions.includes('')) {
+          updateGroupCountriesDisplay(selectedOptions);
+        }
+      }
+
       hideLoading();
     }
 
@@ -939,10 +962,15 @@
         if (countryGroups[groupName]) {
           html += `<strong>${groupName}:</strong><br>`;
           countryGroups[groupName].forEach(country => {
+            const standardized = countryMap[country] || country;
+            const count = countryEntryCounts[standardized.toLowerCase()] || 0;
             const safeCountry = country.replace(/'/g, "\\'");
             html += `<div class="country-row">
               <span class="country-name">${country}</span>
-              <button class="btn btn-primary btn-sm" onclick="downloadCountry('${safeCountry}')">Download</button>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="country-count" style="font-weight: bold; color: var(--primary-color);">${count}</span>
+                <button class="btn btn-primary btn-sm" onclick="downloadCountry('${safeCountry}')">Download</button>
+              </div>
             </div>`;
           });
           html += '<br><br>';
@@ -957,7 +985,7 @@
       entries = text.trim();
       allParts = entries.split(/\n\n+/);
       document.getElementById('manualInput').value = entries;
-      updateGroupCounts();
+      analyzeEntries();
       renderEntries(() => true);
     }
 
@@ -1088,7 +1116,7 @@
       populateDropdowns();
       document.getElementById('groupSelect').value = groupName;
       updateGroupCountriesDisplay([groupName]);
-      await updateGroupCounts();
+      await analyzeEntries();
 
       // Create a set of all countries in the new group for faster lookup
       const selectedCountries = new Set();
@@ -1114,7 +1142,7 @@
         localStorage.setItem('userGroups', JSON.stringify(userGroups));
         updateCountryGroups();
         populateDropdowns();
-        await updateGroupCounts();
+        await analyzeEntries();
         await renderEntries(() => true);
         document.getElementById('groupCountries').style.display = 'none';
       }
