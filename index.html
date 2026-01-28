@@ -747,53 +747,29 @@
       hideLoading();
     }
 
-    async function distributeEntriesToCountries() {
-      showLoading("Preparing files...");
-      const buckets = {};
-      const chunkSize = 100;
+    async function downloadCountriesInGroup(groupName) {
+      if (!countryGroups[groupName]) return;
+      const countries = countryGroups[groupName];
+      const validCountries = [];
 
-      for (let i = 0; i < allParts.length; i += chunkSize) {
-        const chunk = allParts.slice(i, i + chunkSize);
-        await Promise.all(chunk.map(async (entry) => {
-          const country = await getCountryFromEntry(entry);
-          if (country) {
-            const standardized = countryMap[country] || country;
-            if (!buckets[standardized]) buckets[standardized] = [];
-            buckets[standardized].push(entry);
-          }
-        }));
-        updateProgress((i / allParts.length) * 100);
-        await new Promise(resolve => setTimeout(resolve, 0));
-      }
-      hideLoading();
-      return buckets;
-    }
-
-    async function downloadAllCountries() {
-      const buckets = await distributeEntriesToCountries();
-      const countries = Object.keys(buckets).sort();
-
-      if (countries.length === 0) {
-        alert("No entries to download.");
-        return;
-      }
-
-      if (!confirm(`This will download ${countries.length} files. Continue?`)) return;
-
+      // Filter countries that actually have entries
       for (const country of countries) {
-        const entries = buckets[country];
-        const blob = new Blob([entries.join('\n\n')], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        const prefix = getFilePrefix();
-        a.download = `${prefix} - ${country} - (${entries.length} Entries).txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        const standardized = countryMap[country] || country;
+        if ((countryEntryCounts[standardized.toLowerCase()] || 0) > 0) {
+           validCountries.push(country);
+        }
+      }
 
-        await new Promise(r => setTimeout(r, 100));
+      if (validCountries.length === 0) {
+         alert("No entries found for any country in this group.");
+         return;
+      }
+
+      if (!confirm(`This will download ${validCountries.length} files for group "${groupName}". Continue?`)) return;
+
+      for (const country of validCountries) {
+        await downloadCountry(country);
+        await new Promise(r => setTimeout(r, 500)); // Delay to prevent browser blocking
       }
     }
 
@@ -802,13 +778,6 @@
       container.innerHTML = '';
       const allDiv = document.createElement('div');
       allDiv.className = 'group-count-item';
-
-      const allCountriesBtn = document.createElement('button');
-      allCountriesBtn.className = 'btn btn-download-countries';
-      allCountriesBtn.textContent = `Download All Countries`;
-      allCountriesBtn.onclick = downloadAllCountries;
-      allCountriesBtn.style.marginRight = '10px';
-      allDiv.appendChild(allCountriesBtn);
 
       const allBtn = document.createElement('button');
       allBtn.className = 'btn btn-download-all';
@@ -1029,7 +998,11 @@
 
       groupNames.forEach(groupName => {
         if (countryGroups[groupName]) {
-          html += `<strong>${groupName}:</strong><br>`;
+          const safeGroupName = groupName.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+          html += `<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <strong>${groupName}:</strong>
+                    <button class="btn btn-download-countries" onclick="downloadCountriesInGroup('${safeGroupName}')">Download All Countries</button>
+                   </div>`;
           countryGroups[groupName].forEach(country => {
             const standardized = countryMap[country] || country;
             const count = countryEntryCounts[standardized.toLowerCase()] || 0;
